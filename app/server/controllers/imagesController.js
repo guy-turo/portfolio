@@ -1,20 +1,57 @@
 const imagesModel = require('../models/picturesModel')
 const cloudinary = require('cloudinary').v2
+const multer = require('multer')
+const path = require('path')
+const process = require('process')
+const { CloudinaryStorage } = require('multer-storage-cloudinary')
 require('dotenv').config()
+    // cloudinary.config({
+    //     cloud_name: process.env.CLOUD_NAME,
+    //     api_key: process.env.CLOUDINARY_API_KEY,
+    //     api_secret: process.env.CLOUDINARY_API_SECRET,
+    // })
 
-cloudinary.config({
-    cloud_name: process.env.CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET,
-})
-
+// const storage = new CloudinaryStorage({
+//     cloudinary,
+//     params: {
+//         folder: "Images",
+//         allowFormats: ['jpeg', 'png', 'jpg']
+//     }
+// })
 
 // images
-const createImages = async(req, res) => {
+let filePath
+const imageUpload = async(req, res, next) => {
 
+    // if (!file) {
+    //     const error = new Error("please upload a file")
+    //     error.httpStatusCode = 400
+    //     return next(error)
+    // }
+    console.log(req.file)
+        // upload(req, res, function(error) {
+
+    //     if (error instanceof multer.MulterError) {
+    //         return res.status(500).json(error)
+    //     } else if (error) {
+    //         return res.status(500).json(error)
+    //     }
+    //     filePath = req.files.file.path
+    //     console.log(filePath)
+    // })
+}
+const createImages = async(req, res) => {
+        upload.single('image')(req, res, (err) => {
+            if (err instanceof multer.MulterError) {
+                return res.status(500).json(err)
+            } else if (err) {
+                return res.status(500).json(err)
+            }
+            filePath = req.file.name
+            console.log(filePath)
+        })
         try {
 
-            console.log(req.body.file)
             if (!req.files || req.files.Image) {
                 res.status(400).json({
                     message: 'No file uploaded',
@@ -115,4 +152,4 @@ const fetchImages = async(req, res) => {
     }
 }
 
-module.exports = { createImages, updateImage, deleteImage, fetchImages, fetchImage }
+module.exports = { imageUpload, createImages, updateImage, deleteImage, fetchImages, fetchImage }

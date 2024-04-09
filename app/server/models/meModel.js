@@ -10,8 +10,14 @@ const meSchema = new schema({
         type: String,
         required: true,
     },
-    email: { type: String, required: true },
-    phoneNumber: { type: String, required: true },
+    email: {
+        type: String,
+        required: true
+    },
+    phoneNumber: {
+        type: String,
+        required: true
+    },
     experienceYear: {
         type: String,
         required: true,
@@ -20,18 +26,17 @@ const meSchema = new schema({
         type: Number,
         required: true,
     },
-
     description: {
         type: String,
         required: true,
     },
     pictures: {
         type: String,
+        required: true,
     },
     projects: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Projects",
-
     }],
     testimonial: [{
         type: mongoose.Schema.Types.ObjectId,

@@ -6,8 +6,9 @@ const testimonialsSchema = schema({
     title: { type: String },
     testimonial: { type: String, },
     pictures: {
-        type: String,
-    }
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Images"
+    },
 }, { timestamps: true })
 
 const testimonialsModel = mongoose.model('Testimonial', testimonialsSchema)

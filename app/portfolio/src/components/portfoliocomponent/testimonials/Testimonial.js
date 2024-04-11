@@ -57,7 +57,7 @@ function Testimonial() {
     }
   },[index])
   return (
-    <section className="section">
+    <section id="testimonials" className="section">
       <div className="title">
         <h2 className='text-blue-300'>
           <span>/</span>Testimonials

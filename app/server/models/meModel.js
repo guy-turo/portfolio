@@ -31,8 +31,8 @@ const meSchema = new schema({
         required: true,
     },
     pictures: {
-        type: String,
-        required: true,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Images"
     },
     projects: [{
         type: mongoose.Schema.Types.ObjectId,

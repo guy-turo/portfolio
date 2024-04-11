@@ -6,8 +6,9 @@ const projectSchema = schema({
     linkGithub: { type: String },
     linkLive: { type: String, },
     pictures: {
-        type: String,
-    }
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Images"
+    },
 })
 
 const projectModel = mongoose.model('Projects', projectSchema)

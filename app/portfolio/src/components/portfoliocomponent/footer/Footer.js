@@ -2,7 +2,7 @@ import React from 'react'
 
 function Footer() {
   return (
-    <footer >
+    <footer id='footer' className="">
       
       <div className='items-center flex flex-col space-y-10 divide-y-2 divide-solid divide-black'>
       <div className='container pt-10 items-center flex flex-col'>
@@ -57,7 +57,7 @@ function Footer() {
       
       
       </div>
-      <p className='font-serif text-zinc-400 '>© 2024 Kodilux</p>
+      <p className='font-serif text-zinc-400 '>© 2020 Kodilux || last modif 02/03/2024</p>
       </div>
      
       

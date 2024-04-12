@@ -1,27 +1,119 @@
-import React from 'react'
+import React,{useState} from 'react'
 import TabsComponent from '../components/admin/TabsComponent'
 import me from "../assets/me.jpg"
+import { CiLogout } from "react-icons/ci";
+import { MdPersonPin } from "react-icons/md";
+import { MdMenu } from "react-icons/md";
+import Drawer from 'react-modern-drawer'
+import 'react-modern-drawer/dist/index.css'
+import {MdDashboard} from 'react-icons/md'
+import Data from '../components/admin/Data'
+import Dashboard from '../components/admin/Dashboard'
 const AdminPage=()=> {
+  const [isOpen, setIsOpen] = useState(false)
+  const toggleDrawer = () => {
+      setIsOpen((prevState) => !prevState)
+  }
+  const [toggleState,setToggleState]=useState(1)
+
+  const toggleTab=(index)=>{
+   
+    if(toggleState===index){
+      return
+    }
+    setToggleState(index)
+    console.log(toggleState)
+  }
+  const colors={
+    backgroundColor:"#1f1f38"
+  }
   return (
     
     <div className=" flex flex-col h-screen">
-      <div className="items-center  justify-items-center ">
+      <div className="items-center justify-items-center  ">
         <div className='flex justify-between items-center px-2'>
-          <div  className="flex items-center cursor-pointer justify-start">
-            <div className="w-10 h-10 rounded-full">
+        
+          <div  className="flex items-center justify-start">
+          <MdMenu  onClick={toggleDrawer}  className="flex size-7 md:hidden cursor-pointer"/>
+          <Drawer
+                open={isOpen}
+                onClose={toggleDrawer}
+                direction='left'
+                style={colors}
+                className='flex rounded-sm  rounded-tr-3xl rounded-br-3xl justify-center border border-solid border-blue-800 bg-blue-100'
+            >
+              <div className="w-full flex flex-col justify-between rounded-md h-full ">
+                
+              <div className="flex flex-col   rounded-tl-md rounded-bl-md w-12/12  p-1 items-center justify-items-center space-y-1">
+              <div className="flex  flex-col items-center justify-center">
+                  <div className="w-20 h-20 rounded-full  cursor-pointer">
+                  <img src={me} alt="" className="w-20 h-20 rounded-full"/>
+                  </div>
+                  <h2 className="fex font-bold">Admin</h2>
+                </div>
+                <div
+                  onClick={()=>{
+                    toggleTab(1)
+                    toggleDrawer()
+                  }}
+                  className={` w-full rounded-sm ${toggleState===1?"bg-blue-600":"bg-blue-800"}`}>
+
+                  <h2 className=" flex cursor-pointer justify-center items-center space-x-1"><MdDashboard/> Dashboard</h2></div>
+                <div
+                onClick={()=>{
+                  toggleTab(2)
+                  toggleDrawer()
+                }}
+                className={` w-full rounded-sm ${toggleState===2?"bg-blue-600":"bg-blue-800"}`}>
+                 <h2 className=" cursor-pointer flex justify-center ">Data</h2></div>
+                </div>
+              <div className=" flex  space-x-1">
+               <button className="bg-blue-800  px-2 rounded-md h-8 flex  items-center space-x-2"><MdPersonPin /><h2 >Profile</h2></button>
+                <button className="bg-red-800 px-2  rounded-md h-8  flex  items-center space-x-2"><CiLogout /><h2>Logout</h2></button>
+              </div>
+              </div>
+              
+             
+            </Drawer>
+          <div className="w-4"></div>
+            <div className="w-10 h-10 rounded-full  cursor-pointer">
               <img src={me} alt="" className="w-10 h-10 rounded-full"/>
             </div>
           <h2 className="font-semibold fex self-end">Admin</h2>
         </div>
-        <div className="space-x-1">
-        <button className="bg-blue-800 px-2 rounded-md h-8">Edit</button>
-        <button className="bg-red-800 px-2 rounded-md h-8">Sign out</button>
+        
+        <div className=" flex hidden md:block space-x-1">
+        <button className="bg-blue-800  px-2 rounded-md h-8"><MdPersonPin /></button>
+        <button className="bg-red-800 px-2  rounded-md h-8"><CiLogout /></button>
         </div>
         
+      </div>
+      <div className="w-full h-full p-1 flex  justify-center rounded-lg shadow-lg  ">
+        {/* Tabs Header */}
+        {/* For the big screen */}
+        <div className="flex flex-col hidden md:block rounded-tl-md rounded-bl-md w-2/12  p-1 items-center justify-items-center space-y-1">
+          <div
+          onClick={()=>toggleTab(1)}
+          className={` w-full rounded-sm ${toggleState===1?"bg-blue-600":"bg-blue-800"}`}>
+
+            <h2 className=" flex cursor-pointer justify-center items-center space-x-1"><MdDashboard/> Dashboard</h2></div>
+          <div
+          onClick={()=>toggleTab(2)}
+          className={` w-full rounded-sm ${toggleState===2?"bg-blue-600":"bg-blue-800"}`}>
+            <h2 className=" cursor-pointer flex justify-center ">Data</h2></div>
         </div>
-       
-        
-        <TabsComponent/>
+
+        {/* content Pages */}
+        <div className="w-11/12 rounded-tr-md  rounded-br-md bg-gray-700">
+          <div className={`${toggleState===1?"":"hidden"} flex justify-center h-screen`}>
+            <Dashboard/>
+            </div>
+          <div className={`${toggleState===2?"":"hidden"} flex justify-center `}>
+            <Data/>
+            </div>
+        </div>
+        </div>
+    
     </div>
     </div>
     

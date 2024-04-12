@@ -1,44 +1,22 @@
 import React,{useState,} from 'react'
-import axios from 'axios'
+import UploadImage from './helper/UploadImage'
+
 function AdminPage() {
-  const [message,setMessage]=useState('')
-  const [image,setImage]=useState(null)
-
-
-  const handleFileName=(event)=>{
-    setImage(event.target.files[0])
-   
-  }
-  const uploadImage= async(e)=>{
-
-    e.preventDefault()
-    if(image){
-      const formData=new FormData()
-      console.log(image)
-      formData.append('file',image)
-      const URI="http://localhost:8000/api/v1/images/upload"
-     try{
-      const response = await axios.post(URI, formData,{
-        headers:{
-          "Content-Type":"multipart/form-data"
-        },
-      },)
-      setMessage(response.data.message)
-     }catch(err){
-      console.error("Upload error:", err)
-      setMessage("An error occurred during uploading")
-     }
-    }else if(!image){
-      setMessage("please select a file to upload")
-      return
-    }
+  
+  const addData=()=>{
+    console.log('added')
   }
 
   return (
     <div className='w-full  flex-col   self-center space-y-2  flex items-center divide-y-2 divide-solid divide-gray-800'>
       <div className="flex flex-col  container">
+        
+        <div className="flex justify-between">
         <h1 className='text-gray-400'>profile</h1>
-        <form onSubmit={uploadImage} className=' items-start space-y-2 flex flex-col'>
+        <UploadImage/>
+        </div>
+        
+        <form onSubmit={addData} className=' items-start space-y-2 flex flex-col'>
           <div className=' flex flex-col md:flex-row justify-between  md:space-x-4 '>
           <div className='grid grid-cols-2 space-y-1'>
           <label htmlFor="fullName">Full Name</label>
@@ -63,12 +41,8 @@ function AdminPage() {
          
           <label htmlFor="description">Description</label>
           <input type="text" id="description" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
-         
-          <label htmlFor='files'>
-           <div className="w-fit px-3 bg-slate-800 text-green-700 rounded-sm">Add Image</div>
-            </label>
-        <input type="file" id='files' onChange={handleFileName} accept='image/*' hidden/>
-        {message && <p className="text-red-500">{message}</p>}
+          
+          
           </div>
           </div>
           
@@ -78,8 +52,12 @@ function AdminPage() {
        
       </div>
       <div className="flex  flex-col  container">
+        <div className="flex justify-between">
         <h1 className='text-gray-400'>Project</h1>
-        <form onSubmit={uploadImage} className=' items-start space-y-2 flex flex-col'>
+        <UploadImage/>
+        </div>
+       
+        <form  className=' items-start space-y-2 flex flex-col'>
           <div className=' flex flex-col '>
           <div className='grid grid-cols-2 sm:grid-cols-4 space-x-2 sm:space-y-1'>
           <label htmlFor="title">Title</label>
@@ -91,11 +69,7 @@ function AdminPage() {
           <label htmlFor="live">Link Live</label>
           <input type="text" id="live" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
          
-          <label htmlFor='files'>
-           <div className="w-fit px-3 bg-slate-800 text-green-700 rounded-sm">Add Image</div>
-            </label>
-        <input type="file" id='files' onChange={handleFileName} accept='image/*' hidden/>
-        {message && <p className="text-red-500">{message}</p>}
+          
           </div>
           </div>
           
@@ -105,8 +79,12 @@ function AdminPage() {
        
       </div>
       <div className="flex flex-col container">
+      <div className="flex justify-between">
         <h1 className='text-gray-400'>Testimonials</h1>
-        <form onSubmit={uploadImage} className=' items-start space-y-2 flex flex-col'>
+        <UploadImage/>
+        </div>
+      
+        <form  className=' items-start space-y-2 flex flex-col'>
           <div className=' flex flex-col  '>
           <div className='grid grid-cols-2 sm:grid-cols-4 space-x-2 sm:space-y-1'>
           <label htmlFor="name">Name</label>
@@ -117,23 +95,16 @@ function AdminPage() {
          
           <label htmlFor="testimonial">Testimonial</label>
           <input type="text" id="testimonial" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
-         
-          <label htmlFor='files'>
-           <div className="w-fit px-3 bg-slate-800 text-green-700 rounded-sm">Add Image</div>
-            </label>
-        <input type="file" id='files' onChange={handleFileName} accept='image/*' hidden/>
-        {message && <p className="text-red-500">{message}</p>}
           </div>
           </div>
-          
-         
+
           <button type="submit" className="px-4 bg-blue-700 rounded-sm">Save</button>
         </form>
-       
+
       </div>
       <div className="flex flex-col  container">
         <h1 className='text-gray-400'>Services</h1>
-        <form onSubmit={uploadImage} className=' items-start space-y-2 flex flex-col'>
+        <form className=' items-start space-y-2 flex flex-col'>
           <div className=' flex flex-col  '>
           <div className='grid grid-cols-2 sm:grid-cols-4 space-x-2 sm:space-y-1'>
           <label htmlFor="ui/ux">UI/UX</label>
@@ -151,15 +122,14 @@ function AdminPage() {
       </div>
       <div className="flex flex-col container">
         <h1 className='text-gray-400'>Social</h1>
-        <form onSubmit={uploadImage} className=' items-start space-y-2 flex flex-col'>
+        <form  className=' items-start space-y-2 flex flex-col'>
           <div className=' flex flex-col  '>
           <div className='grid grid-cols-2 sm:grid-cols-4 space-x-2 sm:space-y-1'>
           <label htmlFor="title">Title</label>
           <input type="text" id="title" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
           <label htmlFor="link">Link</label>
           <input type="text" id="link" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
-         
-         
+
           </div>
           </div>
           
@@ -170,7 +140,7 @@ function AdminPage() {
       </div>
       <div className="flex flex-col  container">
         <h1 className='text-gray-400'>Experiences</h1>
-        <form onSubmit={uploadImage} className=' items-start space-y-2 flex flex-col'>
+        <form  className=' items-start space-y-2 flex flex-col'>
           <div className=' flex flex-col  '>
           <div className='grid grid-cols-2 sm:grid-cols-4 space-x-2 sm:space-y-1 '>
           

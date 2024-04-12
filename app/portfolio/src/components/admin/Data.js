@@ -36,7 +36,7 @@ function AdminPage() {
 
   return (
     <div className='w-full  flex-col   self-center space-y-2  flex items-center divide-y-2 divide-solid divide-gray-800'>
-      <div className="flex flex-col container">
+      <div className="flex flex-col  container">
         <h1 className='text-gray-400'>profile</h1>
         <form onSubmit={uploadImage} className=' items-start space-y-2 flex flex-col'>
           <div className=' flex flex-col md:flex-row justify-between  md:space-x-4 '>
@@ -77,10 +77,10 @@ function AdminPage() {
         </form>
        
       </div>
-      <div className="flex flex-col container">
+      <div className="flex  flex-col  container">
         <h1 className='text-gray-400'>Project</h1>
         <form onSubmit={uploadImage} className=' items-start space-y-2 flex flex-col'>
-          <div className=' flex flex-col  '>
+          <div className=' flex flex-col '>
           <div className='grid grid-cols-2 sm:grid-cols-4 space-x-2 sm:space-y-1'>
           <label htmlFor="title">Title</label>
           <input type="text" id="title" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>

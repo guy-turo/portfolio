@@ -1,5 +1,4 @@
 import React,{useState} from 'react'
-import TabsComponent from '../components/admin/TabsComponent'
 import me from "../assets/me.jpg"
 import { CiLogout } from "react-icons/ci";
 import { MdPersonPin } from "react-icons/md";
@@ -9,6 +8,7 @@ import 'react-modern-drawer/dist/index.css'
 import {MdDashboard} from 'react-icons/md'
 import Data from '../components/admin/Data'
 import Dashboard from '../components/admin/Dashboard'
+import {Link} from "react-router-dom"
 const AdminPage=()=> {
   const [isOpen, setIsOpen] = useState(false)
   const toggleDrawer = () => {
@@ -77,7 +77,10 @@ const AdminPage=()=> {
             </Drawer>
           <div className="w-4"></div>
             <div className="w-10 h-10 rounded-full  cursor-pointer">
-              <img src={me} alt="" className="w-10 h-10 rounded-full"/>
+            <Link to="/" className='p-0'>
+            <img src={me} alt="" className="w-10 h-10 rounded-full"/>
+            </Link>
+              
             </div>
           <h2 className="font-semibold fex self-end">Admin</h2>
         </div>
@@ -104,11 +107,13 @@ const AdminPage=()=> {
         </div>
 
         {/* content Pages */}
-        <div className="w-11/12 rounded-tr-md  rounded-br-md bg-gray-700">
-          <div className={`${toggleState===1?"":"hidden"} flex justify-center h-screen`}>
+        <div className="w-11/12 shadow-2xl rounded-md bg-gray-600">
+          <div className={`${toggleState===1?"":"hidden"} flex flex-col items-center justify-start h-screen`}>
+          <h2>Dashboard</h2>
             <Dashboard/>
             </div>
-          <div className={`${toggleState===2?"":"hidden"} flex justify-center `}>
+          <div className={`${toggleState===2?"":"hidden"} flex flex-col items-center space-y-5 justify-start `}>
+            <h2>Personal data</h2>
             <Data/>
             </div>
         </div>

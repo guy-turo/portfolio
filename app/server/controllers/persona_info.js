@@ -1,5 +1,15 @@
 const meModel = require('../models/meModel')
 const StatusCodes = require('http-status-codes')
+const {
+    TestimonialsImagesModel,
+    ProfileImagesModel,
+    ProjectImagesModel,
+} = require('../models/picturesModel')
+const { projectModel } = require("../models/projectModel")
+const { testimonialsModel } = require("../models/testimonialsModel")
+const { servicesModel } = require("../models/servicesModel")
+const { socialContactModel } = require("../models/socialContactModel")
+const { experiencesModel } = require("../models/experiencesModel")
     // me
 const createMe = async(req, res) => {
     console.log('createMe')
@@ -9,7 +19,7 @@ const createMe = async(req, res) => {
         email: email,
         phoneNumber: phoneNumber,
         experienceYear: experienceYear,
-        clients: client,
+        clients: clients,
         description: description,
     } = req.body
     try {
@@ -19,8 +29,14 @@ const createMe = async(req, res) => {
             email: email,
             phoneNumber: phoneNumber,
             experienceYear: experienceYear,
-            clients: client,
+            clients: clients,
             description: description,
+            pictures: ProfileImagesModel._id,
+            projects: projectModel._id,
+            testimonial: testimonialsModel._id,
+            services: servicesModel._id,
+            socials: socialContactModel._id,
+            experiences: experiencesModel._id
         })
         newData.save()
             .then((result) => {

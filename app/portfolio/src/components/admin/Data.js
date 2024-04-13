@@ -1,15 +1,29 @@
-import React,{useState,} from 'react'
+import React,{useState, useEffect} from 'react'
 import UploadImage from './helper/UploadImage'
-
+import axios from 'axios'
 function AdminPage() {
-  
+  const [images, setImages]=useState([])
   const addData=()=>{
     console.log('added')
   }
-
+  const fetchData=()=>{
+    const URI="http://localhost:8000/api/v1/images"
+    axios.get(URI)
+    .then((res)=>{
+      
+      console.log(res)
+      setImages(res.data)
+    })
+    .catch(error=>
+      console.log(error.message)
+      )
+  }
+  useEffect(()=>{
+   fetchData()
+  },[])
   return (
     <div className='w-full  flex-col   self-center space-y-2  flex items-center divide-y-2 divide-solid divide-gray-800'>
-      <div className="flex flex-col  container">
+      <div className="flex flex-col  container space-y-2">
         
         <div className="flex justify-between">
         <h1 className='text-gray-400'>profile</h1>
@@ -50,13 +64,23 @@ function AdminPage() {
           <button type="submit" className="px-4 bg-blue-700 rounded-sm">Save</button>
         </form>
        
+       <div className="flex flex-row   rounded-md w-full h-20 bg-transparent border border-solid border-black shadow-md">
+        <ul className=" flex flex-row  overflow-x-auto overflow-y-hidden">
+          {images.map(
+            (item,index)=>(
+            <li key={index}>
+              
+              <img src={item.imageUrl} alt={item.title} className="w-20 h-20  rounded-md pb-1"/>
+            </li>)
+            )}
+        </ul>
+       </div>
       </div>
-      <div className="flex  flex-col  container">
+      <div className="flex   flex-col  container">
         <div className="flex justify-between">
         <h1 className='text-gray-400'>Project</h1>
         <UploadImage/>
         </div>
-       
         <form  className=' items-start space-y-2 flex flex-col'>
           <div className=' flex flex-col '>
           <div className='grid grid-cols-2 sm:grid-cols-4 space-x-2 sm:space-y-1'>

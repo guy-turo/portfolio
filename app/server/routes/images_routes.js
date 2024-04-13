@@ -1,6 +1,6 @@
 const imagesRoute = require('express').Router()
 
-const { imageUpload, createImages, fetchImage, fetchImages, updateImage, deleteImage } = require('../controllers/imagesController')
+const { imageUpload, fetchImage, fetchImages, updateImage, deleteImage } = require('../controllers/imagesController')
 
 const multer = require('multer');
 const cloudinary = require('cloudinary').v2
@@ -55,4 +55,4 @@ imagesRoute.route('/:id')
     .put(updateImage)
     .delete(deleteImage)
 
-module.exports = { imagesRoute }
+module.exports = { imagesRoute, upload }

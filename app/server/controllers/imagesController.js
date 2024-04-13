@@ -1,77 +1,40 @@
-const imagesModel = require('../models/picturesModel')
+const { ProfileImagesModel, TestimonialsImagesModel, ProjectImagesModel } = require('../models/picturesModel')
+
 const cloudinary = require('cloudinary').v2
 const multer = require('multer')
-const path = require('path')
-const process = require('process')
+
 const { CloudinaryStorage } = require('multer-storage-cloudinary')
 require('dotenv').config()
-    // cloudinary.config({
-    //     cloud_name: process.env.CLOUD_NAME,
-    //     api_key: process.env.CLOUDINARY_API_KEY,
-    //     api_secret: process.env.CLOUDINARY_API_SECRET,
-    // })
 
-// const storage = new CloudinaryStorage({
-//     cloudinary,
-//     params: {
-//         folder: "Images",
-//         allowFormats: ['jpeg', 'png', 'jpg']
-//     }
-// })
-
-// images
 let filePath
+
 const imageUpload = async(req, res, next) => {
+    try {
+        const file = req.file
 
-    // if (!file) {
-    //     const error = new Error("please upload a file")
-    //     error.httpStatusCode = 400
-    //     return next(error)
-    // }
-    console.log(req.file)
-        // upload(req, res, function(error) {
-
-    //     if (error instanceof multer.MulterError) {
-    //         return res.status(500).json(error)
-    //     } else if (error) {
-    //         return res.status(500).json(error)
-    //     }
-    //     filePath = req.files.file.path
-    //     console.log(filePath)
-    // })
-}
-const createImages = async(req, res) => {
-        upload.single('image')(req, res, (err) => {
-            if (err instanceof multer.MulterError) {
-                return res.status(500).json(err)
-            } else if (err) {
-                return res.status(500).json(err)
-            }
-            filePath = req.file.name
-            console.log(filePath)
-        })
-        try {
-
-            if (!req.files || req.files.Image) {
-                res.status(400).json({
-                    message: 'No file uploaded',
-                })
-            }
-            const uploadedFile = req.files.Image
-            console.log(uploadedFile)
-            const uploadResult = await cloudinary.uploader.upload(uploadedFile.tempFilePath)
-            const newImage = new imagesModel({
-                title: req.body.title,
-                description: req.body.description,
-                imageId: uploadResult.public_id
-            })
-            await newImage.save()
-            res.status(201).json({ message: "Image uploaded successfully!" })
-        } catch (error) {
-            res.status(500).json({ message: 'unable to to upload image' })
+        if (!file && !filePath.path) {
+            const error = new Error("please upload a file")
+            error.httpStatusCode = 400
+            return next(error)
         }
+
+        const newImage = new ProfileImagesModel({
+            title: req.body.title,
+            description: req.body.description,
+            imageUrl: file.path
+        })
+
+        await newImage.save()
+
+        res.status(200).json(file)
+        console.log("uploaded")
+    } catch (e) {
+        res.status(500).json({ message: 'unable to to upload image' })
     }
-    //cloudinary don't accept update func but we can delete and add it
+
+}
+
+//cloudinary don't accept update func but we can delete and add it
 const updateImage = async(req, res) => {
     try {
         const id = req.params.Id
@@ -140,16 +103,16 @@ const fetchImage = async(req, res) => {
 }
 const fetchImages = async(req, res) => {
     try {
-        const images = await imagesModel.find()
+        const images = await ProfileImagesModel.find()
         if (!images) {
             return res.status(404).json({ message: 'Image not found' })
         }
-        const imageUrl = cloudinary.image(images.imageId, { width: 400 })
-        res.json({...images, imageUrl })
+
+        res.status(200).json(images)
     } catch (error) {
         console.log(error.message)
         res.status(500).json({ message: "Failed to retrieve the data" })
     }
 }
 
-module.exports = { imageUpload, createImages, updateImage, deleteImage, fetchImages, fetchImage }
+module.exports = { imageUpload, updateImage, deleteImage, fetchImages, fetchImage }

@@ -3,11 +3,44 @@ import UploadImage from './helper/UploadImage'
 import axios from 'axios'
 function AdminPage() {
   const [images, setImages]=useState([])
+  const [imageProject, setImageProject]=useState([])
+  const [imageTestimonial,setImageTestimonial]=useState([])
   const addData=()=>{
     console.log('added')
   }
+// testimonials
+const fetchTestimonialData=()=>{
+  const URI="http://localhost:8000/api/v1/images/testimonialImage"
+  axios.get(URI)
+  .then((res)=>{
+    
+    console.log(res)
+    setImageTestimonial(res.data)
+  })
+  .catch(error=>
+    console.log(error.message)
+    )
+}
+
+
+// project
+const fetchProjectData=()=>{
+  const URI="http://localhost:8000/api/v1/images/projectImage"
+  axios.get(URI)
+  .then((res)=>{
+    
+    console.log(res)
+    setImageProject(res.data)
+  })
+  .catch(error=>
+    console.log(error.message)
+    )
+}
+
+
+  // profile
   const fetchData=()=>{
-    const URI="http://localhost:8000/api/v1/images"
+    const URI="http://localhost:8000/api/v1/images/profileImage"
     axios.get(URI)
     .then((res)=>{
       
@@ -18,8 +51,10 @@ function AdminPage() {
       console.log(error.message)
       )
   }
-  useEffect(()=>{
-   fetchData()
+useEffect(()=>{
+    fetchData()
+    fetchTestimonialData()
+    fetchProjectData()
   },[])
   const [fullName,setFullName]=useState('')
   const [title,setTitle]=useState('')
@@ -29,9 +64,9 @@ function AdminPage() {
   const [clients, setClients]=useState('')
   const [description,setDescription]=useState('')
   const addProfile=()=>{
-      const URI=""
+      const URI="http://localhost:8000/api/v1/me"
       axios.post(URI,{
-        name:fullName,
+        fullName:fullName,
         title:title,
         email:email,
         phoneNumber:phoneNumber,
@@ -44,15 +79,95 @@ function AdminPage() {
       })
       .catch(error=>console.log(error))
     }
+    const [nameT,setNameT]=useState('')
+    const [titleT,setTitleT]=useState('')
+    const [testimonialsT,setTestimonialsT]=useState('')
+  const addTestimonial=()=>{
+    const URI="http://localhost:8000/api/v1/me/testimonials"
+      axios.post(URI,{
+        name:nameT,
+        title:titleT,
+       testimonials:testimonialsT,
+      })
+      .then((response)=>{
+        console.log(response.data)
+      })
+      .catch(error=>console.log(error))
+  }
+  // Project
+  const [titleP,setTitleP]=useState('')
+  const [linkGithubP,setLinkGithubP]=useState('')
+  const [linkLiveP,setLinkLiveP]=useState('')
+const addProject=()=>{
+  const URI="http://localhost:8000/api/v1/me/projects"
+    axios.post(URI,{
+      title:titleP,
+      linkGithub:linkGithubP,
+     linkLive:linkLiveP,
+    })
+    .then((response)=>{
+      console.log(response.data)
+    })
+    .catch(error=>console.log(error))
+}
+// Services
+const [userExpS,setUserExpS]=useState('')
+  const [frontendS,setFrontendS]=useState('')
+  const [backendS,setBackendS]=useState('')
+  const [otherS, setOtherS]=useState('')
+const addService=()=>{
+  const URI="http://localhost:8000/api/v1/me/services"
+    axios.post(URI,{
+      userExp:userExpS,
+      frontend:frontendS,
+     backend:backendS,
+     other:otherS
+    })
+    .then((response)=>{
+      console.log(response.data)
+    })
+    .catch(error=>console.log(error))
+}
+// socilaContact
+const [titleSC,setTitleSC]=useState('')
+  const [linkSC,setLinkSC]=useState('')
+
+const addSocial=()=>{
+  const URI="http://localhost:8000/api/v1/me/socials"
+    axios.post(URI,{
+     title:titleSC,
+      link:linkSC,
     
-  
-  return (
+    })
+    .then((response)=>{
+      console.log(response.data)
+    })
+    .catch(error=>console.log(error))
+} 
+// experience
+const [frontendExp,setFrontendExp]=useState('')
+  const [backendExp,setBackendExp]=useState('')
+  const [otherExp,setOtherExp]=useState('')
+
+const addExperience=()=>{
+  const URI="http://localhost:8000/api/v1/me/experiences"
+    axios.post(URI,{
+     frontend:frontendExp,
+      backend:backendExp,
+      other:otherExp,
+    })
+    .then((response)=>{
+      console.log(response.data)
+    })
+    .catch(error=>console.log(error))
+} 
+return (
     <div className='w-full  flex-col   self-center space-y-2  flex items-center divide-y-2 divide-solid divide-gray-800'>
       <div className="flex flex-col  container space-y-2">
         
         <div className="flex justify-between">
         <h1 className='text-gray-400'>profile</h1>
-        <UploadImage/>
+        <UploadImage model="upload"/>
         </div>
         
         <form onSubmit={addProfile} className=' items-start space-y-2 flex flex-col'>
@@ -72,7 +187,7 @@ function AdminPage() {
          
           <label htmlFor="email">Email</label>
           <input type="text" 
-          value={title} 
+          value={email} 
           onChange={(e)=>setEmail(e.target.value)} 
           id="email" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
          
@@ -92,7 +207,7 @@ function AdminPage() {
          
           <label htmlFor="clients">Clients</label>
           <input type="text"
-          value={clients.length} 
+          value={clients} 
           onChange={(e)=>setClients(e.target.value)} 
           id="clients" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
          
@@ -110,7 +225,7 @@ function AdminPage() {
           <button type="submit" className="px-4 bg-blue-700 rounded-sm">Save</button>
         </form>
        
-       <div className="flex flex-row   rounded-md w-full h-20 bg-transparent border border-solid border-black shadow-md">
+       {images.length!==0 && <div className="flex flex-row   rounded-md w-full h-20 bg-transparent border border-solid border-black shadow-md">
         <ul className=" flex flex-row px-1 space-x-1 items-center overflow-x-auto overflow-y-hidden">
           {images.map(
             (item,index)=>(
@@ -120,71 +235,84 @@ function AdminPage() {
             </li>)
             )}
         </ul>
-       </div>
+       </div>}
       </div>
-      <div className="flex   flex-col  container">
+      <div className="flex space-y-2 flex-col  container">
         <div className="flex justify-between">
         <h1 className='text-gray-400'>Project</h1>
-        <UploadImage/>
+        <UploadImage model="projectImage/upload"/>
         </div>
-        <form  className=' items-start space-y-2 flex flex-col'>
+        <form onSubmit={addProject}  className=' items-start space-y-2 flex flex-col'>
           <div className=' flex flex-col '>
           <div className='grid grid-cols-2 sm:grid-cols-4 space-x-2 sm:space-y-1'>
           <label htmlFor="title">Title</label>
-          <input type="text" id="title" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
-         
+          <input type="text" value={titleP} onChange={(e)=>setTitleP(e.target.value)} id="title" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
           <label htmlFor="github">Link Github</label>
-          <input type="text" id="github" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
-         
+          <input type="text" value={linkGithubP} onChange={e=>setLinkGithubP(e.target.value)} id="github" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
           <label htmlFor="live">Link Live</label>
-          <input type="text" id="live" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
-         
-          
+          <input type="text" value={linkLiveP} onChange={e=>setLinkLiveP(e.target.value)} id="live" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
           </div>
           </div>
-          
-         
           <button type="submit" className="px-4 bg-blue-700 rounded-sm">Save</button>
         </form>
-       
+        {imageProject.length!==0 && <div className="flex flex-row   rounded-md w-full h-20 bg-transparent border border-solid border-black shadow-md">
+        <ul className=" flex flex-row px-1 space-x-1 items-center overflow-x-auto overflow-y-hidden">
+          {imageProject.map(
+            (item,index)=>(
+            <li key={index}>
+              
+              <img src={item.imageUrl} alt={item.title} className="w-16 h-16  shadow-md rounded-md pb-1 border border-solid border-gray-500"/>
+            </li>)
+            )}
+        </ul>
+       </div>}
       </div>
-      <div className="flex flex-col container">
+      <div className="flex space-y-2 flex-col container">
       <div className="flex justify-between">
         <h1 className='text-gray-400'>Testimonials</h1>
-        <UploadImage/>
+        <UploadImage model="testimonialImage/upload"/>
         </div>
       
-        <form  className=' items-start space-y-2 flex flex-col'>
+        <form onSubmit={addTestimonial}  className=' items-start space-y-2 flex flex-col'>
           <div className=' flex flex-col  '>
           <div className='grid grid-cols-2 sm:grid-cols-4 space-x-2 sm:space-y-1'>
           <label htmlFor="name">Name</label>
-          <input type="text" id="name" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
+          <input type="text" value={nameT} onChange={(e)=>setNameT(e.target.value)} id="name" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
          
           <label htmlFor="title">Title</label>
-          <input type="text" id="title" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
+          <input type="text" value={titleT} onChange={(e)=>setTitleT(e.target.value)} id="title" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
          
           <label htmlFor="testimonial">Testimonial</label>
-          <input type="text" id="testimonial" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
+          <input type="text" value={testimonialsT} onChange={(e)=>setTestimonialsT(e.target.value)} id="testimonial" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
           </div>
           </div>
-
           <button type="submit" className="px-4 bg-blue-700 rounded-sm">Save</button>
         </form>
-
+        {imageTestimonial.length!==0 && <div className="flex flex-row   rounded-md w-full h-20 bg-transparent border border-solid border-black shadow-md">
+        <ul className=" flex flex-row px-1 space-x-1 items-center overflow-x-auto overflow-y-hidden">
+          {imageTestimonial.map(
+            (item,index)=>(
+            <li key={index}>
+              
+              <img src={item.imageUrl} alt={item.title} className="w-16 h-16  shadow-md rounded-md pb-1 border border-solid border-gray-500"/>
+            </li>)
+            )}
+        </ul>
+       </div>}
       </div>
       <div className="flex flex-col  container">
         <h1 className='text-gray-400'>Services</h1>
-        <form className=' items-start space-y-2 flex flex-col'>
+        <form onSubmit={addService} className=' items-start space-y-2 flex flex-col'>
           <div className=' flex flex-col  '>
           <div className='grid grid-cols-2 sm:grid-cols-4 space-x-2 sm:space-y-1'>
           <label htmlFor="ui/ux">UI/UX</label>
-          <input type="text" id="ui/ux" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
+          <input type="text" value={userExpS} onChange={e=>setUserExpS(e.target.value)} id="ui/ux" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
           <label htmlFor="clients">Frontend</label>
-          <input type="text" id="frontend" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
+          <input type="text" value={frontendS} onChange={e=>setFrontendS(e.target.value)} id="frontend" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
           <label htmlFor="backend">Backend</label>
-          <input type="text" id="backend" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
+          <input type="text" value={backendS} onChange={e=>setBackendS(e.target.value)} id="backend" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
           <label htmlFor="other">Other</label>
-          <input type="text" id="other" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
+          <input type="text" value={otherS} onChange={e=>setOtherS(e.target.value)} id="other" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
           </div>
           </div>
           <button type="submit" className="px-4 bg-blue-700 rounded-sm">Save</button>
@@ -192,35 +320,31 @@ function AdminPage() {
       </div>
       <div className="flex flex-col container">
         <h1 className='text-gray-400'>Social</h1>
-        <form  className=' items-start space-y-2 flex flex-col'>
+        <form onSubmit={addSocial} className=' items-start space-y-2 flex flex-col'>
           <div className=' flex flex-col  '>
           <div className='grid grid-cols-2 sm:grid-cols-4 space-x-2 sm:space-y-1'>
           <label htmlFor="title">Title</label>
-          <input type="text" id="title" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
+          <input type="text" value={titleSC} onChange={e=>setTitleSC(e.target.value)} id="title" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
           <label htmlFor="link">Link</label>
-          <input type="text" id="link" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
-
+          <input type="text" value={linkSC} onChange={e=>setLinkSC(e.target.value)} id="link" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
           </div>
           </div>
-          
-         
           <button type="submit" className="px-4 bg-blue-700 rounded-sm">Save</button>
         </form>
-       
       </div>
       <div className="flex flex-col  container">
         <h1 className='text-gray-400'>Experiences</h1>
-        <form  className=' items-start space-y-2 flex flex-col'>
+        <form onSubmit={addExperience} className=' items-start space-y-2 flex flex-col'>
           <div className=' flex flex-col  '>
           <div className='grid grid-cols-2 sm:grid-cols-4 space-x-2 sm:space-y-1 '>
           
           <label htmlFor="frontend">Frontend</label>
-          <input type="text" id="frontend" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
+          <input type="text" value={frontendExp} onChange={e=>setFrontendExp(e.target.value)} id="frontend" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
          
           <label htmlFor="backend">Backend</label>
-          <input type="text" id="backend" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
+          <input type="text" value={backendExp} onChange={e=>setBackendExp(e.target.value)} id="backend" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
           <label htmlFor="other">Other</label>
-          <input type="text" id="other" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
+          <input type="text" value={otherExp} onChange={e=>setOtherExp(e.target.value)} id="other" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
           </div>
           </div>
           <button type="submit" className="px-4 bg-blue-700 rounded-sm">Save</button>

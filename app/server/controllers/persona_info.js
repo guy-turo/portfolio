@@ -5,14 +5,14 @@ const {
     ProfileImagesModel,
     ProjectImagesModel,
 } = require('../models/picturesModel')
-const { projectModel } = require("../models/projectModel")
-const { testimonialsModel } = require("../models/testimonialsModel")
-const { servicesModel } = require("../models/servicesModel")
-const { socialContactModel } = require("../models/socialContactModel")
-const { experiencesModel } = require("../models/experiencesModel")
+const { ProjectModel } = require("../models/projectModel")
+const { TestimonialsModel } = require("../models/testimonialsModel")
+const { ServicesModel } = require("../models/servicesModel")
+const { SocialContactModel } = require("../models/socialContactModel")
+const { ExperiencesModel } = require("../models/experiencesModel")
     // me
 const createMe = async(req, res) => {
-    console.log('createMe')
+
     const {
         fullName: fullName,
         title: title,
@@ -32,11 +32,11 @@ const createMe = async(req, res) => {
             clients: clients,
             description: description,
             pictures: ProfileImagesModel._id,
-            projects: projectModel._id,
-            testimonial: testimonialsModel._id,
-            services: servicesModel._id,
-            socials: socialContactModel._id,
-            experiences: experiencesModel._id
+            projects: ProjectModel._id,
+            testimonial: TestimonialsModel._id,
+            services: ServicesModel._id,
+            socials: SocialContactModel._id,
+            experiences: ExperiencesModel._id
         })
         newData.save()
             .then((result) => {
@@ -44,6 +44,7 @@ const createMe = async(req, res) => {
                     return res.status(404).json({ message: "item not found" })
                 }
                 res.status(StatusCodes.CREATED).json(result)
+                console.log('createMe')
             })
             .catch((error) => console.error(error.message))
     } catch (error) {
@@ -114,7 +115,25 @@ const fetchMe = async(req, res) => {
 
 // projects
 const createProject = async(req, res) => {
-    res.send('create')
+    const { title: title, linkGithub: linkGithub, linkLive: linkLive } = req.body
+    try {
+        const newDataProject = new ProjectModel({
+            title: title,
+            linkGithub: linkGithub,
+            linkLive: linkLive,
+            pictures: ProjectImagesModel._id,
+        })
+        newDataProject.save()
+            .then((result) => {
+                if (!result) {
+                    return res.status(404).json({ message: "item not found" })
+                }
+                res.status(StatusCodes.CREATED).json(result)
+                console.log('createMe')
+            }).catch(e => console.error(e.message))
+    } catch (e) {
+        console.error(e)
+    }
 }
 const updateProject = async(req, res) => {
     res.send('update')
@@ -131,7 +150,22 @@ const fetchProject = async(req, res) => {
 
 // experiences
 const createExperiences = async(req, res) => {
-    res.send('create')
+    const { frontend: frontend, backend: backend, other: other } = req.body
+    try {
+        experienceData = new ExperiencesModel({
+            frontend: frontend,
+            backend: backend,
+            other: other,
+        })
+        experienceData.save()
+            .then((result) => {
+                if (!result) {
+                    return res.status(404).json({ message: "item not found" })
+                }
+                res.status(StatusCodes.CREATED).json(result)
+                console.log('createMe')
+            }).catch(e => console.error(e.message))
+    } catch (err) { console.error(err) }
 }
 const updateExperiences = async(req, res) => {
     res.send('update')
@@ -147,7 +181,23 @@ const fetchExperiences = async(req, res) => {
 
 // services
 const createServices = async(req, res) => {
-    res.send('create')
+    const { userExp: userExp, frontend: frontend, backend: backend, other: other } = req.body
+    try {
+        const servicesData = new ServicesModel({
+            userExp: userExp,
+            frontend: frontend,
+            backend: backend,
+            other: other,
+        })
+        servicesData.save()
+            .then((result) => {
+                if (!result) {
+                    return res.status(404).json({ message: "item not found" })
+                }
+                res.status(StatusCodes.CREATED).json(result)
+                console.log('createMe')
+            }).catch(e => console.error(e.message))
+    } catch (err) { console.log(err) }
 }
 const updateServices = async(req, res) => {
     res.send('update')
@@ -164,7 +214,21 @@ const fetchServices = async(req, res) => {
 
 // socials
 const createSocials = async(req, res) => {
-    res.send('create')
+    const { title: title, link: link } = req.body
+    try {
+        const socialsData = new SocialContactModel({
+            title: title,
+            link: link,
+        })
+        socialsData.save()
+            .then((result) => {
+                if (!result) {
+                    return res.status(404).json({ message: "item not found" })
+                }
+                res.status(StatusCodes.CREATED).json(result)
+                console.log('createMe')
+            }).catch(e => console.error(e.message))
+    } catch (err) { console.log(err) }
 }
 const updateSocials = async(req, res) => {
     res.send('update')
@@ -179,7 +243,15 @@ const fetchSocials = async(req, res) => {
     }
     // testimonials
 const createTestimonials = async(req, res) => {
-    res.send('create')
+    const { name: name, title: title, testimonials: testimonials } = req.body
+    try {
+        const testimonialData = new TestimonialsModel({
+            name: name,
+            title: title,
+            testimonials: testimonials,
+            pictures: TestimonialsImagesModel._id
+        })
+    } catch (err) { console.error(err) }
 }
 const updateTestimonials = async(req, res) => {
     res.send('update')

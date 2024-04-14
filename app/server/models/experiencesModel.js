@@ -1,8 +1,8 @@
 const mongoose = require('mongoose')
 const schema = mongoose.Schema
 
-const experiencesSchema = schema({
-    frontEnd: {
+const ExperiencesSchema = new schema({
+    frontend: {
         type: Array,
         required: true,
     },
@@ -16,6 +16,6 @@ const experiencesSchema = schema({
     }
 }, { timestamps: true })
 
-const experiencesModel = mongoose.model('Experiences', experiencesSchema)
+const ExperiencesModel = new mongoose.model('Experiences', ExperiencesSchema)
 
-module.exports = experiencesModel
+module.exports = { ExperiencesModel }

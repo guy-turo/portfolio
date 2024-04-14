@@ -1,12 +1,12 @@
 const mongoose = require('mongoose')
 const schema = mongoose.Schema
 
-const servicesSchema = schema({
+const servicesSchema = new schema({
     userExp: {
         type: Array,
         required: true
     },
-    frontEnd: {
+    frontend: {
         type: Array,
         required: true,
     },
@@ -19,6 +19,6 @@ const servicesSchema = schema({
     }
 }, { timestamps: true })
 
-const servicesModel = mongoose.model('Services', servicesSchema)
+const ServicesModel = new mongoose.model('Services', servicesSchema)
 
-module.exports = servicesModel
+module.exports = ServicesModel

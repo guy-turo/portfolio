@@ -14,7 +14,7 @@ const profileImageSchema = new schema({
             required: true,
         }
     }, { timestamps: true })
-    // Projects
+    // Projectsb
 const projectImageSchema = new schema({
         ...profileImageSchema.obj,
     }, { timestamps: true })
@@ -22,6 +22,7 @@ const projectImageSchema = new schema({
 const testimonialImageSchema = new schema({
     ...profileImageSchema.obj
 }, { timestamps: true })
+
 const ProfileImagesModel = mongoose.model('ProfileImages', profileImageSchema)
 const ProjectImagesModel = mongoose.model('ProjectImages', projectImageSchema)
 const TestimonialsImagesModel = mongoose.model('TestimonialsImages', testimonialImageSchema)

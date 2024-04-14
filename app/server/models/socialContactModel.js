@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const schema = mongoose.Schema
 
-const socialContactSchema = schema({
+const socialContactSchema = new schema({
     title: {
         type: String,
         required: true
@@ -12,5 +12,5 @@ const socialContactSchema = schema({
     },
 }, { timestamps: true })
 
-const socialContactModel = mongoose.model('Socials', socialContactSchema)
-module.exports = socialContactModel
+const SocialContactModel = new mongoose.model('Socials', socialContactSchema)
+module.exports = SocialContactModel

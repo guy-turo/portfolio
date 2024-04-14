@@ -1,6 +1,24 @@
 const imagesRoute = require('express').Router()
 
-const { imageUpload, fetchImage, fetchImages, updateImage, deleteImage } = require('../controllers/imagesController')
+const {
+    imageUpload,
+    fetchImage,
+    fetchImages,
+    updateImage,
+    deleteImage,
+
+    testimonialsImageUpload,
+    testimonialUpdateImage,
+    testimonialDeleteImage,
+    testimonialFetchImage,
+    testimonialFetchImages,
+
+    projectImageUpload,
+    projectDeleteImage,
+    projectUpdateImage,
+    projectFetchImages,
+    projectFetchImage
+} = require('../controllers/imagesController')
 
 const multer = require('multer');
 const cloudinary = require('cloudinary').v2
@@ -46,13 +64,28 @@ const upload = multer({ storage })
     // });
 
 
-imagesRoute.post('/upload', upload.single("file"), imageUpload)
+imagesRoute.post('/profileImage/upload', upload.single("file"), imageUpload)
 
-imagesRoute.route('/')
+imagesRoute.route('/profileImage')
     .get(fetchImages)
-imagesRoute.route('/:id')
+imagesRoute.route('/profileImage/:id')
     .get(fetchImage)
     .put(updateImage)
     .delete(deleteImage)
-
+    // Projects
+imagesRoute.post('/projectImage/upload', upload.single("file"), projectImageUpload)
+imagesRoute.route('/projectImage')
+    .get(projectFetchImages)
+imagesRoute.route('/projectImage/:id')
+    .get(projectFetchImage)
+    .put(projectUpdateImage)
+    .delete(projectDeleteImage)
+    // testimonials
+imagesRoute.post('/testimonialImage/upload', upload.single("file"), testimonialsImageUpload)
+imagesRoute.route('/testimonialImage')
+    .get(testimonialFetchImages)
+imagesRoute.route('/testimonialImage/:id')
+    .get(testimonialFetchImage)
+    .put(testimonialUpdateImage)
+    .delete(testimonialDeleteImage)
 module.exports = { imagesRoute, upload }

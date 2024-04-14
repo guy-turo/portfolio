@@ -58,5 +58,5 @@ const meSchema = new schema({
 
 }, { timestamps: true })
 
-const meModel = mongoose.model('Me', meSchema)
-module.exports = meModel
+const MeModel = new mongoose.model('Me', meSchema)
+module.exports = MeModel

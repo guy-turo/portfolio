@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const schema = mongoose.Schema
 
-const projectSchema = schema({
+const projectSchema = new schema({
     title: { type: String },
     linkGithub: { type: String },
     linkLive: { type: String, },
@@ -11,5 +11,5 @@ const projectSchema = schema({
     },
 })
 
-const projectModel = mongoose.model('Projects', projectSchema)
-module.exports = projectModel
+const ProjectModel = new mongoose.model('Projects', projectSchema)
+module.exports = ProjectModel

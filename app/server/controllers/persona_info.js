@@ -12,7 +12,18 @@ const { TestimonialsModel } = require("../models/testimonialsModel")
 const { ServicesModel } = require("../models/servicesModel")
 const { SocialContactModel } = require("../models/socialContactModel")
 const { ExperiencesModel } = require("../models/experiencesModel")
-    // me
+
+function getCloudinaryImagePath(url) {
+    const urlParts = url.split('/');
+
+    if (urlParts.length < 7 || urlParts[0] !== 'https:' || urlParts[2] !== 'res.cloudinary.com') {
+        throw new Error('Invalid Cloudinary URL format');
+    }
+    const urlImage = urlParts.slice(7).join('/')
+    return urlImage.slice(0, -4)
+}
+
+// me
 const createMe = async(req, res) => {
 
     const {
@@ -275,13 +286,39 @@ const updateTestimonials = async(req, res) => {
 }
 
 const deleteTestimonials = async(req, res) => {
-    res.send('delete')
+    const { id: id } = req.params
+
+
+    try {
+        const image = await TestimonialsModel.findById({ _id: id })
+        if (!image) {
+            res.status(404).json({ message: "Image not found" })
+        }
+
+
+        for (let i = 0; i < image.pictures.length; i++) {
+            const publicId = getCloudinaryImagePath(image.pictures[i])
+            result = await cloudinary.uploader.destroy(publicId);
+            if (result.result === 'ok') {
+                await TestimonialsModel.deleteOne({ _id: id })
+                res.json({ message: "image deleted" })
+                console.log('deleted' + i)
+            } else {
+                res.status(500).json({ message: 'Error deleting image' });
+            }
+
+        }
+
+
+
+
+    } catch (error) { res.json({ message: error.message }) }
 }
 
 const fetchTestimonials = async(req, res) => {
     try {
         const response = await TestimonialsModel.find()
-        console.log(response)
+
         if (response.length > 0) {
             res.status(200).json(response)
         }

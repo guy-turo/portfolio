@@ -6,7 +6,9 @@ import { FaRegCircleRight } from "react-icons/fa6";
 import { FaRegCircleLeft } from "react-icons/fa6";
 function AdminPage() {
 
-  const [moreFunction, setMoreFunction]=useState(false)
+  const [moreFunction, setMoreFunction]=useState(true)
+  const [addTest, setAddTest]=useState(false)
+
   const [images, setImages]=useState([])
   const [imageProject, setImageProject]=useState([])
   const [imageTestimonial,setImageTestimonial]=useState([])
@@ -79,6 +81,7 @@ useEffect(()=>{
     fetchData()
     fetchTestimonialData()
     fetchProjectData()
+    addTestimonial()
   },[])
   const [fullName,setFullName]=useState('')
   const [title,setTitle]=useState('')
@@ -105,7 +108,7 @@ useEffect(()=>{
     }
     
   const addTestimonial=(e)=>{
-    e.preventDefault()
+   
     if(!testimonialsT){
       setMessage("please select a file to upload")
       return
@@ -122,10 +125,9 @@ useEffect(()=>{
     const URI="http://localhost:8000/api/v1/me/testimonials"
       axios.post(URI,formData)
       .then((response)=>{
-        if(response.status===200){
+        if(response){
           setMessage('testimonial has been created')
           setTimeout(()=>{
-            
             setImageTestimonials([])
             setSuccessMessage('')
             setNameT("")
@@ -136,6 +138,21 @@ useEffect(()=>{
         }
       })
       .catch(error=>console.log(error))
+  }
+  const deleteTestimonial=(id)=>{
+    
+    const URI=`http://localhost:8000/api/v1/me/testimonials/${id}`
+    axios.delete(URI)
+    .then((response)=>{
+      if(response.status===200){
+        setMessage('Deleted')
+      }
+    })
+    .catch((e)=>setMessage(e.message))
+  }
+  const updateTestimonial=(e)=>{
+    e.preventDefault();
+
   }
   // Project
   const [titleP,setTitleP]=useState('')
@@ -207,7 +224,7 @@ const addExperience=()=>{
 
 return (
     <div className='w-full  flex-col   self-center space-y-2  flex items-center divide-y-2 divide-solid divide-gray-800'>
-      <div className="flex flex-col  container space-y-2">
+      <div className="flex flex-col  container space-y-2 shadow-2xl border border-solid border-gray-400 mt-4 p-2 rounded-md" >
         
         <div className="flex justify-between">
         <h1 className='text-gray-400'>profile</h1>
@@ -281,7 +298,7 @@ return (
         </ul>
        </div>}
       </div>
-      <div className="flex space-y-2 flex-col  container">
+      <div className="flex space-y-2 flex-col  container shadow-2xl border border-solid border-gray-400 mt-4 p-2 rounded-md">
        
         <h1 className='text-gray-400'>Project</h1>
        
@@ -329,13 +346,12 @@ return (
             </ul>
           </div>}
       </div>
-      <div className="flex space-y-2 flex-col container">
-      
-        <h1 className='text-gray-400'>Testimonials</h1>
-        
-        
-      
-        <form onSubmit={addTestimonial}  className=' items-start space-y-2 flex flex-col'>
+      <div className="flex space-y-2 flex-col container shadow-2xl border border-solid border-gray-400 mt-4 p-2 rounded-md">
+      <div className='flex justify-between'>
+      <h1 className='text-gray-400'>Testimonials</h1>
+      <button onClick={()=>setAddTest(!addTest)} className='border border-solid border-gray-400 rounded-md px-1 m-1'>Add Testimonial</button>
+      </div>
+        <form onSubmit={addTestimonial}  className={`${addTest?"":"hidden"} items-start space-y-2 flex flex-col`}>
           <div className=' flex flex-col '>
           <div className='grid grid-cols-2 sm:grid-cols-4 space-x-2 sm:space-y-1'>
           <label htmlFor="name">Name</label>
@@ -383,10 +399,10 @@ return (
         </form>
         <button onClick={()=>setMoreFunction(!moreFunction)}>{moreFunction?<FaRegCircleLeft/>:<FaRegCircleRight/>} </button>
         {imageTestimonial.length!==0 && <div className="flex flex-row   rounded-md w-full h-full bg-transparent border border-solid border-black shadow-md">
-        <ul className=" grid grid-cols-1 mt-1 mb-1 sm:grid-cols-2 md:grid-cols-3 px-1 justify-center  sm:space-y-1 space-x-1 items-center overflow-y-auto overflow-y-hidden">
+        <ul className=" grid grid-cols-1 mt-1 mb-1  sm:grid-cols-2 md:grid-cols-3 px-1 justify-center  sm:space-y-1 space-x-1 items-center overflow-y-auto ">
           {imageTestimonial.map(
             (item,index)=>(
-            <li key={index} className=' border mb-1 border-solid border-gray-400  space-y-1 rounded-md w-60 h-60 items-center flex flex-col justify-center'>
+            <li key={index} className=' border mb-1 mt-1 border-solid border-gray-400  space-y-1 rounded-md w-60 h-60 items-center flex flex-col justify-center'>
                 <ul className='flex flex-row px-1 space-x-1 items-center overflow-x-auto overflow-y-hidden'>
                   {item.pictures.map((pic,index)=><li key={index}>
                     <img src={pic} alt={item.title} className="w-16 h-16  shadow-md rounded-md pb-1 border border-solid border-gray-500"/>
@@ -395,19 +411,19 @@ return (
                 </ul>
               <h2 className='underline px-1 rounded-sm'>{item.name}</h2>
               <h2 className='underline font-normal px-1 rounded-sm'>{item.title}</h2>
-              <h3 className='   border-solid font-normal border-gray-400  rounded-sm'>{item.testimonials}</h3>
+              <h3 className='border-solid text-clip h-20 mx-2 font-normal border-gray-400  rounded-sm'>{item.testimonials}</h3>
               
               
               <div className={`space-x-2 ${moreFunction?"hidden":"block"}`}>
-                <button className='border border-solid border-gray-400 px-1 rounded-md'>Update</button>
-                <button className='border border-solid bg-red-800 border-gray-400 px-1 rounded-md'>Delete</button>
+                <button onClick={updateTestimonial} className='border border-solid border-gray-400 px-1 rounded-md'>Update</button>
+                <button onClick={()=>deleteTestimonial(item._id)} className='border border-solid bg-red-800 border-gray-400 px-1 rounded-md'>Delete</button>
               </div>
             </li>)
             )}
         </ul>
        </div>}
       </div>
-      <div className="flex flex-col  container">
+      <div className="flex flex-col  container shadow-2xl border border-solid border-gray-400 mt-4 p-2 rounded-md">
         <h1 className='text-gray-400'>Services</h1>
         <form onSubmit={addService} className=' items-start space-y-2 flex flex-col'>
           <div className=' flex flex-col  '>
@@ -425,7 +441,7 @@ return (
           <button type="submit" className="px-4 bg-blue-700 rounded-sm">Save</button>
         </form>
       </div>
-      <div className="flex flex-col container">
+      <div className="flex flex-col container shadow-2xl border border-solid border-gray-400 mt-4 p-2 rounded-md">
         <h1 className='text-gray-400'>Social</h1>
         <form onSubmit={addSocial} className=' items-start space-y-2 flex flex-col'>
           <div className=' flex flex-col  '>
@@ -439,7 +455,7 @@ return (
           <button type="submit" className="px-4 bg-blue-700 rounded-sm">Save</button>
         </form>
       </div>
-      <div className="flex flex-col  container">
+      <div className="flex flex-col  container shadow-2xl border border-solid border-gray-400 mt-4  p-2 rounded-md">
         <h1 className='text-gray-400'>Experiences</h1>
         <form onSubmit={addExperience} className=' items-start space-y-2 flex flex-col'>
           <div className=' flex flex-col  '>

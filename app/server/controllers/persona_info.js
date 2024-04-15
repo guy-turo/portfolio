@@ -1,5 +1,7 @@
 const meModel = require('../models/meModel')
+const cloudinary = require('cloudinary').v2
 const StatusCodes = require('http-status-codes')
+
 const {
     TestimonialsImagesModel,
     ProfileImagesModel,
@@ -243,14 +245,29 @@ const fetchSocials = async(req, res) => {
     }
     // testimonials
 const createTestimonials = async(req, res) => {
+    console.log("proceeding..")
     const { name: name, title: title, testimonials: testimonials } = req.body
+    const uploadedFiles = []
+    console.log(req.body)
+    console.log(req.file)
+    console.log(req.files)
+    req.files.forEach(async(file) => {
+        console.log(file)
+            // const uploadedResponse =  await cloudinary.uploader.upload(file.path)
+        uploadedFiles.push(file.path)
+    })
     try {
+
         const testimonialData = new TestimonialsModel({
             name: name,
             title: title,
             testimonials: testimonials,
-            pictures: TestimonialsImagesModel._id
+            pictures: uploadedFiles
         })
+        testimonialData.save()
+            .then((res) => res.status(200).json(res))
+            .catch(err => res.status(500).json(err.message))
+        console.log('image uploaded successfully')
     } catch (err) { console.error(err) }
 }
 const updateTestimonials = async(req, res) => {

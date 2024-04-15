@@ -1,10 +1,23 @@
 import React,{useState, useEffect} from 'react'
 import UploadImage from './helper/UploadImage'
 import axios from 'axios'
+import { LuImagePlus } from "react-icons/lu";
 function AdminPage() {
   const [images, setImages]=useState([])
   const [imageProject, setImageProject]=useState([])
   const [imageTestimonial,setImageTestimonial]=useState([])
+  const [message,setMessage]=useState('')
+  const [successMessage, setSuccessMessage]=useState("")
+  const [imageProjects,setImageProjects]=useState([])
+const handleFileName=(event)=>{
+ const files = event.target.files
+ setImageProjects([...files])
+}
+const [imageTestimonials,setImageTestimonials]=useState([])
+const handleTestimonialFileName=(event)=>{
+  const files=event.target.files
+  setImageTestimonials([...files])
+}
   const addData=()=>{
     console.log('added')
   }
@@ -82,15 +95,27 @@ useEffect(()=>{
     const [nameT,setNameT]=useState('')
     const [titleT,setTitleT]=useState('')
     const [testimonialsT,setTestimonialsT]=useState('')
-  const addTestimonial=()=>{
+  const addTestimonial=(e)=>{
+    e.preventDefault()
+    if(!testimonialsT){
+      setMessage("please select a file to upload")
+      return
+    }
+      const formData=new FormData()
+      if(imageTestimonials.length>0){
+        for(let i=0;i<imageTestimonials.length;i++){
+          formData.append('file',imageTestimonials[i])
+        }
+      }
+      formData.append('name', nameT)
+      formData.append('title',titleT)
+      formData.append('testimonials',testimonialsT)
     const URI="http://localhost:8000/api/v1/me/testimonials"
-      axios.post(URI,{
-        name:nameT,
-        title:titleT,
-       testimonials:testimonialsT,
-      })
+      axios.post(URI,formData)
       .then((response)=>{
-        console.log(response.data)
+        if(response.status===200){
+          setMessage(response.message)
+        }
       })
       .catch(error=>console.log(error))
   }
@@ -161,6 +186,8 @@ const addExperience=()=>{
     })
     .catch(error=>console.log(error))
 } 
+
+
 return (
     <div className='w-full  flex-col   self-center space-y-2  flex items-center divide-y-2 divide-solid divide-gray-800'>
       <div className="flex flex-col  container space-y-2">
@@ -238,10 +265,10 @@ return (
        </div>}
       </div>
       <div className="flex space-y-2 flex-col  container">
-        <div className="flex justify-between">
+       
         <h1 className='text-gray-400'>Project</h1>
-        <UploadImage model="projectImage/upload"/>
-        </div>
+       
+        
         <form onSubmit={addProject}  className=' items-start space-y-2 flex flex-col'>
           <div className=' flex flex-col '>
           <div className='grid grid-cols-2 sm:grid-cols-4 space-x-2 sm:space-y-1'>
@@ -251,12 +278,34 @@ return (
           <input type="text" value={linkGithubP} onChange={e=>setLinkGithubP(e.target.value)} id="github" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
           <label htmlFor="live">Link Live</label>
           <input type="text" value={linkLiveP} onChange={e=>setLinkLiveP(e.target.value)} id="live" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
+         
           </div>
           </div>
+          <div className="">
+              <label htmlFor='images' className="flex w-full overflow-x-auto rounded-md shadow-md border border-solid border-gray-400 items-center space-x-2  cursor-pointer">
+              <div className=" flex items-center     rounded-md border border-solid border-blue-700">
+                {imageProjects===null &&<LuImagePlus className="flex size-20 "/>}
+                {imageProjects!==null&& (
+               <ul className='flex bg-blue-900 items-center'>
+                  {imageProjects.map((item,index)=><li key={index} className="">
+                  <img src={URL.createObjectURL(item)} alt="" className='size-20  rounded-md object-cover'/>
+                    </li>)}
+               </ul>
+                  
+                      
+                   
+                )}
+
+              </div>
+              <h2 className="flex font-normal">Select project pictures</h2>
+             </label>
+              <input type="file" multiple id='images'  onChange={handleFileName} accept='image/*' hidden/>
+            
+              </div>
           <button type="submit" className="px-4 bg-blue-700 rounded-sm">Save</button>
         </form>
         {imageProject.length!==0 && <div className="flex flex-row   rounded-md w-full h-20 bg-transparent border border-solid border-black shadow-md">
-        <ul className=" flex flex-row px-1 space-x-1 items-center overflow-x-auto overflow-y-hidden">
+        <ul  className=" flex flex-row px-1 space-x-1 items-center overflow-x-auto overflow-y-hidden">
           {imageProject.map(
             (item,index)=>(
             <li key={index}>
@@ -268,13 +317,13 @@ return (
        </div>}
       </div>
       <div className="flex space-y-2 flex-col container">
-      <div className="flex justify-between">
+      
         <h1 className='text-gray-400'>Testimonials</h1>
-        <UploadImage model="testimonialImage/upload"/>
-        </div>
+        
+        
       
         <form onSubmit={addTestimonial}  className=' items-start space-y-2 flex flex-col'>
-          <div className=' flex flex-col  '>
+          <div className=' flex flex-col '>
           <div className='grid grid-cols-2 sm:grid-cols-4 space-x-2 sm:space-y-1'>
           <label htmlFor="name">Name</label>
           <input type="text" value={nameT} onChange={(e)=>setNameT(e.target.value)} id="name" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
@@ -285,8 +334,40 @@ return (
           <label htmlFor="testimonial">Testimonial</label>
           <input type="text" value={testimonialsT} onChange={(e)=>setTestimonialsT(e.target.value)} id="testimonial" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
           </div>
+
+
           </div>
-          <button type="submit" className="px-4 bg-blue-700 rounded-sm">Save</button>
+          <div >
+              <label htmlFor='files' className="flex w-full overflow-x-auto rounded-md shadow-md border border-solid border-gray-400 items-center space-x-2  cursor-pointer">
+              <div className=" flex items-center    rounded-md border border-solid border-blue-700">
+                {imageTestimonials===null &&<LuImagePlus className="flex size-20 "/>}
+                {imageTestimonials!==null&& 
+                <ul className="flex bg-blue-900">
+                  {imageTestimonials.map((item, index)=>
+                    <li key={index}>
+<img src={URL.createObjectURL(item)} alt="" className=' flex size-20 rounded-md object-cover'/>
+                    </li>
+                  )}
+                </ul>
+                
+                }
+
+              </div>
+              <h2 className="flex font-normal">Select testimonial pictures</h2>
+             </label>
+            <input type="file" multiple id='files'  onChange={handleTestimonialFileName} accept='image/*' hidden/>
+            
+              </div>
+              <div className="space-y-1">
+              {message && <textarea rows="1" cols="40" className='text-black  rounded-md  bg-red-500'>{message}</textarea>}
+              {successMessage && <textarea rows="1" cols="40" value="Image uploaded successfully" className='text-black items-center justify-center flex  rounded-md  bg-green-500 text-center text-blue-800'></textarea>}
+              <button type="submit" className="px-4 bg-green-700 w-full rounded-md">
+                {message && <h3 className='text-red-700'>try again</h3>}
+                {!message &&successMessage==="" && <h3>Upload</h3>}
+                {successMessage && <h3>Uploaded</h3>}
+                </button>
+          
+              </div>
         </form>
         {imageTestimonial.length!==0 && <div className="flex flex-row   rounded-md w-full h-20 bg-transparent border border-solid border-black shadow-md">
         <ul className=" flex flex-row px-1 space-x-1 items-center overflow-x-auto overflow-y-hidden">

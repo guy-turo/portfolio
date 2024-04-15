@@ -75,7 +75,7 @@ const UploadImage=({model})=> {
                 {image!==null&& <img src={URL.createObjectURL(image)} alt="" className='size-20 rounded-full object-cover'/>}
               </div>
              </label>
-            <input type="file" id='files' onChange={handleFileName} accept='image/*' hidden/>
+            <input type="file" id='files'  onChange={handleFileName} accept='image/*' hidden/>
               </div>
               <div className="space-y-2">
                 <input type="text" value={title} onChange={(e)=>setTitle(e.target.value)} placeholder='Title' className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>

@@ -1,3 +1,4 @@
+const { upload } = require('../utility/helper')
 const {
     createMe,
     updateMe,
@@ -26,9 +27,8 @@ const {
 } = require('../controllers/persona_info')
 
 const personRoutes = require('express').Router()
-
+personRoutes.post('/testimonials', upload.array('file'), createTestimonials)
 personRoutes.route('/testimonials')
-    .post(createTestimonials)
     .get(fetchTestimonials)
 personRoutes.route('/testimonials/:id')
     .put(updateTestimonials)
@@ -65,8 +65,8 @@ personRoutes.route('/:id')
     .delete(deleteMe)
     .put(updateMe)
     // Projects
+personRoutes.post("/projects", upload.array("file"), createProject)
 personRoutes.route("/projects")
-    .post(createProject)
     .get(fetchProject)
 personRoutes.route("projects/:id")
     .put(updateProject)

@@ -2,18 +2,30 @@ import React,{useState, useEffect} from 'react'
 import UploadImage from './helper/UploadImage'
 import axios from 'axios'
 import { LuImagePlus } from "react-icons/lu";
+import { FaRegCircleRight } from "react-icons/fa6";
+import { FaRegCircleLeft } from "react-icons/fa6";
 function AdminPage() {
+
+  const [moreFunction, setMoreFunction]=useState(false)
   const [images, setImages]=useState([])
   const [imageProject, setImageProject]=useState([])
   const [imageTestimonial,setImageTestimonial]=useState([])
+
   const [message,setMessage]=useState('')
   const [successMessage, setSuccessMessage]=useState("")
+
   const [imageProjects,setImageProjects]=useState([])
+
+  const [imageTestimonials,setImageTestimonials]=useState([])
+  const [nameT,setNameT]=useState('')
+  const [titleT,setTitleT]=useState('')
+  const [testimonialsT,setTestimonialsT]=useState('')
+
 const handleFileName=(event)=>{
  const files = event.target.files
  setImageProjects([...files])
 }
-const [imageTestimonials,setImageTestimonials]=useState([])
+
 const handleTestimonialFileName=(event)=>{
   const files=event.target.files
   setImageTestimonials([...files])
@@ -23,10 +35,9 @@ const handleTestimonialFileName=(event)=>{
   }
 // testimonials
 const fetchTestimonialData=()=>{
-  const URI="http://localhost:8000/api/v1/images/testimonialImage"
+  const URI="http://localhost:8000/api/v1/me/testimonials"
   axios.get(URI)
   .then((res)=>{
-    
     console.log(res)
     setImageTestimonial(res.data)
   })
@@ -92,9 +103,7 @@ useEffect(()=>{
       })
       .catch(error=>console.log(error))
     }
-    const [nameT,setNameT]=useState('')
-    const [titleT,setTitleT]=useState('')
-    const [testimonialsT,setTestimonialsT]=useState('')
+    
   const addTestimonial=(e)=>{
     e.preventDefault()
     if(!testimonialsT){
@@ -114,7 +123,16 @@ useEffect(()=>{
       axios.post(URI,formData)
       .then((response)=>{
         if(response.status===200){
-          setMessage(response.message)
+          setMessage('testimonial has been created')
+          setTimeout(()=>{
+            
+            setImageTestimonials([])
+            setSuccessMessage('')
+            setNameT("")
+            setTitleT("")
+            setTestimonialsT("")
+          },1500)
+          
         }
       })
       .catch(error=>console.log(error))
@@ -186,7 +204,6 @@ const addExperience=()=>{
     })
     .catch(error=>console.log(error))
 } 
-
 
 return (
     <div className='w-full  flex-col   self-center space-y-2  flex items-center divide-y-2 divide-solid divide-gray-800'>
@@ -291,30 +308,26 @@ return (
                   <img src={URL.createObjectURL(item)} alt="" className='size-20  rounded-md object-cover'/>
                     </li>)}
                </ul>
-                  
-                      
-                   
                 )}
-
               </div>
-              <h2 className="flex font-normal">Select project pictures</h2>
+              <h2 className="flex font-normal px-2">Select project pictures</h2>
              </label>
               <input type="file" multiple id='images'  onChange={handleFileName} accept='image/*' hidden/>
-            
               </div>
           <button type="submit" className="px-4 bg-blue-700 rounded-sm">Save</button>
         </form>
-        {imageProject.length!==0 && <div className="flex flex-row   rounded-md w-full h-20 bg-transparent border border-solid border-black shadow-md">
-        <ul  className=" flex flex-row px-1 space-x-1 items-center overflow-x-auto overflow-y-hidden">
-          {imageProject.map(
-            (item,index)=>(
-            <li key={index}>
-              
-              <img src={item.imageUrl} alt={item.title} className="w-16 h-16  shadow-md rounded-md pb-1 border border-solid border-gray-500"/>
-            </li>)
-            )}
-        </ul>
-       </div>}
+        {imageProject.length!==0 && 
+          <div className="flex flex-row   rounded-md w-full h-20 bg-transparent border border-solid border-black shadow-md">
+            <ul  className=" flex flex-row px-1 space-x-1 items-center overflow-x-auto overflow-y-hidden">
+              {imageProject.map(
+                (item,index)=>(
+                  <li key={index}>
+                  <img src={item.imageUrl} alt={item.title} className="w-16 h-16  shadow-md rounded-md pb-1 border border-solid border-gray-500"/>
+                  </li>
+                )
+              )}
+            </ul>
+          </div>}
       </div>
       <div className="flex space-y-2 flex-col container">
       
@@ -342,18 +355,17 @@ return (
               <div className=" flex items-center    rounded-md border border-solid border-blue-700">
                 {imageTestimonials===null &&<LuImagePlus className="flex size-20 "/>}
                 {imageTestimonials!==null&& 
-                <ul className="flex bg-blue-900">
-                  {imageTestimonials.map((item, index)=>
-                    <li key={index}>
-<img src={URL.createObjectURL(item)} alt="" className=' flex size-20 rounded-md object-cover'/>
-                    </li>
-                  )}
-                </ul>
-                
-                }
+                  <ul className="flex bg-blue-900">
+                    {imageTestimonials.map((item, index)=>
+                      <li key={index}>
 
+                        <img src={URL.createObjectURL(item)} alt="" className=' flex size-20 rounded-md object-cover'/>
+                      </li>
+                   )}
+                  </ul>
+                 }
               </div>
-              <h2 className="flex font-normal">Select testimonial pictures</h2>
+              <h2 className="flex font-normal px-2">Select testimonial pictures</h2>
              </label>
             <input type="file" multiple id='files'  onChange={handleTestimonialFileName} accept='image/*' hidden/>
             
@@ -363,19 +375,33 @@ return (
               {successMessage && <textarea rows="1" cols="40" value="Image uploaded successfully" className='text-black items-center justify-center flex  rounded-md  bg-green-500 text-center text-blue-800'></textarea>}
               <button type="submit" className="px-4 bg-green-700 w-full rounded-md">
                 {message && <h3 className='text-red-700'>try again</h3>}
-                {!message &&successMessage==="" && <h3>Upload</h3>}
-                {successMessage && <h3>Uploaded</h3>}
+                {!message &&successMessage==="" && <h3>save</h3>}
+                {successMessage && <h3>saved</h3>}
                 </button>
           
               </div>
         </form>
-        {imageTestimonial.length!==0 && <div className="flex flex-row   rounded-md w-full h-20 bg-transparent border border-solid border-black shadow-md">
-        <ul className=" flex flex-row px-1 space-x-1 items-center overflow-x-auto overflow-y-hidden">
+        <button onClick={()=>setMoreFunction(!moreFunction)}>{moreFunction?<FaRegCircleLeft/>:<FaRegCircleRight/>} </button>
+        {imageTestimonial.length!==0 && <div className="flex flex-row   rounded-md w-full h-full bg-transparent border border-solid border-black shadow-md">
+        <ul className=" grid grid-cols-1 mt-1 mb-1 sm:grid-cols-2 md:grid-cols-3 px-1 justify-center  sm:space-y-1 space-x-1 items-center overflow-y-auto overflow-y-hidden">
           {imageTestimonial.map(
             (item,index)=>(
-            <li key={index}>
+            <li key={index} className=' border mb-1 border-solid border-gray-400  space-y-1 rounded-md w-60 h-60 items-center flex flex-col justify-center'>
+                <ul className='flex flex-row px-1 space-x-1 items-center overflow-x-auto overflow-y-hidden'>
+                  {item.pictures.map((pic,index)=><li key={index}>
+                    <img src={pic} alt={item.title} className="w-16 h-16  shadow-md rounded-md pb-1 border border-solid border-gray-500"/>
+                  </li>
+                )}
+                </ul>
+              <h2 className='underline px-1 rounded-sm'>{item.name}</h2>
+              <h2 className='underline font-normal px-1 rounded-sm'>{item.title}</h2>
+              <h3 className='   border-solid font-normal border-gray-400  rounded-sm'>{item.testimonials}</h3>
               
-              <img src={item.imageUrl} alt={item.title} className="w-16 h-16  shadow-md rounded-md pb-1 border border-solid border-gray-500"/>
+              
+              <div className={`space-x-2 ${moreFunction?"hidden":"block"}`}>
+                <button className='border border-solid border-gray-400 px-1 rounded-md'>Update</button>
+                <button className='border border-solid bg-red-800 border-gray-400 px-1 rounded-md'>Delete</button>
+              </div>
             </li>)
             )}
         </ul>

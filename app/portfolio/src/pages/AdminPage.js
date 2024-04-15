@@ -31,7 +31,7 @@ const AdminPage=()=> {
     
     <div className=" flex flex-col h-screen">
       <div className="items-center justify-items-center  ">
-        <div className='flex justify-between items-center px-2'>
+        <div className='flex justify-between items-center px-2 bg-blue-950 '>
         
           <div  className="flex items-center justify-start">
           <MdMenu  onClick={toggleDrawer}  className="flex size-7 md:hidden cursor-pointer"/>

@@ -279,7 +279,16 @@ const deleteTestimonials = async(req, res) => {
 }
 
 const fetchTestimonials = async(req, res) => {
-    res.send('fetch')
+    try {
+        const response = await TestimonialsModel.find()
+        console.log(response)
+        if (response.length > 0) {
+            res.status(200).json(response)
+        }
+
+    } catch (err) {
+        res.status(500).json({ message: err.message })
+    }
 }
 
 module.exports = {

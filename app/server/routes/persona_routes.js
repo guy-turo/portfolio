@@ -54,7 +54,7 @@ personRoutes.route("/services")
     .get(fetchServices)
 personRoutes.route('/services/:id')
     .put(updateServices)
-    .delete(deleteServices)
+    .patch(deleteServices)
 
 // person
 personRoutes.route('/')

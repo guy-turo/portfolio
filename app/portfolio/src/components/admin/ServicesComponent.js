@@ -34,13 +34,15 @@ const addService=(e)=>{
     })
     .catch(error=>console.log(error))
 }
-const deleteServices=(id)=>{
-  const URI=`http://localhost:8000/api/v1/me/services/${id}`
-  axios.delete(URI)
-  .then((response)=>{
-    console.log(response.data)
-  })
-  .catch(error=>console.log(error.message))
+const deleteServices=(id ,el)=>{
+  // const URI=`http://localhost:8000/api/v1/me/services/${id}`
+  // axios.patch(URI,{
+  //   el:el
+  // })
+  // .then((response)=>{
+  //   console.log(response.data)
+  // })
+  // .catch(error=>console.log(error.message))
 } 
 const fetchServices=()=>{
   const URI=`http://localhost:8000/api/v1/me/services`
@@ -85,8 +87,7 @@ useEffect(()=>{
           <li key={index} className="grid grid-cols-2 space-x-1 space-y-1 items-center justify-between w-full ">
             <div className='items-center justify-center flex  border border-solid border-gray-400 rounded-md shadow-md  flex-col'>
             <div className="flex justify-center space-x-3 items-center  w-full px-4 ">
-              <MdDelete onClick={()=>deleteServices(item.userExp)} className={`${moreFunction?"hidden":""} text-red-400 cursor-pointer `}/>
-              <h2 className="underline text-blue-950">UI/Ux</h2>
+            <div></div><h2 className="underline text-blue-950">UI/Ux</h2>
               <div className={`${moreFunction?"hidden":""}`}>
               <UpdateServices item={item.userExp} el='userExp' id={item._id}/>
               </div>
@@ -99,8 +100,7 @@ useEffect(()=>{
             </div>
             <div  className='items-center justify-center flex  flex-col border border-solid border-gray-400 rounded-md shadow-md'>
             <div className="flex justify-center space-x-3 items-center  w-full px-4 ">
-              <MdDelete className={`${moreFunction?"hidden":""} text-red-400 cursor-pointer `}/>
-              <h2 className="underline text-blue-950">Frontend</h2>
+            <div></div><h2 className="underline text-blue-950">Frontend</h2>
               <div className={`${moreFunction?"hidden":""}`}>
               <UpdateServices item={item.frontend} el='frontend' id={item._id}/>
               </div> </div>
@@ -112,8 +112,7 @@ useEffect(()=>{
             </div>
             <div  className='items-center justify-center flex  flex-col border border-solid border-gray-400 rounded-md shadow-md'>
             <div className="flex justify-center space-x-3 items-center  w-full px-4 ">
-              <MdDelete className={`${moreFunction?"hidden":""} text-red-400 cursor-pointer `}/>
-              <h2 className="underline text-blue-950">Backend</h2>
+            <div></div><h2 className="underline text-blue-950">Backend</h2>
               <div className={`${moreFunction?"hidden":""}`}>
               <UpdateServices item={item.backend} el='backend' id={item._id}/>
               </div>  </div>
@@ -125,20 +124,20 @@ useEffect(()=>{
             </div>
             <div  className='items-center justify-center flex  flex-col border border-solid border-gray-400 rounded-md shadow-md'>
             <div className="flex justify-center space-x-3 items-center  w-full px-4 ">
-              <MdDelete className={`${moreFunction?"hidden":""} text-red-400 cursor-pointer `}/>
+              
+              <div></div>
               <h2 className="underline text-blue-950">Other</h2>
               <div className={`${moreFunction?"hidden":""}`}>
               <UpdateServices item={item.other} el='other' id={item._id}  />
-              </div>  </div>
+              </div>  
+            </div>
             <ul>
              {item.other.map((itemY)=><li key={item.other.length}  className="flex flex-col items-center justify-center">
                 <h3 className="font-normal">{itemY}</h3>
               </li>)}
             </ul>
             </div>
-          </li>
-           
-      )
+          </li>)
          )}
         </ul>
    </div>}

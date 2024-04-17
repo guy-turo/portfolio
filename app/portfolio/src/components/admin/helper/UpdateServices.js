@@ -23,7 +23,6 @@ const update= async(e)=>{
           setTimeout(()=>{
             onClose()
             setSuccessMessage('')
-           
             setText("")
           },1500)
       }
@@ -31,8 +30,8 @@ const update= async(e)=>{
      .catch((error)=>{
       if (error.response) {
         // The server responded with a status code outside the 2xx range
-        console.log('Error response:', error.response);
-        setMessage("error response:"+ error.response)
+        console.log('Error response:', error.response.data);
+        setMessage("error response:"+ error.response.data)
       } else if (error.request) {
         // The request was made but no response was received
         console.log('Error request:', error.request);

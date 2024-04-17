@@ -266,9 +266,6 @@ const updateServices = async(req, res) => {
         if (!data) {
             res.status(404).json({ message: "Item not found" })
         }
-        console.log("Start:" + data)
-        console.log(req.body)
-
         switch (el) {
             case "userExp":
                 console.log("userExp")
@@ -280,14 +277,12 @@ const updateServices = async(req, res) => {
                 data.userExp = userExpData || data.userExp
                 break;
             case "frontend":
-                console.log(el)
                 let frontendData = []
                 const mod1 = text.split(',')
                 for (let i = 0; i < mod1.length; i++) {
                     frontendData.push(mod1[i])
                 }
                 data.frontend = frontendData || data.frontend
-                console.log("onProcess")
                 break;
             case "backend":
                 console.log("backend")
@@ -302,27 +297,26 @@ const updateServices = async(req, res) => {
                 let otherData = []
                 const mod3 = text.split(',')
                 for (let i = 0; i < mod3.length; i++) {
-                    userExp.push(mod3[i])
+                    otherData.push(mod3[i])
                 }
                 data.other = otherData || data.other
                 break;
             default:
                 console.log("Error!! try again")
         }
-        console.log(data)
+
         await data.save()
             .then((result) => {
                 if (!result) {
                     return res.status(404).json({ message: "item not found" })
                 }
                 res.status(StatusCodes.CREATED).json(result)
-                console.log('createMe')
             }).catch(e => console.error(e.message))
     } catch (error) { res.status(500).json(error.message) }
 }
 
 const deleteServices = async(req, res) => {
-    res.send('delete')
+    console.log('on process')
 }
 
 const fetchServices = async(req, res) => {

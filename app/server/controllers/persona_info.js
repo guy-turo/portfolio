@@ -195,43 +195,60 @@ const fetchExperiences = async(req, res) => {
 // services
 const createServices = async(req, res) => {
     const { userExp: userExp, frontend: frontend, backend: backend, other: other } = req.body
+    const checkData = await ServicesModel.find()
     let userExpData = []
     let frontendData = []
     let backendData = []
     let otherData = []
 
     try {
+
         if (userExp) {
             const data = userExp.split(',')
             for (let i = 0; i < data.length; i++) {
-                userExpData.push(data[i])
+                if (checkData.userExp.length > 0) {
+                    userExpData = [...checkData.userExp, data[i]]
+                } else {
+                    userExpData.push(data[i])
+                }
+
             }
         }
         if (frontend) {
             const data = frontend.split(',')
             for (let i = 0; i < data.length; i++) {
-                frontendData.push(data[i])
+                if (checkData.frontend.length > 0) {
+                    frontendData = [...checkData.frontend, data[i]]
+                } else {
+                    frontendData.push(data[i])
+                }
+
             }
         }
         if (backend) {
             const data = backend.split(',')
             for (let i = 0; i < data.length; i++) {
-                backendData.push(data[i])
+                if (checkData.backend.length > 0) {
+                    backendData = [...checkData.backend, data[i]]
+                } else {
+                    backendData.push(data[i])
+                }
             }
         }
         if (other) {
             const data = other.split(',')
             for (let i = 0; i < data.length; i++) {
+                if (checkData.other.length > 0) {
+                    otherData = [...checkData.other, data[i]]
+                }
                 otherData.push(data[i])
             }
         }
 
-        const servicesData = new ServicesModel({
-            userExp: userExpData || [],
-            frontend: frontendData || [],
-            backend: backendData || [],
-            other: otherData || [],
-        })
+        servicesData.userExp = userExpData || []
+        servicesData.frontend = frontendData || []
+        servicesData.backend = backendData || []
+        servicesData.other = otherData || []
         servicesData.save()
             .then((result) => {
                 if (!result) {
@@ -243,7 +260,65 @@ const createServices = async(req, res) => {
     } catch (err) { console.log(err) }
 }
 const updateServices = async(req, res) => {
-    res.send('update')
+    try {
+        const { text: text, el: el } = req.body
+        const data = await ServicesModel.findById({ _id: req.params.id })
+        if (!data) {
+            res.status(404).json({ message: "Item not found" })
+        }
+        console.log("Start:" + data)
+        console.log(req.body)
+
+        switch (el) {
+            case "userExp":
+                console.log("userExp")
+                let userExpData = []
+                const mod = text.split(',')
+                for (let i = 0; i < mod.length; i++) {
+                    userExpData.push(mod[i])
+                }
+                data.userExp = userExpData || data.userExp
+                break;
+            case "frontend":
+                console.log(el)
+                let frontendData = []
+                const mod1 = text.split(',')
+                for (let i = 0; i < mod1.length; i++) {
+                    frontendData.push(mod1[i])
+                }
+                data.frontend = frontendData || data.frontend
+                console.log("onProcess")
+                break;
+            case "backend":
+                console.log("backend")
+                let backendData = []
+                const mod2 = text.split(',')
+                for (let i = 0; i < mod2.length; i++) {
+                    backendData.push(mod2[i])
+                }
+                data.backend = backendData || data.backend
+                break;
+            case "other":
+                let otherData = []
+                const mod3 = text.split(',')
+                for (let i = 0; i < mod3.length; i++) {
+                    userExp.push(mod3[i])
+                }
+                data.other = otherData || data.other
+                break;
+            default:
+                console.log("Error!! try again")
+        }
+        console.log(data)
+        await data.save()
+            .then((result) => {
+                if (!result) {
+                    return res.status(404).json({ message: "item not found" })
+                }
+                res.status(StatusCodes.CREATED).json(result)
+                console.log('createMe')
+            }).catch(e => console.error(e.message))
+    } catch (error) { res.status(500).json(error.message) }
 }
 
 const deleteServices = async(req, res) => {
@@ -295,8 +370,6 @@ const updateSocials = async(req, res) => {
         if (!data) {
             return res.status(404).json({ message: "Item not fount" })
         }
-        console.log(req.body)
-        console.log(req.body.title + " " + req.body.link)
         data.title = req.body.title || data.title
         data.testimonials = req.body.link || data.link
 

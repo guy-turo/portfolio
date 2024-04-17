@@ -96,7 +96,7 @@ useEffect(()=>{
         (item,index)=>(
         <li key={index} className=' shadow-2xl border mb-1 mt-1 border-solid border-gray-500  space-y-1 sm:space-y-0 sm:space-x-1 rounded-md w-56 h-24 items-center flex flex-col justify-center'>
 
-          <h2 className='underline px-1 rounded-sm'>{item.title}</h2>
+          <h2 className='underline px-1 rounded-sm text-blue-950'>{item.title}</h2>
           <h3 className='border-solid text-clip h-20 mx-2 font-normal border-gray-400  rounded-sm'>{item.link}</h3>
           <div className={`space-x-2 ${moreFunction?"hidden":"block"}`}>
             <UpdateSocials  item={item}/>

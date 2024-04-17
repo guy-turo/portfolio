@@ -7,11 +7,7 @@ const {
     updateImage,
     deleteImage,
 
-    testimonialsImageUpload,
-    testimonialUpdateImage,
-    testimonialDeleteImage,
-    testimonialFetchImage,
-    testimonialFetchImages,
+
 
     projectImageUpload,
     projectDeleteImage,
@@ -60,12 +56,6 @@ imagesRoute.route('/projectImage/:id')
     .get(projectFetchImage)
     .put(projectUpdateImage)
     .delete(projectDeleteImage)
-    // testimonials
-imagesRoute.post('/testimonialImage/upload', upload.single("file"), testimonialsImageUpload)
-imagesRoute.route('/testimonialImage')
-    .get(testimonialFetchImages)
-imagesRoute.route('/testimonialImage/:id')
-    .get(testimonialFetchImage)
-    .put(testimonialUpdateImage)
-    .delete(testimonialDeleteImage)
+
+
 module.exports = { imagesRoute, upload }

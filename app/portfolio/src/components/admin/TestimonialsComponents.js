@@ -137,7 +137,7 @@ const TestimonialsComponent=()=>{
                 <img src={item.pictures} alt={item.title} className="w-16 h-16  shadow-md rounded-md pb-1 border border-solid border-gray-500"/>
               
             
-          <h2 className='underline px-1 rounded-sm'>{item.name}</h2>
+          <h2 className='underline px-1 rounded-sm text-blue-950'>{item.name}</h2>
           <h2 className='underline font-normal px-1 rounded-sm'>{item.title}</h2>
           <h3 className='border-solid text-clip h-20 mx-2 font-normal border-gray-400  rounded-sm'>{item.testimonials}</h3>
           

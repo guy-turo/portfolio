@@ -2,20 +2,20 @@ import React,{useState} from 'react'
 import Dialog from "../../../utils/Dialog"
 import axios from 'axios'
 import { LiaEditSolid } from "react-icons/lia";
-const UpdateSocials=({item})=> {
+const UpdateSocials=({item, el,id })=> {
   const [message,setMessage]=useState('')
   const [successMessage, setSuccessMessage]=useState("")
   const [open,setOpen]=useState(false)
-
  
-  const [text,setText]=useState("")
+  const [text,setText]=useState([item])
  
-  const  onClose=()=>setOpen(!open)
+const  onClose=()=>setOpen(!open)
 const update= async(e)=>{
     e.preventDefault()
-      const URI=`http://localhost:8000/api/v1/me/Socials/${item._id}`
+      const URI=`http://localhost:8000/api/v1/me/services/${id}`
      axios.put(URI,{
       text:text,
+      el:el
      })
      .then((response)=>{
       if(response){
@@ -44,21 +44,18 @@ const update= async(e)=>{
       }
      })
   }
-  const elements=item.join(",")  
-  const data=elements
- 
   return (
     <>
       <button  onClick={()=>setOpen(!open)}>
       <LiaEditSolid  className={` text-gray-400 cursor-pointer`}/>
       </button>
         <Dialog onClose={onClose} open={open}>
-          <div className="pt-3 w-80 rounded px-10 pb-5 h-fit flex flex-col shadow-lg bg-slate-300 border border-solid border-blue-600">
+          <div className="pt-3 w-80 items-center rounded px-10 pb-5 h-fit flex flex-col shadow-lg bg-slate-300 border border-solid border-blue-600">
+            
+            <h2 className="text-gray-400 underline">{el}</h2>
             <form  onSubmit={update} className="flex flex-col items-center justify-center">
               <div className="space-y-2">
-                
-                   <textarea  type="text" value={text} onChange={(e)=>setText(e.target.value)} placeholder={data} className=" bg-gray-300 w-full border rounded-md px-2 text-black border-solid border-blue-800"/>
-                
+                   <textarea  type="text" value={text} onChange={(e)=>setText(e.target.value)}  className=" bg-gray-300  border rounded-md px-2 text-black border-solid border-blue-800"/>
               </div>
 
               <div className="space-y-1">

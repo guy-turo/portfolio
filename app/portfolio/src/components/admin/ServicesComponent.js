@@ -58,7 +58,7 @@ useEffect(()=>{
     <div className="flex flex-col  container shadow-2xl border border-solid border-gray-400 mt-4 p-2 rounded-md">
    <div className="flex justify-between">
    <h1 className='text-gray-400'>Services</h1>
-   {servicesData.length===0 && <button onClick={()=>setAddSe(!addSe)} className='border border-solid border-gray-400 rounded-md px-1 m-1'>Add Social</button>}
+   {servicesData===null && <button onClick={()=>setAddSe(!addSe)} className='border border-solid border-gray-400 rounded-md px-1 m-1'>Add Service</button>}
    </div>
     <div className={addSe?"":"hidden"}>
     <form onSubmit={addService} className=' items-start space-y-2 flex flex-col'>
@@ -84,11 +84,11 @@ useEffect(()=>{
         (item,index)=>(
           <li key={index} className="grid grid-cols-2 space-x-1 space-y-1 items-center justify-between w-full ">
             <div className='items-center justify-center flex  border border-solid border-gray-400 rounded-md shadow-md  flex-col'>
-            <div className="flex justify-between items-center  w-full px-4 ">
+            <div className="flex justify-center space-x-3 items-center  w-full px-4 ">
               <MdDelete onClick={()=>deleteServices(item.userExp)} className={`${moreFunction?"hidden":""} text-red-400 cursor-pointer `}/>
-              <h2 className="underline">UI/Ux</h2>
+              <h2 className="underline text-blue-950">UI/Ux</h2>
               <div className={`${moreFunction?"hidden":""}`}>
-              <UpdateServices item={item.userExp}/>
+              <UpdateServices item={item.userExp} el='userExp' id={item._id}/>
               </div>
             </div>
             <ul>
@@ -98,11 +98,11 @@ useEffect(()=>{
             </ul>
             </div>
             <div  className='items-center justify-center flex  flex-col border border-solid border-gray-400 rounded-md shadow-md'>
-            <div className="flex justify-between items-center  w-full px-4 ">
+            <div className="flex justify-center space-x-3 items-center  w-full px-4 ">
               <MdDelete className={`${moreFunction?"hidden":""} text-red-400 cursor-pointer `}/>
-              <h2 className="underline">Frontend</h2>
+              <h2 className="underline text-blue-950">Frontend</h2>
               <div className={`${moreFunction?"hidden":""}`}>
-              <UpdateServices item={item.frontend}/>
+              <UpdateServices item={item.frontend} el='frontend' id={item._id}/>
               </div> </div>
             <ul>
              {item.frontend.map((itemY)=><li key={item.frontend.length}  className="flex flex-col items-center justify-center">
@@ -111,11 +111,11 @@ useEffect(()=>{
             </ul>
             </div>
             <div  className='items-center justify-center flex  flex-col border border-solid border-gray-400 rounded-md shadow-md'>
-            <div className="flex justify-between items-center  w-full px-4 ">
+            <div className="flex justify-center space-x-3 items-center  w-full px-4 ">
               <MdDelete className={`${moreFunction?"hidden":""} text-red-400 cursor-pointer `}/>
-              <h2 className="underline">Backend</h2>
+              <h2 className="underline text-blue-950">Backend</h2>
               <div className={`${moreFunction?"hidden":""}`}>
-              <UpdateServices item={item.backend}/>
+              <UpdateServices item={item.backend} el='backend' id={item._id}/>
               </div>  </div>
             <ul>
              {item.backend.map((itemY)=><li key={item.backend.length}  className="flex flex-col items-center justify-center">
@@ -124,11 +124,11 @@ useEffect(()=>{
             </ul>
             </div>
             <div  className='items-center justify-center flex  flex-col border border-solid border-gray-400 rounded-md shadow-md'>
-            <div className="flex justify-between items-center  w-full px-4 ">
+            <div className="flex justify-center space-x-3 items-center  w-full px-4 ">
               <MdDelete className={`${moreFunction?"hidden":""} text-red-400 cursor-pointer `}/>
-              <h2 className="underline">Other</h2>
+              <h2 className="underline text-blue-950">Other</h2>
               <div className={`${moreFunction?"hidden":""}`}>
-              <UpdateServices item={item.other}/>
+              <UpdateServices item={item.other} el='other' id={item._id}  />
               </div>  </div>
             <ul>
              {item.other.map((itemY)=><li key={item.other.length}  className="flex flex-col items-center justify-center">

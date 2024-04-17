@@ -195,12 +195,42 @@ const fetchExperiences = async(req, res) => {
 // services
 const createServices = async(req, res) => {
     const { userExp: userExp, frontend: frontend, backend: backend, other: other } = req.body
+    let userExpData = []
+    let frontendData = []
+    let backendData = []
+    let otherData = []
+
     try {
+        if (userExp) {
+            const data = userExp.split(',')
+            for (let i = 0; i < data.length; i++) {
+                userExpData.push(data[i])
+            }
+        }
+        if (frontend) {
+            const data = frontend.split(',')
+            for (let i = 0; i < data.length; i++) {
+                frontendData.push(data[i])
+            }
+        }
+        if (backend) {
+            const data = backend.split(',')
+            for (let i = 0; i < data.length; i++) {
+                backendData.push(data[i])
+            }
+        }
+        if (other) {
+            const data = other.split(',')
+            for (let i = 0; i < data.length; i++) {
+                otherData.push(data[i])
+            }
+        }
+
         const servicesData = new ServicesModel({
-            userExp: userExp,
-            frontend: frontend,
-            backend: backend,
-            other: other,
+            userExp: userExpData || [],
+            frontend: frontendData || [],
+            backend: backendData || [],
+            other: otherData || [],
         })
         servicesData.save()
             .then((result) => {
@@ -221,7 +251,14 @@ const deleteServices = async(req, res) => {
 }
 
 const fetchServices = async(req, res) => {
-    res.send('fetch')
+    try {
+        const response = await ServicesModel.find()
+        if (response) {
+            res.status(200).json(response)
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message })
+    }
 }
 
 
@@ -229,6 +266,12 @@ const fetchServices = async(req, res) => {
 const createSocials = async(req, res) => {
     const { title: title, link: link } = req.body
     try {
+        const checkData = await SocialContactModel.find()
+        if (!checkData) {
+            return
+        } else if (checkData.title === title) {
+            return res.status(404).json({ message: "Item already exist" })
+        }
         const socialsData = new SocialContactModel({
             title: title,
             link: link,
@@ -239,41 +282,69 @@ const createSocials = async(req, res) => {
                     return res.status(404).json({ message: "item not found" })
                 }
                 res.status(StatusCodes.CREATED).json(result)
-                console.log('createMe')
+                console.log('create Socials')
             }).catch(e => console.error(e.message))
     } catch (err) { console.log(err) }
 }
 const updateSocials = async(req, res) => {
-    res.send('update')
+    try {
+        const { id: id } = req.params
+
+        const data = await SocialContactModel.findById({ _id: id })
+        console.log(data)
+        if (!data) {
+            return res.status(404).json({ message: "Item not fount" })
+        }
+        console.log(req.body)
+        console.log(req.body.title + " " + req.body.link)
+        data.title = req.body.title || data.title
+        data.testimonials = req.body.link || data.link
+
+        await data.save()
+        res.status(200).json({ message: 'Item updated successfully' })
+
+        console.log('updated successfully')
+    } catch (e) {
+        res.status(500).json(e.message)
+    }
 }
 
 const deleteSocials = async(req, res) => {
-    res.send('delete')
+    const { id: id } = req.params
+    try {
+        const data = await SocialContactModel.findById({ _id: id })
+        if (!data) {
+            res.status(404).json({ message: 'Item Not Found' })
+        }
+        await SocialContactModel.deleteOne({ _id: id })
+        res.status(200).json('Item Deleted')
+    } catch (error) {
+        res.status(500).json(error.message)
+    }
 }
 
 const fetchSocials = async(req, res) => {
-        res.send('fetch')
+        try {
+            const response = await SocialContactModel.find()
+            if (!response) {
+                res.status(404).json({ message: 'Item not found' })
+            }
+            res.status(200).json(response)
+        } catch (error) {
+            res.status(500).json(error.message)
+        }
     }
     // testimonials
 const createTestimonials = async(req, res) => {
     console.log("proceeding..")
     const { name: name, title: title, testimonials: testimonials } = req.body
-    const uploadedFiles = []
-    console.log(req.body)
-    console.log(req.file)
-    console.log(req.files)
-    req.files.forEach(async(file) => {
-        console.log(file)
-            // const uploadedResponse =  await cloudinary.uploader.upload(file.path)
-        uploadedFiles.push(file.path)
-    })
-    try {
 
+    try {
         const testimonialData = new TestimonialsModel({
             name: name,
             title: title,
             testimonials: testimonials,
-            pictures: uploadedFiles
+            pictures: req.file.path
         })
         testimonialData.save()
             .then((res) => res.status(200).json(res))
@@ -282,35 +353,51 @@ const createTestimonials = async(req, res) => {
     } catch (err) { console.error(err) }
 }
 const updateTestimonials = async(req, res) => {
-    res.send('update')
+
+    try {
+        const { id: id } = req.params
+        const data = await TestimonialsModel.findById(id)
+
+        if (!data) {
+            return res.status(404).json({ message: "Item not fount" })
+        }
+
+        let newImageId = getCloudinaryImagePath(data.pictures)
+        if (newImageId) {
+            await cloudinary.uploader.destroy(newImageId)
+        }
+
+
+        data.name = req.body.name || data.title
+        data.title = req.body.title || data.title
+        data.testimonials = req.body.testimonials || data.testimonials
+        data.pictures = req.file.path
+
+        await data.save()
+        res.status(200).json({ message: 'Item updated successfully' })
+        console.log('updated successfully')
+    } catch (e) {
+        res.status(500).json(e.message)
+    }
 }
 
 const deleteTestimonials = async(req, res) => {
     const { id: id } = req.params
-
-
     try {
         const image = await TestimonialsModel.findById({ _id: id })
         if (!image) {
             res.status(404).json({ message: "Image not found" })
         }
 
-
-        for (let i = 0; i < image.pictures.length; i++) {
-            const publicId = getCloudinaryImagePath(image.pictures[i])
-            result = await cloudinary.uploader.destroy(publicId);
-            if (result.result === 'ok') {
-                await TestimonialsModel.deleteOne({ _id: id })
-                res.json({ message: "image deleted" })
-                console.log('deleted' + i)
-            } else {
-                res.status(500).json({ message: 'Error deleting image' });
-            }
-
+        const publicId = getCloudinaryImagePath(image.pictures)
+        result = await cloudinary.uploader.destroy(publicId);
+        if (result.result === 'ok') {
+            await TestimonialsModel.deleteOne({ _id: id })
+            res.json({ message: "image deleted" })
+            console.log('deleted' + i)
+        } else {
+            res.status(500).json({ message: 'Error deleting image' });
         }
-
-
-
 
     } catch (error) { res.json({ message: error.message }) }
 }

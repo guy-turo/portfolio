@@ -5,7 +5,7 @@ const testimonialsSchema = new schema({
     name: { type: String },
     title: { type: String },
     testimonials: { type: String, },
-    pictures: { type: Array },
+    pictures: { type: String },
 }, { timestamps: true })
 
 const TestimonialsModel = new mongoose.model('Testimonial', testimonialsSchema)

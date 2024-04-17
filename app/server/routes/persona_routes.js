@@ -27,11 +27,11 @@ const {
 } = require('../controllers/persona_info')
 
 const personRoutes = require('express').Router()
-personRoutes.post('/testimonials', upload.array('file'), createTestimonials)
+personRoutes.post('/testimonials', upload.single('file'), createTestimonials)
 personRoutes.route('/testimonials')
     .get(fetchTestimonials)
+personRoutes.put("/testimonials/:id", upload.single('file'), updateTestimonials)
 personRoutes.route('/testimonials/:id')
-    .put(updateTestimonials)
     .delete(deleteTestimonials)
     // experiences
 personRoutes.route("/experiences")

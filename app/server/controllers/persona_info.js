@@ -1,6 +1,7 @@
 const meModel = require('../models/meModel')
 const cloudinary = require('cloudinary').v2
 const StatusCodes = require('http-status-codes')
+const { getCloudinaryImagePath } = require('../utility/helper')
 
 const {
     TestimonialsImagesModel,
@@ -13,15 +14,6 @@ const { ServicesModel } = require("../models/servicesModel")
 const { SocialContactModel } = require("../models/socialContactModel")
 const { ExperiencesModel } = require("../models/experiencesModel")
 
-function getCloudinaryImagePath(url) {
-    const urlParts = url.split('/');
-
-    if (urlParts.length < 7 || urlParts[0] !== 'https:' || urlParts[2] !== 'res.cloudinary.com') {
-        throw new Error('Invalid Cloudinary URL format');
-    }
-    const urlImage = urlParts.slice(7).join('/')
-    return urlImage.slice(0, -4)
-}
 
 // me
 const createMe = async(req, res) => {
@@ -228,24 +220,114 @@ const fetchProject = async(req, res) => {
 // experiences
 const createExperiences = async(req, res) => {
     const { frontend: frontend, backend: backend, other: other } = req.body
+    const checkData = await ExperiencesModel.find()
+    let frontendData = []
+    let backendData = []
+    let otherData = []
+
     try {
-        experienceData = new ExperiencesModel({
-            frontend: frontend,
-            backend: backend,
-            other: other,
-        })
-        experienceData.save()
+        if (frontend) {
+            const data = frontend.split(',')
+            for (let i = 0; i < data.length; i++) {
+                if (checkData.frontend) {
+                    frontendData = [...checkData.frontend, data[i]]
+                } else {
+                    frontendData.push(data[i])
+                }
+
+            }
+        }
+        if (backend) {
+            const data = backend.split(',')
+            for (let i = 0; i < data.length; i++) {
+                if (checkData.backend) {
+                    backendData = [...checkData.backend, data[i]]
+                } else {
+                    backendData.push(data[i])
+                }
+            }
+        }
+        if (other) {
+            const data = other.split(',')
+            for (let i = 0; i < data.length; i++) {
+                if (checkData.other) {
+                    otherData = [...checkData.other, data[i]]
+                } else {
+                    otherData.push(data[i])
+                }
+
+            }
+        }
+
+        if (checkData.length === 0) {
+            const createData = new ExperiencesModel({
+                frontend: frontendData,
+                backend: backendData,
+                other: otherData,
+            })
+            createData.save()
+                .then((re) => res.status(status.CREATED).json(res))
+                .catch(err => res.status(404).json(err.message))
+        } else {
+            checkData.frontend = frontendData || []
+            checkData.backend = backendData || []
+            checkData.other = otherData || []
+            await checkData.save()
+                .then((result) => {
+                    if (!result) {
+                        return res.status(404).json({ message: "item not found" })
+                    }
+                    res.status(StatusCodes.CREATED).json(result)
+                    console.log('createMe')
+                }).catch(e => console.error(e.message))
+        }
+    } catch (err) { console.log(err) }
+}
+const updateExperiences = async(req, res) => {
+    try {
+        const { text: text, el: el } = req.body
+        const data = await ExperiencesModel.findById({ _id: req.params.id })
+        if (!data) {
+            res.status(404).json({ message: "Item not found" })
+        }
+        switch (el) {
+            case "frontend":
+                let frontendData = []
+                const mod1 = text.split(',')
+                for (let i = 0; i < mod1.length; i++) {
+                    frontendData.push(mod1[i])
+                }
+                data.frontend = frontendData || data.frontend
+                break;
+            case "backend":
+                console.log("backend")
+                let backendData = []
+                const mod2 = text.split(',')
+                for (let i = 0; i < mod2.length; i++) {
+                    backendData.push(mod2[i])
+                }
+                data.backend = backendData || data.backend
+                break;
+            case "other":
+                let otherData = []
+                const mod3 = text.split(',')
+                for (let i = 0; i < mod3.length; i++) {
+                    otherData.push(mod3[i])
+                }
+                data.other = otherData || data.other
+                break;
+            default:
+                console.log("Error!! try again")
+        }
+
+        await data.save()
             .then((result) => {
                 if (!result) {
                     return res.status(404).json({ message: "item not found" })
                 }
                 res.status(StatusCodes.CREATED).json(result)
-                console.log('createMe')
             }).catch(e => console.error(e.message))
-    } catch (err) { console.error(err) }
-}
-const updateExperiences = async(req, res) => {
-    res.send('update')
+    } catch (error) { res.status(500).json(error.message) }
 }
 
 const deleteExperiences = async(req, res) => {
@@ -253,7 +335,14 @@ const deleteExperiences = async(req, res) => {
 }
 
 const fetchExperiences = async(req, res) => {
-    res.send('fetch')
+    try {
+        const response = await ExperiencesModel.find()
+        if (response) {
+            res.status(200).json(response)
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message })
+    }
 }
 
 // services
@@ -270,7 +359,7 @@ const createServices = async(req, res) => {
         if (userExp) {
             const data = userExp.split(',')
             for (let i = 0; i < data.length; i++) {
-                if (checkData.userExp.length > 0) {
+                if (checkData.userExp) {
                     userExpData = [...checkData.userExp, data[i]]
                 } else {
                     userExpData.push(data[i])
@@ -281,7 +370,7 @@ const createServices = async(req, res) => {
         if (frontend) {
             const data = frontend.split(',')
             for (let i = 0; i < data.length; i++) {
-                if (checkData.frontend.length > 0) {
+                if (checkData.frontend) {
                     frontendData = [...checkData.frontend, data[i]]
                 } else {
                     frontendData.push(data[i])
@@ -292,7 +381,7 @@ const createServices = async(req, res) => {
         if (backend) {
             const data = backend.split(',')
             for (let i = 0; i < data.length; i++) {
-                if (checkData.backend.length > 0) {
+                if (checkData.backend) {
                     backendData = [...checkData.backend, data[i]]
                 } else {
                     backendData.push(data[i])
@@ -302,25 +391,39 @@ const createServices = async(req, res) => {
         if (other) {
             const data = other.split(',')
             for (let i = 0; i < data.length; i++) {
-                if (checkData.other.length > 0) {
+                if (checkData.other) {
                     otherData = [...checkData.other, data[i]]
+                } else {
+                    otherData.push(data[i])
                 }
-                otherData.push(data[i])
+
             }
         }
 
-        servicesData.userExp = userExpData || []
-        servicesData.frontend = frontendData || []
-        servicesData.backend = backendData || []
-        servicesData.other = otherData || []
-        servicesData.save()
-            .then((result) => {
-                if (!result) {
-                    return res.status(404).json({ message: "item not found" })
-                }
-                res.status(StatusCodes.CREATED).json(result)
-                console.log('createMe')
-            }).catch(e => console.error(e.message))
+        if (checkData.length === 0) {
+            const createData = new ServicesModel({
+                userExp: userExpData,
+                frontend: frontendData,
+                backend: backendData,
+                other: otherData,
+            })
+            createData.save()
+
+        } else {
+            servicesData.userExp = userExpData || []
+            servicesData.frontend = frontendData || []
+            servicesData.backend = backendData || []
+            servicesData.other = otherData || []
+            await servicesData.save()
+                .then((result) => {
+                    if (!result) {
+                        return res.status(404).json({ message: "item not found" })
+                    }
+                    res.status(StatusCodes.CREATED).json(result)
+                    console.log('createMe')
+                }).catch(e => console.error(e.message))
+        }
+
     } catch (err) { console.log(err) }
 }
 const updateServices = async(req, res) => {

@@ -20,4 +20,15 @@ const storage = new CloudinaryStorage({
 
 const upload = multer({ storage })
 
-module.exports = { upload }
+const getCloudinaryImagePath = (url) => {
+    const urlParts = url.split('/');
+
+    if (urlParts.length < 7 || urlParts[0] !== 'https:' || urlParts[2] !== 'res.cloudinary.com') {
+        throw new Error('Invalid Cloudinary URL format');
+    }
+    const urlImage = urlParts.slice(7).join('/')
+    return urlImage.slice(0, -4)
+}
+
+
+module.exports = { upload, getCloudinaryImagePath }

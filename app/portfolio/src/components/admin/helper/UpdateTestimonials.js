@@ -73,7 +73,7 @@ const UpdateTestimonials=({item})=> {
         <Dialog onClose={onClose} open={open}>
           <div className="pt-3 w-80 rounded px-10 pb-5 h-fit flex flex-col shadow-lg bg-slate-300 border border-solid border-blue-600">
             <form  onSubmit={uploadImage} className="flex flex-col items-center">
-            <div className=' flex items-center space-x-2'>
+              <div className=' flex items-center space-x-2'>
               <div>
               <label htmlFor='fil'>
               <div className="size-20 flex items-center  cursor-pointer p-2 bg-slate-500  rounded-full border border-solid border-blue-700">
@@ -88,9 +88,6 @@ const UpdateTestimonials=({item})=> {
                 <input type="text" value={title} onChange={(e)=>setTitle(e.target.value)} placeholder={item.title} className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
                 <input type="text" value={testimonials}  onChange={(e)=> setTestimonials(e.target.value)} placeholder={item.testimonials} className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
               </div>
-              </div>
-              <div>
-                
               </div>
               <div className="space-y-1">
               {message && <textarea rows="1" cols="40" className='text-black  rounded-md  bg-red-500'>{message}</textarea>}

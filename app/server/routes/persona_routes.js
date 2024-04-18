@@ -68,8 +68,8 @@ personRoutes.route('/:id')
 personRoutes.post("/projects", upload.array("file"), createProject)
 personRoutes.route("/projects")
     .get(fetchProject)
-personRoutes.route("projects/:id")
-    .put(updateProject)
+personRoutes.put("/projects/:id", upload.array("file"), updateProject)
+personRoutes.route("/projects/:id")
     .delete(deleteProject)
 
 module.exports = { personRoutes }

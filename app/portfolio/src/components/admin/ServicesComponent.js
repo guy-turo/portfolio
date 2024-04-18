@@ -30,9 +30,9 @@ const addService=(e)=>{
      other:otherS
     })
     .then((response)=>{
-      console.log(response.data)
+      setSuccessMessage(response.data)
     })
-    .catch(error=>console.log(error))
+    .catch(error=>setMessage(error.message))
 }
 const deleteServices=(id ,el)=>{
   // const URI=`http://localhost:8000/api/v1/me/services/${id}`
@@ -76,7 +76,11 @@ useEffect(()=>{
       <input type="text" value={otherS} onChange={e=>setOtherS(e.target.value)} id="other" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
       </div>
       </div>
-      <button type="submit" className="px-4 bg-blue-700 rounded-sm">Save</button>
+      <button type="submit" className="px-4 bg-green-700 w-full rounded-md">
+            {message!=='' && <h3 className='text-red-700'>try again</h3>}
+            {!message &&successMessage==="" && <h3>save</h3>}
+            {successMessage && <h3>saved</h3>}
+            </button>
     </form>
     </div>
     <button className='w-fit' onClick={()=>setMoreFunction(!moreFunction)}>{moreFunction?<FaRegCircleLeft className='size-5 text-blue-500'/>:<FaRegCircleRight  className='size-5 text-blue-500'/>} </button>

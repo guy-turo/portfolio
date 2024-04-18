@@ -32,9 +32,7 @@ const TestimonialsComponent=()=>{
       )
   }
   useEffect(()=>{
-    
     fetchTestimonialData()
-   
   },[])
   const addTestimonial=(e)=>{
     e.preventDefault()
@@ -62,7 +60,6 @@ const TestimonialsComponent=()=>{
             setTitleT("")
             setTestimonialsT("")
           },1500)
-          
         }
       })
       .catch(error=>console.log(error))

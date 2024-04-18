@@ -46,7 +46,7 @@ const update= async(e)=>{
   return (
     <>
       <button  onClick={()=>setOpen(!open)}>
-      <LiaEditSolid  className={` text-gray-400 cursor-pointer`}/>
+      <LiaEditSolid className="text-gray-500 size-7"/>
       </button>
         <Dialog onClose={onClose} open={open}>
           <div className="pt-3 w-80 items-center rounded px-10 pb-5 h-fit flex flex-col shadow-lg bg-slate-300 border border-solid border-blue-600">

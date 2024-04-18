@@ -112,7 +112,6 @@ const deleteMe = async(req, res) => {
 }
 
 const fetchMe = async(req, res) => {
-    console.log('fetchMe')
     try {
         const contacts = await meModel.find()
         if (contacts !== null) {
@@ -128,36 +127,101 @@ const fetchMe = async(req, res) => {
 
 // projects
 const createProject = async(req, res) => {
-    const { title: title, linkGithub: linkGithub, linkLive: linkLive } = req.body
+    const { title: title, linkGithub: linkGithub, linkLive: linkLive, description: description } = req.body
     try {
+        const checkTitle = await ProjectModel.findOne({ title: title })
+        if (checkTitle) {
+            res.status(404).json({ message: "Project already exists" })
+        }
+        const images = req.files
+        let imagesPath = []
+        for (let i = 0; i < images.length; i++) {
+            const paths = images[i].path
+            imagesPath.push(paths)
+        }
         const newDataProject = new ProjectModel({
             title: title,
             linkGithub: linkGithub,
             linkLive: linkLive,
-            pictures: ProjectImagesModel._id,
+            pictures: imagesPath,
+            description: description,
         })
-        newDataProject.save()
+        await newDataProject.save()
             .then((result) => {
                 if (!result) {
                     return res.status(404).json({ message: "item not found" })
                 }
                 res.status(StatusCodes.CREATED).json(result)
-                console.log('createMe')
             }).catch(e => console.error(e.message))
     } catch (e) {
-        console.error(e)
+        res.status(500).json("Hello")
     }
 }
 const updateProject = async(req, res) => {
-    res.send('update')
+    try {
+        const { id: id } = req.params
+        const data = await ProjectModel.findById(id)
+
+        if (!data) {
+            return res.status(404).json({ message: "Item not fount" })
+        }
+        let newImage = []
+        for (let i = 0; i < data.pictures.length; i++) {
+            let newImageId = getCloudinaryImagePath(data.pictures[i])
+            if (!newImageId) return console.log('No picture found')
+            const result = await cloudinary.uploader.destroy(newImageId)
+            if (result.result === "ok") {
+                console.log("all images has been updated successfully")
+            }
+        }
+        const resImage = req.files
+        resImage.forEach(image => newImage.push(image.path))
+
+        data.title = req.body.title || data.title
+        data.description = req.body.description || data.description
+        data.pictures = newImage || data.pictures
+        data.linkGithub = req.body.linkGithub || data.linkGithub
+        data.linkLive = req.body.linkLive || data.linkLive
+
+        await data.save()
+        res.status(200).json({ message: 'Item updated successfully' })
+        console.log('updated successfully')
+    } catch (e) {
+        res.status(500).json(e.message)
+    }
 }
 
 const deleteProject = async(req, res) => {
-    res.send('delete')
+    const { id: id } = req.params
+    try {
+        const data = await ProjectModel.findById({ _id: id })
+        if (!data) {
+            res.status(404).json({ message: "Item not found" })
+        }
+        for (let i; i < data.pictures.length; i++) {
+            const publicId = getCloudinaryImagePath(data.pictures)
+            const result = await cloudinary.uploader.destroy(publicId);
+            if (result.result === "ok") {
+                console.log("all images has been deleted successfully")
+            }
+        }
+        await ProjectModel.deleteOne({ _id: id })
+        res.json({ message: "project deleted" })
+        console.log('deleted')
+
+    } catch (error) {
+        res.status(500).json(error.message)
+    }
 }
 
 const fetchProject = async(req, res) => {
-    res.send('fetch')
+    try {
+        const data = await ProjectModel.find()
+        if (!data) return res.status(404).json({ message: "No Data Found" })
+        res.status(200).json(data)
+    } catch (err) {
+        res.status(500).json(err.message)
+    }
 }
 
 
@@ -461,7 +525,7 @@ const deleteTestimonials = async(req, res) => {
         if (result.result === 'ok') {
             await TestimonialsModel.deleteOne({ _id: id })
             res.json({ message: "image deleted" })
-            console.log('deleted' + i)
+            console.log('deleted')
         } else {
             res.status(500).json({ message: 'Error deleting image' });
         }

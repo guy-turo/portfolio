@@ -62,7 +62,7 @@ personRoutes.route('/personal')
 personRoutes.post("/personal", upload.array('file'), createMe)
 personRoutes.route('/personal/:id')
     .delete(deleteMe)
-    .put(updateMe)
+personRoutes.put("/personal/:id", upload.array('file'), updateMe)
     // Projects
 personRoutes.post("/projects", upload.array("file"), createProject)
 personRoutes.route("/projects")

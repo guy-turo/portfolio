@@ -110,7 +110,7 @@ const TestimonialsComponent=()=>{
          </label>
         <input type="file" required multiple id='fi'  onChange={handleTestimonialFileName} accept='image/*' hidden/>
         
-          </div>
+      </div>
           <div className="space-y-1">
           {message && <textarea rows="1" cols="40" className='text-black  rounded-md  bg-red-500'>{message}</textarea>}
           {successMessage && <textarea rows="1" cols="40" value="Image uploaded successfully" className='text-black items-center justify-center flex  rounded-md  bg-green-500 text-center text-blue-800'></textarea>}

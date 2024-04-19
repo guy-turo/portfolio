@@ -20,37 +20,40 @@ const createMe = async(req, res) => {
     const { fullName: fullName, title: title, email: email, phoneNumber: phoneNumber, experienceYear: experienceYear, clients: clients, description: description, } = req.body
 
     try {
-
-        if (response.length === 0) {
+        if (req.files.length === 0) {
             res.status(400).json("Please upload picture")
         }
 
         let imagesMe = []
         req.files.forEach(image => imagesMe.push(image.path))
+        console.log(imagesMe)
         const checkData = await meModel.find()
         if (checkData.length !== 0) {
+            console.log('has data')
             res.status(404).json({ message: "Already Exists" })
-        }
-        const newData = new meModel({
-            fullName: fullName,
-            title: title,
-            email: email,
-            phoneNumber: phoneNumber,
-            experienceYear: experienceYear,
-            clients: clients,
-            description: description,
-            pictures: imagesMe
-        })
-
-        newData.save()
-            .then((result) => {
-                if (!result) {
-                    return res.status(404).json({ message: "item not found" })
-                }
-                res.status(StatusCodes.CREATED).json(result)
-                console.log('createMe')
+        } else {
+            const newData = new meModel({
+                fullName: fullName,
+                title: title,
+                email: email,
+                phoneNumber: phoneNumber,
+                experienceYear: experienceYear,
+                clients: clients,
+                description: description,
+                pictures: imagesMe
             })
-            .catch((error) => console.error(error.message))
+
+            newData.save()
+                .then((result) => {
+                    if (!result) {
+                        return res.status(404).json({ message: "item not found" })
+                    }
+                    res.status(StatusCodes.CREATED).json(result)
+                    console.log('createMe')
+                })
+                .catch((error) => console.error(error.message))
+        }
+
     } catch (error) {
         console.log(error.message)
         res.status(500).json({ message: "Error Creating Data" })
@@ -67,25 +70,56 @@ const updateMe = async(req, res) => {
         description: description,
     } = req.body
     try {
+        const checkData = await meModel.find()
+        if (!checkData) {
+            res.status(404).json({ message: "does not exist" })
+        }
+        const img = []
+        if (!req.files) {
+            res.status(404).json({ message: "please upload image" })
+        }
+
+        for (let z = 0; z < checkData[0].pictures.length; z++) {
+            let newImageId = getCloudinaryImagePath(checkData[0].pictures[z])
+            if (!newImageId) return console.log('No picture found')
+            const result = await cloudinary.uploader.destroy(newImageId)
+            if (result.result === "ok") {
+                console.log(`Images ${z} has been updated successfully`)
+            }
+        }
+        const dataImg = req.files
+        if (dataImg.length === 0) {
+            for (let j = 0; j < checkData[0].pictures.length; j++) {
+                const jData = checkData[0].pictures[j]
+                img.push(jData)
+            }
+        } else if (dataImg.length !== 0) {
+            for (let i = 0; i < dataImg.length; i++) {
+                const image = dataImg[i].path
+                img.push(image)
+            }
+        }
+        console.log(img)
         const newData = {
             $set: {
-                fullName: fullName,
-                title: title,
-                email: email,
-                phoneNumber: phoneNumber,
-                experienceYear: experienceYear,
-                clients: client,
-                description: description,
+                fullName: fullName || checkData[0].fullName,
+                title: title || checkData[0].title,
+                email: email || checkData[0].email,
+                phoneNumber: phoneNumber || checkData[0].phoneNumber,
+                experienceYear: experienceYear || checkData[0].experienceYear,
+                clients: client || checkData[0].clients,
+                description: description || checkData[0].description,
+                pictures: img
             }
         }
         const update = await meModel.updateMany({ _id: req.params.id }, newData)
-        if (update) {
-            console.log('items has been updated')
+        if (!update) {
+            res.status(404).json({ message: "Try again" })
         } else {
-            res.json('Contact has been updated')
+            res.status(200).json({ message: "Data has been updated successfully" })
         }
     } catch (error) {
-        console.error(error.message)
+        res.status(500).json(error.message)
     }
 }
 const deleteMe = async(req, res) => {

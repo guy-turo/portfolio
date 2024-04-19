@@ -6,7 +6,6 @@ function ProfileComponent() {
   const [meData, setMeData]=useState([])
   const [meImage,setMeImage]=useState([])
 
-  const updateButton=meData?.length===0
 
   const [message,setMessage]=useState('')
   const [successMessage,setSuccessMessage]=useState('')

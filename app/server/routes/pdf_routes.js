@@ -1,12 +1,12 @@
-const imagesRoute = require('express').Router()
+const pdfRoute = require('express').Router()
 
 const {
-    imageUpload,
-    fetchImage,
-    fetchImages,
-    updateImage,
-    deleteImage,
-} = require('../controllers/imagesController')
+    pdfUpload,
+    fetchSinglePdf,
+    fetchPdf,
+    updatePdf,
+    deletePdf,
+} = require('../controllers/pdfController')
 
 const { upload } = require('../utility/helper')
     // const storage = multer.diskStorage({
@@ -32,15 +32,15 @@ const { upload } = require('../utility/helper')
     // });
 
 
-imagesRoute.post('/profileImage/upload', upload.single("file"), imageUpload)
+pdfRoute.post('/upload', upload.single("file"), pdfUpload)
 
-imagesRoute.route('/profileImage')
-    .get(fetchImages)
-imagesRoute.route('/profileImage/:id')
-    .get(fetchImage)
-    .put(updateImage)
-    .delete(deleteImage)
+pdfRoute.route('/', )
+    .get(fetchPdf)
+pdfRoute.put('/:id', upload.single('file'), updatePdf)
+pdfRoute.route('/:id')
+    .get(fetchSinglePdf)
+    .delete(deletePdf)
 
 
 
-module.exports = { imagesRoute, upload }
+module.exports = { pdfRoute, upload }

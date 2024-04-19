@@ -3,11 +3,6 @@ const cloudinary = require('cloudinary').v2
 const StatusCodes = require('http-status-codes')
 const { getCloudinaryImagePath } = require('../utility/helper')
 
-const {
-    TestimonialsImagesModel,
-    ProfileImagesModel,
-    ProjectImagesModel,
-} = require('../models/picturesModel')
 const { ProjectModel } = require("../models/projectModel")
 const { TestimonialsModel } = require("../models/testimonialsModel")
 const { ServicesModel } = require("../models/servicesModel")
@@ -17,7 +12,7 @@ const { ExperiencesModel } = require("../models/experiencesModel")
 
 // me
 const createMe = async(req, res) => {
-    const { fullName: fullName, title: title, email: email, phoneNumber: phoneNumber, experienceYear: experienceYear, clients: clients, description: description, } = req.body
+    const { fullName: fullName, title: title, email: email, phoneNumber: phoneNumber, experienceYear: experienceYear, clients: clients, description: description } = req.body
 
     try {
         if (req.files.length === 0) {
@@ -41,6 +36,7 @@ const createMe = async(req, res) => {
                 clients: clients,
                 description: description,
                 pictures: imagesMe
+
             })
 
             newData.save()
@@ -248,7 +244,6 @@ const fetchProject = async(req, res) => {
         res.status(500).json(err.message)
     }
 }
-
 
 // experiences
 const createExperiences = async(req, res) => {

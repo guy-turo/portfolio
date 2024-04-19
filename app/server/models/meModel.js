@@ -31,30 +31,9 @@ const meSchema = new schema({
         required: true,
     },
     pictures: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Images"
+        type: Array,
     },
-    projects: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Projects",
-    }],
-    testimonial: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Testimonials",
-    }],
-    services: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Services",
-    }],
 
-    socials: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Socials"
-    }],
-    experiences: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Experiences',
-    }],
 
 }, { timestamps: true })
 

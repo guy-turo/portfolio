@@ -6,14 +6,6 @@ const {
     fetchImages,
     updateImage,
     deleteImage,
-
-
-
-    projectImageUpload,
-    projectDeleteImage,
-    projectUpdateImage,
-    projectFetchImages,
-    projectFetchImage
 } = require('../controllers/imagesController')
 
 const { upload } = require('../utility/helper')
@@ -48,14 +40,7 @@ imagesRoute.route('/profileImage/:id')
     .get(fetchImage)
     .put(updateImage)
     .delete(deleteImage)
-    // Projects
-imagesRoute.post('/projectImage/upload', upload.single("file"), projectImageUpload)
-imagesRoute.route('/projectImage')
-    .get(projectFetchImages)
-imagesRoute.route('/projectImage/:id')
-    .get(projectFetchImage)
-    .put(projectUpdateImage)
-    .delete(projectDeleteImage)
+
 
 
 module.exports = { imagesRoute, upload }

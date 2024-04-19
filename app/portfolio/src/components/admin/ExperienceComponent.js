@@ -4,8 +4,6 @@ import { FaRegCircleRight } from "react-icons/fa6";
 import { FaRegCircleLeft } from "react-icons/fa6";
 
 import { MdDelete } from "react-icons/md";
-
-import UpdateServices from './helper/UpdateServices'
 import UpdateExperience from './helper/UpdateExperience';
 function ExperienceComponent() {
   const [successMessage,setSuccessMessage]=useState('')

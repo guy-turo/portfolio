@@ -17,17 +17,20 @@ const { ExperiencesModel } = require("../models/experiencesModel")
 
 // me
 const createMe = async(req, res) => {
+    const { fullName: fullName, title: title, email: email, phoneNumber: phoneNumber, experienceYear: experienceYear, clients: clients, description: description, } = req.body
 
-    const {
-        fullName: fullName,
-        title: title,
-        email: email,
-        phoneNumber: phoneNumber,
-        experienceYear: experienceYear,
-        clients: clients,
-        description: description,
-    } = req.body
     try {
+
+        if (response.length === 0) {
+            res.status(400).json("Please upload picture")
+        }
+
+        let imagesMe = []
+        req.files.forEach(image => imagesMe.push(image.path))
+        const checkData = await meModel.find()
+        if (checkData.length !== 0) {
+            res.status(404).json({ message: "Already Exists" })
+        }
         const newData = new meModel({
             fullName: fullName,
             title: title,
@@ -36,13 +39,9 @@ const createMe = async(req, res) => {
             experienceYear: experienceYear,
             clients: clients,
             description: description,
-            pictures: ProfileImagesModel._id,
-            projects: ProjectModel._id,
-            testimonial: TestimonialsModel._id,
-            services: ServicesModel._id,
-            socials: SocialContactModel._id,
-            experiences: ExperiencesModel._id
+            pictures: imagesMe
         })
+
         newData.save()
             .then((result) => {
                 if (!result) {
@@ -89,7 +88,6 @@ const updateMe = async(req, res) => {
         console.error(error.message)
     }
 }
-
 const deleteMe = async(req, res) => {
     try {
         const deleteData = await meModel.delete({ _id: req.params.id })
@@ -105,12 +103,13 @@ const deleteMe = async(req, res) => {
 
 const fetchMe = async(req, res) => {
     try {
-        const contacts = await meModel.find()
-        if (contacts !== null) {
-            res.status(201).json(contacts)
-        } else {
-            res.json('no contacts found')
+        const data = await meModel.find()
+
+        if (!data) {
+            res.status(404).json({ message: "Item does not exist" })
         }
+        res.status(200).json(data)
+
     } catch (err) {
         console.error(err.message)
     }

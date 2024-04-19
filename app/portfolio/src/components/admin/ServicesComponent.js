@@ -48,7 +48,6 @@ const fetchServices=()=>{
   const URI=`http://localhost:8000/api/v1/me/services`
   axios.get(URI)
   .then((response)=>{
-    console.log(response.data)
     setServicesData(response.data)
   })
   .catch(error=>console.log(error.message))

@@ -57,11 +57,10 @@ personRoutes.route('/services/:id')
     .patch(deleteServices)
 
 // person
-personRoutes.route('/')
-    .post(createMe)
+personRoutes.route('/personal')
     .get(fetchMe)
-
-personRoutes.route('/:id')
+personRoutes.post("/personal", upload.array('file'), createMe)
+personRoutes.route('/personal/:id')
     .delete(deleteMe)
     .put(updateMe)
     // Projects

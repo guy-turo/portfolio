@@ -4,21 +4,21 @@ const cloudinary = require('cloudinary').v2
 
 
 const pdfUpload = async(req, res, next) => {
-
+    console.log('pdf Uploading...')
     try {
         const file = req.file
 
-        if (!file && !file.path) {
+        if (!file && !file.path && !file.originalname) {
             const error = new Error("please upload a file")
             error.httpStatusCode = 400
             return next(error)
         }
 
         const newPdf = new PdfModel({
-            fileName: req.body.title,
+            fileName: req.file.originalname,
             pdfUrl: file.path,
         })
-
+        console.log(newPdf)
         await newPdf.save()
 
         res.status(200).json(file)
@@ -68,7 +68,7 @@ const deletePdf = async(req, res) => {
         } else {
             res.status(404).json({ message: 'Error deleting image' });
         }
-
+        console.log("deleted")
     } catch (error) { res.status(500).json({ message: error.message }) }
 }
 

@@ -1,19 +1,32 @@
-import React from 'react'
+import React, {useEffect,useState} from 'react'
 import './header.css'
 import CTA from './CTA'
 import HeaderSection from './HeaderSection'
-import me from '../../../assets/me.jpg'
+import axios from 'axios'
+
 function Header() {
+  const [personalData,setPersonalData]=useState([])
+  const fetchData=()=>{
+    const URI="http://localhost:8000/api/v1/me/personal"
+    axios.get(URI)
+    .then(res=>{
+      setPersonalData(res.data[0])}
+    )
+    .catch(error=>alert("Something went wrong"))
+  }
+  useEffect(()=>{
+    fetchData()
+  },[])
   return (
     <section id="#" className="header">
       <div className="container header_container">
         <h5>Hello I'm</h5>
-        <h1>Kasongo Kakumbi Guy</h1>
-        <h5 className="text-light">Fullstack Developer & Software Engineer</h5>
-        <CTA/>
+        <h1>{personalData?.fullName}</h1>
+        <h5 className="text-light">{personalData?.title}</h5>
+        <CTA />
         <div className="sec">
         <div className='me'>
-          <img src={me} alt="" className='flex rounded-tr-3xl rounded-tl-3xl'/>
+          <img src={personalData?.pictures[0]} alt="" className='flex rounded-tr-3xl rounded-tl-3xl'/>
         </div>
         <p className='scroll_down'></p>
       </div>

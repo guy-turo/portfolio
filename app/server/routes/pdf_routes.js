@@ -1,6 +1,7 @@
 const pdfRoute = require('express').Router()
 
 const {
+    downloadPdf,
     pdfUpload,
     fetchSinglePdf,
     fetchPdf,
@@ -33,7 +34,7 @@ const { upload } = require('../utility/helper')
 
 
 pdfRoute.post('/upload', upload.single("file"), pdfUpload)
-
+pdfRoute.get("/download-pdf/:urlPdf", downloadPdf)
 pdfRoute.route('/', )
     .get(fetchPdf)
 pdfRoute.put('/:id', upload.single('file'), updatePdf)

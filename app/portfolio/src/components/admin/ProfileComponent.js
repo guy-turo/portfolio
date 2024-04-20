@@ -21,6 +21,7 @@ function ProfileComponent() {
   const [experienceYear,setExperienceYear]=useState('')
   const [clients, setClients]=useState('')
   const [description,setDescription]=useState('')
+  const [projects,setProjects]=useState('')
   const addProfile=(e)=>{
     e.preventDefault()
     console.log('creating...')
@@ -33,6 +34,7 @@ function ProfileComponent() {
     formData.append("phoneNumber",phoneNumber)
     formData.append("experienceYear",experienceYear)
     formData.append("clients",clients)
+    formData.append("projects",projects)
       const URI="http://localhost:8000/api/v1/me/personal"
       axios.post(URI,formData)
       .then((response)=>{
@@ -48,6 +50,7 @@ function ProfileComponent() {
             setPhoneNumber('')
             setExperienceYear('')
             setClients('')
+            setProjects('')
           },1500)
         }
       })
@@ -79,6 +82,7 @@ const updateProfile=(id)=>{
   formDataUpdate.append("phoneNumber",phoneNumber)
   formDataUpdate.append("experienceYear",experienceYear)
   formDataUpdate.append("clients",clients)
+  formDataUpdate.append("projects",projects)
   const URI=`http://localhost:8000/api/v1/me/personal/${id}`
   axios.put(URI, formDataUpdate)
   .then(re=>{
@@ -92,6 +96,7 @@ const updateProfile=(id)=>{
       setPhoneNumber('')
       setExperienceYear('')
       setClients('')
+      setProjects('')
     },1500)
   })
   .catch(error=>setMessage(error.message))
@@ -145,6 +150,13 @@ const updateProfile=(id)=>{
           placeholder={meData?.clients}
           onChange={(e)=>setClients(e.target.value)} 
           id="clients" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
+          <label htmlFor="projects">Projects</label>
+          <input type="text"
+          value={projects} 
+          placeholder={meData?.projects}
+          onChange={(e)=>setProjects(e.target.value)} 
+          id="projects" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
+         
           <label htmlFor="description">Description</label>
           <input type="text"
           value={description} 

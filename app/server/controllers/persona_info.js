@@ -12,7 +12,7 @@ const { ExperiencesModel } = require("../models/experiencesModel")
 
 // me
 const createMe = async(req, res) => {
-    const { fullName: fullName, title: title, email: email, phoneNumber: phoneNumber, experienceYear: experienceYear, clients: clients, description: description } = req.body
+    const { fullName: fullName, title: title, email: email, phoneNumber: phoneNumber, experienceYear: experienceYear, clients: clients, projects: projects, description: description } = req.body
 
     try {
         if (req.files.length === 0) {
@@ -35,7 +35,9 @@ const createMe = async(req, res) => {
                 experienceYear: experienceYear,
                 clients: clients,
                 description: description,
+                projects: projects,
                 pictures: imagesMe
+
 
             })
 
@@ -64,6 +66,7 @@ const updateMe = async(req, res) => {
         experienceYear: experienceYear,
         clients: client,
         description: description,
+        projects: projects,
     } = req.body
     try {
         const checkData = await meModel.find()
@@ -105,6 +108,7 @@ const updateMe = async(req, res) => {
                 experienceYear: experienceYear || checkData[0].experienceYear,
                 clients: client || checkData[0].clients,
                 description: description || checkData[0].description,
+                projects: projects || checkData[0].projects,
                 pictures: img
             }
         }

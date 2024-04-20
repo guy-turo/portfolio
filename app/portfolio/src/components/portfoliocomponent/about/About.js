@@ -1,10 +1,29 @@
-import React from 'react'
+import React,{useEffect,useState} from 'react'
 import './about.css'
 import me from '../../../assets/me.jpg'
 import { FaAward } from "react-icons/fa6";
 import { FaUsers } from "react-icons/fa";
 import { AiOutlineFundProjectionScreen } from "react-icons/ai";
-function About() {
+import axios from 'axios'
+const  About=()=> {
+  const [image,setImage]=useState('')
+  const [aboutData, setAboutData]=useState([])
+  
+  const fetchData=()=>{
+    const URI="http://localhost:8000/api/v1/me/personal"
+    axios.get(URI)
+    .then(res=>{
+      console.log(res.data[0])
+      
+      setImage(res.data[0].pictures[1])
+      setAboutData(res.data[0])}
+      
+    )
+    .catch(error=>console.log(error.message))
+  }
+  useEffect(()=>{
+    fetchData()
+  },[])
   return (
    <section id="about">
     <h5>Get To Know</h5>
@@ -12,7 +31,7 @@ function About() {
     <div className="container flex flex-col md:space-x-8 md:flex-row">
       <div className="about_me ">
         <div className="about_me-image">
-          <img src={me} alt="About Image" />
+          <img src={image} alt="About Image" />
         </div>
       </div>
       <div className="flex items-center md:items-start justify-center flex-col space-y-8 h-3/4">
@@ -20,23 +39,20 @@ function About() {
           <article className='flex flex-col items-center cursor-pointer '>
           <FaAward  className='about_icon'/>
             <h5>Experience</h5>
-            <small>5+ Years Working</small>
+            <small>{aboutData.experienceYear}+ Years Working</small>
           </article>
           <article className='flex flex-col items-center cursor-pointer'>
           <FaUsers  className='about_icon'/>
             <h5>Clients</h5>
-            <small>20+ worldwide</small>
+            <small>{aboutData.clients}+ worldwide</small>
           </article>
           <article className='flex flex-col items-center cursor-pointer'>
           <AiOutlineFundProjectionScreen  className='about_icon'/>
             <h5>Projects</h5>
-            <small>25+ Completed </small>
+            <small>{aboutData.projects}+ Completed </small>
           </article>
         </div>
-        <p>Senior Software Engineer
-          🧊Innovator and full-stack software engineer, open source development, systems architecture and product design, chatbots and AI models, FinTech and blockchain development.
-          🔑Imagination is the centerpiece of creation; limitation is the barrier to cross.🪞If we have not yet conquered death, it is because we are limited, simply our imagination is limited at the moment.
-        </p>
+        <p>{aboutData.description}</p>
         <a href="#contact" className='p-10 bg-blue-400 w-40 h-3 items-center flex rounded-lg text-black font-semibold'>Let's Talk</a>
       </div>
     </div>

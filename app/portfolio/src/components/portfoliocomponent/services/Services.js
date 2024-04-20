@@ -22,7 +22,7 @@ function Services() {
       <div className='flex object-center justify-center items-center '>
         <ul className>
           {servicesData && servicesData.map((item,index)=><li key={index} className='grid grid-cols-1 place-self-center  md:grid-cols-2 lg:grid-cols-4 h-fit w-fit space-y-2 md:space-x-2'>
-          <article className='flex rounded-2xl flex-col w-3/4   md:w-fit h-fit items-center border-gray-800 border-2 bg-slate-500 hover:bg-slate-800'>
+          <article className='flex rounded-2xl flex-col w-3/4   md:w-fit h-fit items-center border-gray-800 border-2 bg-slate-700 hover:bg-slate-800'>
           <div className=' p-0 bg-gray-900 flex items-center justify-center w-full h-20 rounded-br-2xl rounded-bl-2xl self-center'>
             <h3 className='flex items-center'>Other</h3>
           </div>
@@ -33,7 +33,7 @@ function Services() {
               </li>)}
             </ul>
         </article>
-          <article className='flex rounded-2xl flex-col w-3/4  md:w-fit h-fit items-center border-gray-800 border-2 bg-slate-500 hover:bg-slate-800'>
+          <article className='flex rounded-2xl flex-col w-3/4  md:w-fit h-fit items-center border-gray-800 border-2 bg-slate-700 hover:bg-slate-800'>
           <div className=' p-0 bg-gray-900 flex items-center justify-center w-full h-20 rounded-br-2xl rounded-bl-2xl self-center'>
             <h3 className='flex items-center'>UI/UX Design</h3>
           </div>
@@ -44,7 +44,7 @@ function Services() {
               </li>)}
             </ul>
         </article>
-        <article className='flex rounded-2xl flex-col w-3/4  md:w-fit h-fit items-center border-gray-800 border-2 bg-slate-500 hover:bg-slate-800'>
+        <article className='flex rounded-2xl flex-col w-3/4  md:w-fit h-fit items-center border-gray-800 border-2 bg-slate-700 hover:bg-slate-800'>
           <div className=' p-0 bg-gray-900 flex items-center justify-center w-full h-20 rounded-br-2xl rounded-bl-2xl self-center'>
             <h3 className='flex items-center'>Front End Developer</h3>
           </div>
@@ -55,7 +55,7 @@ function Services() {
               </li>)}
             </ul>
         </article>
-        <article className='flex rounded-2xl flex-col w-3/4  md:w-fit h-fit items-center border-gray-800 border-2 bg-slate-500 hover:bg-slate-800'>
+        <article className='flex rounded-2xl flex-col w-3/4  md:w-fit h-fit items-center border-gray-800 border-2 bg-slate-700 hover:bg-slate-800'>
           <div className=' p-0 bg-gray-900 flex items-center justify-center w-full h-20 rounded-br-2xl rounded-bl-2xl self-center'>
             <h3 className='flex items-center'>Back End Developer</h3>
           </div>

@@ -1,5 +1,5 @@
 const { PdfModel } = require('../models/pdfModel')
-const { getCloudinaryImagePath } = require('../utility/helper')
+const { getCloudinaryImagePath, generateDownloadLink } = require('../utility/helper')
 const cloudinary = require('cloudinary').v2
 
 
@@ -110,7 +110,43 @@ const deletePdf = async(req, res) => {
 
     } catch (error) { res.status(500).json({ message: error.message }) }
 }
+const downloadPdf = async(req, res) => {
+    console.log("downloading...")
+    try {
+        const response = await PdfModel.findById({ _id: req.params.urlPdf })
+        const id = response.pdfUrl
+        const getCloudinaryImagePaths = (url) => {
+            const urlParts = url.split('/');
 
+            if (urlParts.length < 7 || urlParts[0] !== 'https:' || urlParts[2] !== 'res.cloudinary.com') {
+                throw new Error('Invalid Cloudinary URL format');
+            }
+            const urlImage = urlParts.slice(8).join('/')
+            return urlImage.slice(0, -4)
+        }
+        let pdfId = getCloudinaryImagePaths(id)
+        console.log(pdfId)
+            // if (pdfId) {
+            //     const pdfData = cloudinary.url(pdfId, {
+
+        //         format: "pdf" // Specify format (if provided)
+        //     })
+
+        //     res.setHeader('Content-Type', 'application/pdf');
+        //     console.log('setting...done content type')
+        //     res.setHeader('Content-Disposition', `attachment; filename=${pdfId}.pdf`);
+        //     console.log('setting...done content-disposition')
+        //     res.redirect(pdfData)
+        //     console.log("sent link :" + pdfData)
+        // }
+        const downloadLink = await generateDownloadLink(pdfId);
+        console.log(downloadLink)
+        res.json({ downloadLink });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error downloading PDF');
+    }
+}
 const fetchSinglePdf = async(req, res) => {
     try {
         const pdf = await imagesModel.findById(req.params.Id)
@@ -137,6 +173,7 @@ const fetchPdf = async(req, res) => {
     }
 }
 module.exports = {
+    downloadPdf,
     pdfUpload,
     updatePdf,
     deletePdf,

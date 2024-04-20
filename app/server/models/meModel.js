@@ -30,6 +30,7 @@ const meSchema = new schema({
         type: String,
         required: true,
     },
+    projects: { type: String, },
     pictures: {
         type: Array,
     },

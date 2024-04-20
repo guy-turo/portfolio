@@ -1,6 +1,21 @@
-import React from 'react'
+import React,{useState,useEffect} from  'react'
+import axios from 'axios'
 
 function Footer() {
+  const [SocialsData,setSocialsData]=useState([])
+  const fetchData=()=>{
+    const URI="http://localhost:8000/api/v1/me/socials"
+    axios.get(URI)
+    .then((response)=>{
+      if(response.status===200){
+        setSocialsData(response.data)
+      }
+    })
+    .catch(error=>console.error(error.message))
+  }
+  useEffect(()=>{
+    fetchData()
+  },[])
   return (
     <footer id='footer' className="">
       
@@ -23,11 +38,7 @@ function Footer() {
        <div className='items-center flex flex-col'>
         <h3 className='text-zinc-300 font-semibold'>Social</h3>
        <ul className='items-center flex flex-col'>
-          <li><a href=""  className="flex text-nowrap">Github</a></li>
-          <li><a href=""  className="flex text-nowrap">Twitter X</a></li>
-          <li><a href=""  className="flex text-nowrap">Instagram</a></li>
-          <li><a href="https://www.linkedin.com/in/kasongo-kakumbi-guy">LinkedIn</a></li>
-          
+          {SocialsData && SocialsData?.map((item, index)=><li key={index}><a href={item.link}  className="flex text-nowrap">{item.title}</a></li>)}
         </ul>
        </div>
 

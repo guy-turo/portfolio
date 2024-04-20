@@ -7,7 +7,7 @@ const pdfUpload = async(req, res, next) => {
     console.log('pdf Uploading...')
     try {
         const file = req.file
-
+        console.log(file)
         if (!file && !file.path && !file.originalname) {
             const error = new Error("please upload a file")
             error.httpStatusCode = 400
@@ -18,35 +18,64 @@ const pdfUpload = async(req, res, next) => {
             fileName: req.file.originalname,
             pdfUrl: file.path,
         })
-        console.log(newPdf)
         await newPdf.save()
+            .then((response) => {
+                res.status(200).json(file)
+                console.log("uploaded")
+                console.log(response)
+            })
 
-        res.status(200).json(file)
-        console.log("uploaded")
     } catch (e) {
         res.status(500).json({ message: 'unable to to upload image' })
     }
 
 }
 const updatePdf = async(req, res) => {
+    console.log("updating...")
     try {
         const { id: id } = req.params
-        const data = await PdfModel.findById(id)
+        const data = await PdfModel.findById({ _id: id })
 
         if (!data) {
             return res.status(404).json({ message: "Item not fount" })
         }
+        console.log(data)
+        console.log("existing checked..")
 
-        let newPdfId = getCloudinaryImagePath(data.pdfUrl)
-        if (newPdfId) {
-            await cloudinary.uploader.destroy(newImageId)
+        if (req.file) {
+            let newPdfId = getCloudinaryImagePath(data.pdfUrl)
+            await cloudinary.uploader.destroy(newPdfId)
+            console.log("last pdf has been deleted")
         }
-        data.fileName = req.file.fileName || data.fileName
-        data.pdfUrl = req.file.path || data.pdfUrl
+        let name
+        if (req.file.url) {
+            name = req.file.originalname
+        } else {
+            name = req.body.fileName
+        }
 
-        await data.save()
-        res.status(200).json({ message: 'Item updated successfully' })
-        console.log('updated successfully')
+        console.log("update proceed")
+        const newData = {
+            $set: {
+                fileName: name,
+                pdfUrl: req.file.path || data.pdfUrl
+            }
+        }
+        console.log("saving new pdf...")
+        console.log(data + "to update")
+        const update = await PdfModel.updateMany({ _id: id }, newData, { new: true }, (err, doc) => {
+            if (err) {
+                console.log("Something wrong when updating data!")
+            }
+        })
+        if (update.modifiedCount === 1) {
+            res.status(200).json({ message: 'Item updated successfully' })
+            console.log('updated successfully')
+            console.log(update)
+            console.log(data)
+        } else {
+            console.log("failed")
+        }
     } catch (e) {
         res.status(500).json(e.message)
     }
@@ -57,18 +86,28 @@ const deletePdf = async(req, res) => {
     try {
         const pdf = await PdfModel.findById({ _id: id })
         if (!pdf) {
-            res.status(404).json({ message: "Image not found" })
+            res.status(404).json({ message: "pdf not found" })
         }
-
-        const publicId = getCloudinaryImagePath(pdf.pdfUrl)
-        result = await cloudinary.uploader.destroy(publicId);
-        if (result.result === 'ok') {
-            await PdfModel.deleteOne({ _id: id })
-            res.status(200).json({ message: "image deleted" })
+        console.log(pdf)
+        if (pdf.pdfUrl !== '') {
+            const publicId = getCloudinaryImagePath(pdf.pdfUrl)
+            result = await cloudinary.uploader.destroy(publicId);
+            if (result.result === 'ok') {
+                console.log("pdf deleted")
+            } else {
+                console.log("Can't delete pdf")
+            }
         } else {
-            res.status(404).json({ message: 'Error deleting image' });
+            console.log('not pdf found')
         }
-        console.log("deleted")
+        console.log(pdf)
+        await PdfModel.deleteOne({ _id: id })
+            .then(re => {
+                console.log(res)
+                res.status(200).json({ message: 'pdf deleted' })
+            })
+            .catch(e => console.log(e))
+
     } catch (error) { res.status(500).json({ message: error.message }) }
 }
 

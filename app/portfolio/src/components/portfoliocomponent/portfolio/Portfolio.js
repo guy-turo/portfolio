@@ -21,7 +21,7 @@ const  Portfolio=()=> {
     <section id='portfolio'>
        <h5>My Recent Work</h5>
       <h2>Portfolio</h2>
-      <div className='items-center justify-items-center container grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 space-x-2 space-y-2'>
+      <div className='space-x-2 space-y-2'>
         <ul>
           {portfolioData && portfolioData.map((item, index)=><li key={index} className='h-fit'>
           <article className='bg-blue-900 hover:bg-blue-800 w-44 h-56 rounded-xl py-2 flex flex-col items-center'>

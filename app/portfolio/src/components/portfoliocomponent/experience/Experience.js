@@ -10,7 +10,7 @@ function Experience() {
     axios.get(URI)
     .then((response)=>{
       console.log(response.data[0])
-      setExperiencesData(response.data[0])
+      setExperiencesData(response.data)
     })
     .catch(error=>console.log(error.message))
   }
@@ -23,13 +23,15 @@ function Experience() {
       <h5>What Skills I Have</h5>
       <h2>My Experience</h2>
 
-      <div className="flex flex-col md:flex-row  md:justify-evenly space-y-10 md:space-y-0 md:space-x-10 items-center md:items-start px-20">
-         <div className="items-center hover:bg-slate-600 flex   flex-col space-y-5 bg-slate-900 rounded-2xl w-full md:w-1/2    h-full md:h-fit">
+      <div className=" space-y-10 md:space-y-0 md:space-x-10 items-center md:items-start px-20">
+         <ul className="flex object-center justify-center items-center ">
+          {experiencesData && experiencesData.map((item, index)=><li className='grid grid-cols-1 place-self-center items-center justify-center  md:grid-cols-2 lg:grid-cols-2 h-fit w-fit space-y-2 md:space-x-2'>
+            <div className="items-center hover:bg-slate-600 flex   flex-col space-y-5 bg-slate-900 rounded-2xl w-full md:w-fit    h-full md:h-fit">
           <h2 className='flex text-zinc-300'>Frontend Development</h2>
           <div className=" w-full h-full md:px-20">
             
             <ul  className="grid grid-cols-3 w-full">
-              {experiencesData && experiencesData.frontend.map((item,index)=><li key={index} className="w-full">
+              {experiencesData && item.frontend.map((item,index)=><li key={index} className="w-full">
               <article className='flex space-x-2 items-start'>
               <BsPatchCheckFill />
               <div>
@@ -43,11 +45,11 @@ function Experience() {
            
           </div>
           </div>
-          <div className="items-center hover:bg-slate-600 flex  flex-col space-y-5 bg-slate-900 rounded-2xl w-full md:w-1/2  h-full md:fit">
+          <div className="items-center hover:bg-slate-600 flex  flex-col space-y-5 bg-slate-900 rounded-2xl w-full md:w-fit  h-full md:fit">
          <h3 className='flex text-zinc-300'>Backend Development</h3> 
           <div className="  w-full h-full md:px-20">
           <ul className="grid grid-cols-3   w-fit">
-            {experiencesData&& experiencesData.backend.map((item, index)=><li className="w-full">
+            {experiencesData&& item.backend.map((item, index)=><li className="w-full">
               <article className='flex  space-x-2 '>
               <BsPatchCheckFill/>
               <div>
@@ -65,6 +67,9 @@ function Experience() {
             
            
           </div>
+          </li>)}
+         </ul>
+        
       </div>
     </section>
   )

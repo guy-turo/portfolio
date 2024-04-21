@@ -3,7 +3,6 @@ import axios from 'axios'
 import { FaRegCircleRight } from "react-icons/fa6";
 import { FaRegCircleLeft } from "react-icons/fa6";
 
-import { MdDelete } from "react-icons/md";
 import UpdateExperience from './helper/UpdateExperience';
 function ExperienceComponent() {
   const [successMessage,setSuccessMessage]=useState('')
@@ -17,8 +16,10 @@ function ExperienceComponent() {
   const [otherS, setOtherS]=useState('')
 
   const [experiencesData,setExperiencesData]=useState([])
+  const [process,setProcess]=useState(true)
 const addService=(e)=>{
   e.preventDefault()
+  setProcess(!process)
   const URI="http://localhost:8000/api/v1/me/experiences"
     axios.post(URI,{
       frontend:frontendS,
@@ -30,16 +31,7 @@ const addService=(e)=>{
     })
     .catch(error=>setMessage(error.message))
 }
-const deleteServices=(id ,el)=>{
-  // const URI=`http://localhost:8000/api/v1/me/services/${id}`
-  // axios.patch(URI,{
-  //   el:el
-  // })
-  // .then((response)=>{
-  //   console.log(response.data)
-  // })
-  // .catch(error=>console.log(error.message))
-} 
+
 const fetchServices=()=>{
   const URI=`http://localhost:8000/api/v1/me/experiences`
   axios.get(URI)
@@ -69,9 +61,9 @@ useEffect(()=>{
       <input type="text" value={otherS} onChange={e=>setOtherS(e.target.value)} id="other" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
       </div>
       </div>
-      <button type="submit" className="px-4 bg-green-700 w-full rounded-md">
+      <button type="submit" className="px-4 bg-green-700 w-fit rounded-md">
             {message!=='' && <h3 className='text-red-700'>try again</h3>}
-            {!message &&successMessage==="" && <h3>save</h3>}
+            {!message &&successMessage==="" && <h3>{process?"save":"saving"}</h3>}
             {successMessage && <h3>saved</h3>}
             </button>
     </form>

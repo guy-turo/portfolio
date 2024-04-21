@@ -29,10 +29,7 @@ function Header() {
         <CTA />
         <div className="sec">
         <div className='me'>
-          {personalData&&
-          
-          <img src={image} alt="" className='flex rounded-tr-3xl rounded-tl-3xl'/>
-          }
+          {personalData&&<img src={image} alt="" className='flex rounded-tr-3xl rounded-tl-3xl'/>}
         </div>
         <p className='scroll_down'></p>
       </div>

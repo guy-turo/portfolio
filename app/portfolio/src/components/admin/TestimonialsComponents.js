@@ -21,6 +21,7 @@ const TestimonialsComponent=()=>{
     const files=event.target.files[0]
     setImageTestimonials(files)
   }
+  const [process,setProcess]=useState(true)
   const fetchTestimonialData=()=>{
     const URI="http://localhost:8000/api/v1/me/testimonials"
     axios.get(URI)
@@ -36,6 +37,7 @@ const TestimonialsComponent=()=>{
   },[])
   const addTestimonial=(e)=>{
     e.preventDefault()
+    setProcess(!process)
     console.log('proceed')
     if(imageTestimonials===null){
       setMessage("please select a file to upload")
@@ -51,7 +53,8 @@ const TestimonialsComponent=()=>{
     const URI="http://localhost:8000/api/v1/me/testimonials"
       axios.post(URI,formData)
       .then((response)=>{
-        if(response.status === 200){
+       
+          setProcess(!process)
           setMessage('testimonial has been created')
           setTimeout(()=>{
             setImageTestimonials()
@@ -60,7 +63,7 @@ const TestimonialsComponent=()=>{
             setTitleT("")
             setTestimonialsT("")
           },1500)
-        }
+        
       })
       .catch(error=>console.log(error))
     }
@@ -114,9 +117,9 @@ const TestimonialsComponent=()=>{
           <div className="space-y-1">
           {message && <textarea rows="1" cols="40" className='text-black  rounded-md  bg-red-500'>{message}</textarea>}
           {successMessage && <textarea rows="1" cols="40" value="Image uploaded successfully" className='text-black items-center justify-center flex  rounded-md  bg-green-500 text-center text-blue-800'></textarea>}
-          <button type="submit" className="px-4 bg-green-700 w-full rounded-md">
+          <button type="submit" className="px-4 bg-green-700 w-fit rounded-md">
             {message!=='' && <h3 className='text-red-700'>try again</h3>}
-            {!message &&successMessage==="" && <h3>save</h3>}
+            {!message &&successMessage==="" && <h3>{process?"save":"saving..."}</h3>}
             {successMessage && <h3>saved</h3>}
             </button>
       
@@ -125,8 +128,8 @@ const TestimonialsComponent=()=>{
   </div>
    
     <button className='w-fit' onClick={()=>setMoreFunction(!moreFunction)}>{moreFunction?<FaRegCircleLeft className='size-5 text-blue-500'/>:<FaRegCircleRight  className='size-5 text-blue-500'/>} </button>
-    {TestimonialData.length!==0 && <div className="flex flex-row   rounded-md w-full h-full bg-transparent border border-solid border-black shadow-md">
-    <ul className=" grid grid-cols-1 place-items-center  w-full mt-1 mb-1  sm:grid-cols-1 md:grid-cols-2 px-1     overflow-y-auto ">
+    {TestimonialData.length!==0 && <div className=" rounded-md w-full h-full bg-transparent border border-solid border-black shadow-md">
+    <ul className=" grid grid-cols-1 place-items-center justify-center  w-full h-fit mt-1 mb-1  sm:grid-cols-1 md:grid-cols-2 px-1     overflow-y-auto ">
       {TestimonialData.map(
         (item,index)=>(
         <li key={index} className=' shadow-2xl border mb-1 mt-1 border-solid border-gray-500  space-y-1 sm:space-y-0 sm:space-x-1 rounded-md w-60 h-60 items-center flex flex-col justify-center'>
@@ -136,7 +139,7 @@ const TestimonialsComponent=()=>{
             
           <h2 className='underline px-1 rounded-sm text-blue-950'>{item.name}</h2>
           <h2 className='underline font-normal px-1 rounded-sm'>{item.title}</h2>
-          <h3 className='border-solid text-clip h-20 mx-2 font-normal border-gray-400  rounded-sm'>{item.testimonials}</h3>
+          <p className='border-solid px-1 text-wrap items-center flex justify-center h-fit mx-2 font-normal border-gray-500  rounded-sm'>{item.testimonials}</p>
           
           
           <div className={`space-x-2 ${moreFunction?"hidden":"block"}`}>

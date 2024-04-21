@@ -12,7 +12,9 @@ function PdfComponent() {
 
   const [pdfData,setPdfData]=useState(null)
   const [fileName,setFileName]=useState('')
+  const [process,setProcess]=useState(true)
  const addPdfData=()=>{
+  setProcess(!process)
  const URI="http://localhost:8000/api/v1/pdf/upload"
  const formData = new FormData()
  formData.append('file',pdfData)
@@ -45,11 +47,12 @@ function PdfComponent() {
   },[])
   const deletePdf=(id)=>{
     const URI=`http://localhost:8000/api/v1/pdf/${id}`
-    axios.delete(URI).
-    then(res=>alert("deleted"))
+    axios.delete(URI)
+    .then(res=>alert("deleted"))
     .catch(error=>alert("error :"+error.message))
   }
   const updatePdf=(id)=>{
+    setProcess(!process)
     const URI=`http://localhost:8000/api/v1/pdf/${id}`
     const formData=new FormData()
     formData.append('file',pdfData)
@@ -116,12 +119,12 @@ function PdfComponent() {
       {message&& !successMessage &&<textarea  cols={30 } rows={2} className="text-gray-400 bg-red-600 rounded-md p-1">{message}</textarea>}
       {!data&&  <button onClick={addPdfData} className="px-4 w-fit bg-green-700 rounded-md">
             {message!=='' && <h3 className='text-red-400'>try again</h3>}
-            {!message && successMessage==="" && <h3>upload pdf</h3>}
+            {!message && successMessage==="" && <h3>{process?"upload pdf":"uploading... pdf"}</h3>}
             {successMessage && <h3>uploaded pdf</h3>}
           </button>}
           {data &&  <button onClick={()=>updatePdf(data?._id)} className="px-4 w-fit bg-green-700 rounded-md">
             {message!=='' && <h3 className='text-red-400'>try again Update</h3>}
-            {!message &&successMessage==="" && <h3>Update pdf</h3>}
+            {!message &&successMessage==="" && <h3>{process?"Update pdf":"updating pdf"}</h3>}
             {successMessage && <h3>updated pdf</h3>}
           </button>}
    

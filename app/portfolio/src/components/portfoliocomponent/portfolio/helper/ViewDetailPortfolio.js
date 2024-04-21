@@ -1,6 +1,5 @@
 import React,{useState} from 'react'
 import Dialog from "../../../../utils/Dialog"
-import axios from 'axios'
 import { CgMoreO } from "react-icons/cg";
 const ViewDetailPortfolio=({item})=> {
 const [open,setOpen]=useState(false)
@@ -12,8 +11,8 @@ const  onClose=()=>setOpen(!open)
       </button>
         <Dialog onClose={onClose} open={open}>
           <div className="pt-3 w-fit space-y-2 overflow-x-auto  items-center justify-center rounded px-10 pb-5 h-fit flex flex-col shadow-lg bg-slate-300 border border-solid border-blue-600">
-            <h2 className="text-gray-400 underline">{item.title}</h2>
-                  <ul className="grid grid-cols-4 ">
+            <h2 className="text-gray-400 underline text-2xl">{item.title}</h2>
+                  <ul className={`grid grid-cols-${item.pictures.length} `}>
                     {item.pictures.map((data,index)=><li key={index}>
                     <img src={data} alt="" className='size-40 rounded-md object-cover'/>
                     </li>)}

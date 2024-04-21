@@ -13,7 +13,7 @@ const  About=()=> {
     const URI="http://localhost:8000/api/v1/me/personal"
     axios.get(URI)
     .then(res=>{
-      console.log(res.data[0])
+      
       
       setImage(res.data[0].pictures[1])
       setAboutData(res.data[0])}

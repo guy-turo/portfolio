@@ -27,8 +27,10 @@ const handleFileName=(event)=>{
   const [linkGithub,setLinkGithub]=useState('')
   const [linkLive,setLinkLive]=useState('')
   const [description,setDescription]=useState('')
+  const [process,setProcess]=useState(true)
 const addProject=(e)=>{
   e.preventDefault()
+  setProcess(!process)
   const formData= new FormData()
   if(!imageProjects){
     
@@ -42,6 +44,7 @@ const addProject=(e)=>{
   const URI="http://localhost:8000/api/v1/me/projects"
     axios.post(URI, formData)
     .then((response)=>{
+      setProcess(!process)
      setSuccessMessage(response.data)
      setTimeout(()=>{
       setTitle("")
@@ -118,17 +121,17 @@ const deleteProject=(id)=>{
          </label>
           <input type="file" required multiple id='images'  onChange={handleFileName} accept='image/*' hidden/>
           </div>
-          <button type="submit" className="px-4 bg-green-700 w-full rounded-md">
+          <button type="submit" className="px-4 bg-green-700 w-fit rounded-md">
             {message!=='' && <h3 className='text-red-700'>try again</h3>}
-            {!message &&successMessage==="" && <h3>save</h3>}
+            {!message &&successMessage==="" && <h3>{process?"save":"saving..."}</h3>}
             {successMessage && <h3>saved</h3>}
           </button>
     </form>
    </div>
    <button className='w-fit' onClick={()=>setMoreFunction(!moreFunction)}>{moreFunction?<FaRegCircleLeft className='size-5 text-blue-500'/>:<FaRegCircleRight  className='size-5 text-blue-500'/>} </button>
     {projectsData.length!==0 && 
-      <div className="flex flex-row   rounded-md w-full h-fit bg-transparent border border-solid border-black shadow-md">
-        <ul  className=" grid grid-cols-3  px-1 space-x-1 items-center justify-center overflow-x-auto overflow-y-hidden">
+      <div className=" rounded-md w-full h-fit bg-transparent border border-solid border-black shadow-md">
+        <ul  className=" grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  px-1 sm:space-y-1 space-x-1 items-center justify-around overflow-x-auto overflow-y-hidden">
           {projectsData.map(
             (item,index)=>(
               <li key={index} className='flex border  border-solid border-gray-500  rounded-md p-2 flex-col justify-center items-center'>

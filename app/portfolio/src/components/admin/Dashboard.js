@@ -10,7 +10,8 @@ function Dashboard() {
         <div className=" flex w-6/6  h-52 bg-blue-800"></div>
         <div className=" flex w-6/6  h-52 bg-blue-800"></div>
         <div className=" flex w-6/6  h-52 bg-blue-800"></div>
-     <div className=" flex w-6/6  h-52 bg-blue-800"></div>    </div>
+        <div className=" flex w-6/6  h-52 bg-blue-800"></div>
+     </div>
   )
 }
 

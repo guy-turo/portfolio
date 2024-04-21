@@ -4,13 +4,15 @@ import axios from 'axios'
 function Footer() {
   const [SocialsData,setSocialsData]=useState([])
 
-  const firstFourElements = Array.from(SocialsData.values()).slice(0, 4);
+  
+ 
   const fetchData=()=>{
     const URI="http://localhost:8000/api/v1/me/socials"
     axios.get(URI)
     .then((response)=>{
       if(response.status===200){
         setSocialsData(response.data)
+       
       }
     })
     .catch(error=>console.error(error.message))
@@ -19,11 +21,13 @@ function Footer() {
     fetchData()
   },[])
   const [portfolioData, setPortfolioData]=useState([])
+  const firstFourElements = portfolioData.slice(0,7);
   const fetchProjectData=()=>{
     const URI="http://localhost:8000/api/v1/me/projects"
     axios.get(URI)
     .then((res)=>{
       setPortfolioData(res.data)
+     
     })
     .catch(error=>
      alert("something went wrong")
@@ -54,7 +58,7 @@ function Footer() {
        <div className='items-center flex flex-col'>
         <h3 className='text-zinc-300 font-semibold'>Social</h3>
        <ul className='items-center flex flex-col'>
-          {SocialsData && firstFourElements?.map((item, index)=><li key={index}><a href={item.link}  className="flex text-nowrap">{item.title}</a></li>)}
+          {SocialsData && SocialsData?.map((item, index)=><li key={index}><a href={item.link}  className="flex text-nowrap">{item.title}</a></li>)}
         </ul>
        </div>
 
@@ -62,9 +66,10 @@ function Footer() {
           <h3 className='text-zinc-300 font-semibold'>Projects</h3>
 
         <ul className='items-center flex flex-col'>
-          {portfolioData && portfolioData.map((item, index)=><li key={index}><a href={item.linkGithub}>{item.title}</a></li>)
+          {portfolioData && firstFourElements.map((item, index)=><li key={index}><a href={item.linkGithub}>{item.title}</a></li>)
             
           }
+          <a href="https://github.com/guy-turo?tab=repositories"  className="flex text-nowrap">more</a>
         </ul>
         </div>
         {/* <div className='items-center justify-items-center flex flex-col'>

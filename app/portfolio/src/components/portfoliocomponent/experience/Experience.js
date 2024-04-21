@@ -9,7 +9,6 @@ function Experience() {
     const URI=`http://localhost:8000/api/v1/me/experiences`
     axios.get(URI)
     .then((response)=>{
-      console.log(response.data[0])
       setExperiencesData(response.data)
     })
     .catch(error=>console.log(error.message))
@@ -45,7 +44,7 @@ function Experience() {
            
           </div>
           </div>
-          <div className="items-center hover:bg-slate-600 flex  flex-col space-y-5 bg-slate-900 rounded-2xl w-full md:w-fit  h-full md:fit">
+          <div className="items-center hover:bg-slate-600 flex  flex-col space-y-5 bg-slate-900 rounded-2xl w-full md:w-fit   h-full md:fit">
          <h3 className='flex text-zinc-300'>Backend Development</h3> 
           <div className="  w-full h-full md:px-20">
           <ul className="grid grid-cols-3   w-fit">

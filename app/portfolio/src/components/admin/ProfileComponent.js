@@ -22,9 +22,10 @@ function ProfileComponent() {
   const [clients, setClients]=useState('')
   const [description,setDescription]=useState('')
   const [projects,setProjects]=useState('')
+  const [process,setProcess]=useState(true)
   const addProfile=(e)=>{
     e.preventDefault()
-    console.log('creating...')
+    setProcess(!process)
     const formData=new FormData()
     meImage.forEach(image=>formData.append("file",image))
     formData.append("fullName", fullName)
@@ -70,8 +71,9 @@ const fetchData=()=>{
 useEffect(()=>{
   fetchData()
 },[])
+
 const updateProfile=(id)=>{
-  console.log('updating...')
+ setProcess(!process)
   const formDataUpdate=new FormData()
   meImage.forEach(image=>formDataUpdate.append("file",image))
   console.log(meImage)
@@ -86,6 +88,7 @@ const updateProfile=(id)=>{
   const URI=`http://localhost:8000/api/v1/me/personal/${id}`
   axios.put(URI, formDataUpdate)
   .then(re=>{
+    setProcess(!process)
     setSuccessMessage("Data has been Updated successfully")
     setTimeout(()=>{
       setMeImage([])
@@ -200,9 +203,9 @@ const updateProfile=(id)=>{
           <button onClick={()=>{
             console.log("id:"+meData._id)
             updateProfile(meData._id)}
-            } className="px-4 bg-green-700 w-full rounded-md hover:text-blue-400">
+            } className="px-4 bg-green-700 w-fit rounded-md hover:text-blue-400">
             {message!=='' && <h3 className='text-red-700'>try again to Update</h3>}
-            {!message &&successMessage==="" && <h3 >update</h3>}
+            {!message &&successMessage==="" && <h3 >{process?"update":"updating..."}</h3>}
             {successMessage && <h3>updated</h3>}
             </button>
       
@@ -210,9 +213,9 @@ const updateProfile=(id)=>{
           {!meData&&<div className="space-y-1">
         {message && <textarea rows="1" cols="40" className='text-black  rounded-md  bg-red-500'>{message}</textarea>}
         {successMessage && <textarea rows="1" cols="40" value="Image uploaded successfully" className='text-black items-center justify-center flex  rounded-md  bg-green-500 text-center text-blue-800'></textarea>}
-        <button onSubmit={addProfile()} className="px-4 bg-green-700 w-full rounded-md">
+        <button onSubmit={addProfile()} className="px-4 bg-green-700 w-fit rounded-md">
           {message!=='' && <h3 className='text-red-700'>try again to create</h3>}
-          {!message &&successMessage==="" && <h3>save</h3>}
+          {!message &&successMessage==="" && <h3>{process?"save":"saving..."}</h3>}
           {successMessage && <h3>saved</h3>}
           </button>
         </div>}

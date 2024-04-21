@@ -15,9 +15,10 @@ function SocialComponent() {
   const [linkSC,setLinkSC]=useState('')
 
   const [socialsData, setSocialData]=useState([])
-
+  const [process,setProcess]=useState(true)
 const addSocial=(e)=>{
   e.preventDefault()
+  setProcess(!process)
   const URI="http://localhost:8000/api/v1/me/socials"
     axios.post(URI,{
      title:titleSC,
@@ -25,6 +26,7 @@ const addSocial=(e)=>{
     })
     .then((response)=>{
       if(response.status===200){
+        setProcess(!process)
         setSuccessMessage('success')
         setTimeout(() => {
           setLinkSC('')
@@ -80,9 +82,9 @@ useEffect(()=>{
           <div className="space-y-1">
           {message && <textarea rows="1" cols="40" className='text-black  rounded-md  bg-red-500'>{message}</textarea>}
           {successMessage && <textarea rows="1" cols="40" value="Image uploaded successfully" className='text-black items-center justify-center flex  rounded-md  bg-green-500 text-center text-blue-800'></textarea>}
-          <button type="submit" className="px-4 bg-green-700 w-full rounded-md">
+          <button type="submit" className="px-4 bg-green-700 w-fit rounded-md">
             {message!=='' && <h3 className='text-red-700'>try again</h3>}
-            {!message &&successMessage==="" && <h3>save</h3>}
+            {!message &&successMessage==="" && <h3>{process?'save':'saving...'}</h3>}
             {successMessage && <h3>saved</h3>}
             </button>
       

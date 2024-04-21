@@ -35,7 +35,7 @@ function CTA() {
   },[])
   return (
     <div className="cta">
-      <a href={pdfData.pdfUrl} onClick={()=>setIsDownloading(!isDownloading)} target="_blank"  className={`btn ${isDownloading?"":"disabled"}`}> {isDownloading ? 'Downloading... CV' : 'Download CV'}</a>
+      <a href={pdfData.pdfUrl} onClick={()=>setIsDownloading(!isDownloading)} target="_blank"  className={`btn ${isDownloading?"":"disabled"}`} rel="noreferrer"> {isDownloading ? 'Downloading... CV' : 'Download CV'}</a>
       {pdfData.pdfUrl&& <div className='w-5 h-5 rounded-full bg-blue-950'></div>}
       <a href="#contact" className='btn btn-primary'>Let's Talk</a>
     </div>

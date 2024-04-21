@@ -3,6 +3,7 @@ import {MdOutlineEmail} from 'react-icons/md'
 import {BsWhatsapp} from 'react-icons/bs'
 import axios from 'axios'
 
+
 function Contact() {
   const [aboutData, setAboutData]=useState([])
   
@@ -17,6 +18,29 @@ function Contact() {
   useEffect(()=>{
     fetchData()
   },[])
+  const [sender,setSender]=useState('')
+  const [name,setName]=useState('')
+  const [message,setMessage]=useState('')
+  const [subject,setSubject]=useState('')
+  const [process,setProcess]=useState(true)
+
+  const sendEmail = (e) => {
+    e.preventDefault();
+    setProcess(!process)
+      const URI="http://localhost:8000/api/v1/me/sendEmail"
+      axios.post(URI,{
+        name:name,
+        sender:sender,
+        subject:subject,
+        message:message
+      })
+      .then((re)=>{
+        if(re.status===200){
+          setProcess(!process)
+        }
+      })
+    .catch(error=>alert("try again"))
+  };
   return (
    <section id='contact' className='pb-10'>
     <h5>Get In Touch</h5>
@@ -38,11 +62,12 @@ function Contact() {
         <a href={`https://wa.me/${aboutData.phoneNumber}`} className='bg-blue-900 px-2 rounded-lg border border-solid shadow-xl hover:text-red-600'>Send a message</a>
         </article >
       </div>
-      <form action="" className='flex flex-col space-y-4 w-96 justify-start'>
-        <input type="text"name='name' placeholder='Your Full Name' required className='p-1 rounded-sm bg-transparent block border border-solid border-blue-800'/>
-        <input type="email" name='email' placeholder='Your Email' required className='p-1 rounded-sm bg-transparent block border border-solid border-blue-800'/>
-        <textarea name="message" rows="7" className='p-1 rounded-sm bg-transparent block border border-solid border-blue-800'></textarea>
-        <button type='submit'  className='bg-green-800 hover:bg-green-900 w-28 rounded-sm text-zinc-300'>Send Message</button>
+      <form onSubmit={sendEmail} className='flex flex-col space-y-4 w-96 justify-start'>
+        <input type="text"name='name' value={name} onChange={(e)=>setName(e.target.value)} placeholder='Your Full Name' required className='p-1 rounded-sm bg-transparent block border border-solid border-blue-800'/>
+        <input type="email" value={sender} onChange={(e)=>setSender(e.target.value)} name='email' placeholder='Your Email' required className='p-1 rounded-sm bg-transparent block border border-solid border-blue-800'/>
+        <input type="subject" value={subject} onChange={(e)=>setSubject(e.target.value)} name='subject' placeholder='Your Subject' required className='p-1 rounded-sm bg-transparent block border border-solid border-blue-800'/>
+        <textarea name="message" value={message} onChange={(e)=>setMessage(e.target.value)} rows="7" className='p-1 rounded-sm bg-transparent block border border-solid border-blue-800'></textarea>
+        <button type='submit'  className='bg-green-800 hover:bg-green-900 w-28 rounded-sm text-zinc-300'>{process?"Send Message":"Sending... Message"}</button>
       </form>
     </div>
    </section>

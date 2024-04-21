@@ -33,7 +33,6 @@ const  Portfolio=()=> {
               <img src={image} alt=""  className='flex size-36 rounded-3xl'/>
               </li>).slice(0,1)}
             </ul>
-            
           </div>
           <div className="flex items-center justify-between w-full px-3 ">
             <div></div>

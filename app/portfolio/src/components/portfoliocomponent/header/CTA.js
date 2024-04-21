@@ -1,5 +1,5 @@
 import React,{useEffect,useState} from 'react'
-import resume from '../../../assets/resume.pdf'
+
 import axios from 'axios'
 
 function CTA() {

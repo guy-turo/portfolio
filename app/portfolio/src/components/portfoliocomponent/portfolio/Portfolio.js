@@ -1,9 +1,10 @@
 import React,{useEffect,useState} from 'react'
-import me from '../../../assets/me.jpg'
+
 import axios from 'axios'
 import ViewDetailPortfolio from './helper/ViewDetailPortfolio'
 const  Portfolio=()=> {
   const [portfolioData, setPortfolioData]=useState([])
+  
   const fetchProjectData=()=>{
     const URI="http://localhost:8000/api/v1/me/projects"
     axios.get(URI)
@@ -27,7 +28,12 @@ const  Portfolio=()=> {
           <article className='bg-blue-900 hover:bg-blue-800 w-44 h-56 rounded-xl py-2 flex flex-col items-center'>
           
           <div className='shadow-2xl w-36 h-36 '>
-            <img src={me} alt=""  className='flex size-36 rounded-3xl'/>
+            <ul>
+              {item.pictures.map((image,index)=><li key={index}>
+              <img src={image} alt=""  className='flex size-36 rounded-3xl'/>
+              </li>).slice(0,1)}
+            </ul>
+            
           </div>
           <div className="flex items-center justify-between w-full px-3 ">
             <div></div>

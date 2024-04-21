@@ -5,6 +5,7 @@ require('dotenv').config()
 
 const routePerson = require('./routes/persona_routes')
 const pdfRoute = require('./routes/pdf_routes.js')
+const authRoutes = require("./routes/auth_routes.js")
 
 const bodyParser = require('body-parser')
 
@@ -19,8 +20,10 @@ app.use(cors())
 
 
 const version = '/api/v1/'
+app.use(`${version}auth`, authRoutes.authRoutes)
 app.use(`${version}me`, routePerson.personRoutes)
 app.use(`${version}pdf`, pdfRoute.pdfRoute)
+
 const start = async() => {
     const port = process.env.PORT || 8000
 

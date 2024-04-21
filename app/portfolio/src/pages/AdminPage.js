@@ -1,5 +1,5 @@
-import React,{useState} from 'react'
-import me from "../assets/me.jpg"
+import React,{useState, useEffect} from 'react'
+import axios from 'axios';
 import { CiLogout } from "react-icons/ci";
 import { MdPersonPin } from "react-icons/md";
 import { MdMenu } from "react-icons/md";
@@ -27,12 +27,28 @@ const AdminPage=()=> {
   const colors={
     backgroundColor:"#1f1f38"
   }
+  const [image,setImage]=useState('')
+  const [aboutData, setAboutData]=useState([])
+  
+  const fetchData=()=>{
+    const URI="http://localhost:8000/api/v1/me/personal"
+    axios.get(URI)
+    .then(res=>{
+      
+      
+      setImage(res.data[0].pictures[1])
+      setAboutData(res.data[0])}
+      
+    )
+    .catch(error=>console.log(error.message))
+  }
+  useEffect(()=>{
+    fetchData()
+  },[])
   return (
-    
     <div className=" flex flex-col h-screen">
       <div className="items-center justify-items-center  ">
         <div className='flex justify-between items-center px-2 bg-blue-950 '>
-        
           <div  className="flex items-center justify-start">
           <MdMenu  onClick={toggleDrawer}  className="flex size-7 md:hidden cursor-pointer"/>
           <Drawer
@@ -47,7 +63,7 @@ const AdminPage=()=> {
               <div className="flex flex-col   rounded-tl-md rounded-bl-md w-12/12  p-1 items-center justify-items-center space-y-1">
               <div className="flex  flex-col items-center justify-center">
                   <div className="w-20 h-20 rounded-full  cursor-pointer">
-                  <img src={me} alt="" className="w-20 h-20 rounded-full"/>
+                  <img src={image} alt="" className="w-20 h-20 rounded-full"/>
                   </div>
                   <h2 className="fex font-bold">Admin</h2>
                 </div>
@@ -78,18 +94,16 @@ const AdminPage=()=> {
           <div className="w-4"></div>
             <div className="w-10 h-10 rounded-full  cursor-pointer">
             <Link to="/" className='p-0'>
-            <img src={me} alt="" className="w-10 h-10 rounded-full"/>
+            <img src={image} alt="" className="w-10 h-10 rounded-full"/>
             </Link>
               
             </div>
           <h2 className="font-semibold fex self-end">Admin</h2>
         </div>
-        
         <div className=" flex hidden md:block space-x-1">
         <button className="bg-blue-800  px-2 rounded-md h-8"><MdPersonPin /></button>
         <button className="bg-red-800 px-2  rounded-md h-8"><CiLogout /></button>
         </div>
-        
       </div>
       <div className="w-full h-full p-1 flex  justify-center rounded-lg shadow-lg  ">
         {/* Tabs Header */}
@@ -118,10 +132,8 @@ const AdminPage=()=> {
             </div>
         </div>
         </div>
-    
     </div>
     </div>
-    
   )
 }
 

@@ -1,6 +1,5 @@
 import React,{useEffect,useState} from 'react'
 import './about.css'
-import me from '../../../assets/me.jpg'
 import { FaAward } from "react-icons/fa6";
 import { FaUsers } from "react-icons/fa";
 import { AiOutlineFundProjectionScreen } from "react-icons/ai";

@@ -24,11 +24,9 @@ const pdfUpload = async(req, res, next) => {
                 console.log("uploaded")
                 console.log(response)
             })
-
     } catch (e) {
         res.status(500).json({ message: 'unable to to upload image' })
     }
-
 }
 const updatePdf = async(req, res) => {
     console.log("updating...")

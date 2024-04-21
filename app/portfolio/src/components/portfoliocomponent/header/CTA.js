@@ -5,24 +5,14 @@ import axios from 'axios'
 function CTA() {
   const [pdfData,setPdfData]=useState([])
   const [isDownloading, setIsDownloading] = useState(false)
-
-  const pdfId=pdfData._id
-  
   const handleDownload = async () => {
     setIsDownloading(true);
     try {
-      const URI=`http://localhost:8000/api/v1/pdf/download-pdf/${pdfId}`
-      const response = await axios.get(URI, { responseType: 'blob' });
-      if (response.status === 302) {
-        const downloadUrl = response.headers.location;
-        console.log(downloadUrl)
         const downloadLink = document.createElement('a');
-        downloadLink.href = downloadUrl;
-        downloadLink.download = `${pdfId}.pdf`;
+        downloadLink.href = pdfData.pdfUrl;
+        downloadLink.target = '_blank';
         downloadLink.click();
-      } else {
-        console.error('Unexpected response');
-      }
+      
     } catch (error) {
       alert("Something went wrong with your connection while downloading"+error.message);
     } finally {
@@ -45,10 +35,7 @@ function CTA() {
   },[])
   return (
     <div className="cta">
-    
-      <button onClick={handleDownload} disabled={isDownloading} className='btn'>
-        {isDownloading ? 'Downloading...' : 'Download PDF'}
-      </button>
+      <a href={pdfData.pdfUrl} onClick={()=>setIsDownloading(!isDownloading)} target="_blank"  className={`btn ${isDownloading?"":"disabled"}`}> {isDownloading ? 'Downloading... CV' : 'Download CV'}</a>
       {pdfData.pdfUrl&& <div className='w-5 h-5 rounded-full bg-blue-950'></div>}
       <a href="#contact" className='btn btn-primary'>Let's Talk</a>
     </div>

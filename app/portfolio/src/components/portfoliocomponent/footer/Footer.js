@@ -3,9 +3,6 @@ import axios from 'axios'
 
 function Footer() {
   const [SocialsData,setSocialsData]=useState([])
-
-  
- 
   const fetchData=()=>{
     const URI="http://localhost:8000/api/v1/me/socials"
     axios.get(URI)
@@ -27,7 +24,6 @@ function Footer() {
     axios.get(URI)
     .then((res)=>{
       setPortfolioData(res.data)
-     
     })
     .catch(error=>
      alert("something went wrong")
@@ -38,7 +34,6 @@ function Footer() {
   },[])
   return (
     <footer id='footer' className="">
-      
       <div className='items-center flex flex-col space-y-10 divide-y-2 divide-solid divide-black'>
       <div className='container pt-10 items-center flex flex-col'>
       <a href="#"  className="space-y-10 "><h1 className='flex font-extrabold underline'>K.K.Guy</h1></a>
@@ -61,36 +56,27 @@ function Footer() {
           {SocialsData && SocialsData?.map((item, index)=><li key={index}><a href={item.link}  className="flex text-nowrap">{item.title}</a></li>)}
         </ul>
        </div>
-
         <div className='items-center justify-items-center flex flex-col'>
           <h3 className='text-zinc-300 font-semibold'>Projects</h3>
-
         <ul className='items-center flex flex-col'>
           {portfolioData && firstFourElements.map((item, index)=><li key={index}><a href={item.linkGithub}>{item.title}</a></li>)
-            
           }
           <a href="https://github.com/guy-turo?tab=repositories"  className="flex text-nowrap">more</a>
         </ul>
         </div>
         {/* <div className='items-center justify-items-center flex flex-col'>
           <h3 className='text-zinc-300 font-semibold'>Rules & Others</h3>
-
         <ul className='items-center flex flex-col'>
           <li><a href=""  className="flex text-nowrap">Conditions of use</a></li>
           <li><a href=""  className="flex text-nowrap">Rules and Securities</a></li>
           <li><a href=""  className="flex text-nowrap">Test new features</a></li>
-
         </ul>
         </div>
          */}
       </div>
-      
-      
       </div>
       <p className='font-serif text-zinc-400 '>© 2020 Kodilux || last modif 02/03/2024</p>
       </div>
-     
-      
     </footer>
   )
 }

@@ -16,6 +16,7 @@ const {
     updateExperiences,
     deleteExperiences,
     fetchExperiences,
+    sendEmail,
     createSocials,
     updateSocials,
     deleteSocials,
@@ -45,6 +46,8 @@ personRoutes.route("/experiences/:id")
 personRoutes.route('/socials')
     .post(createSocials)
     .get(fetchSocials)
+personRoutes.route("/sendEmail")
+    .post(sendEmail)
 personRoutes.route("/socials/:id")
     .put(updateSocials)
     .delete(deleteSocials)

@@ -2,6 +2,8 @@ const meModel = require('../models/meModel')
 const cloudinary = require('cloudinary').v2
 const StatusCodes = require('http-status-codes')
 const { getCloudinaryImagePath } = require('../utility/helper')
+const emailjs = require('@emailjs/nodejs');
+require('dotenv').config()
 
 const { ProjectModel } = require("../models/projectModel")
 const { TestimonialsModel } = require("../models/testimonialsModel")
@@ -518,18 +520,45 @@ const deleteServices = async(req, res) => {
 }
 
 const fetchServices = async(req, res) => {
-    try {
-        const response = await ServicesModel.find()
-        if (response) {
-            res.status(200).json(response)
+        try {
+            const response = await ServicesModel.find()
+            if (response) {
+                res.status(200).json(response)
+            }
+        } catch (error) {
+            res.status(500).json({ message: error.message })
         }
-    } catch (error) {
-        res.status(500).json({ message: error.message })
     }
+    // socials
+const sendEmail = async(req, res) => {
+    const { name: name, subject: subject, message: message, sender: sender } = req.body
+    if (!name && !message) return res.status(404).json({ message: "Name or message not found" })
+    const notes = `Name : ${name} -- Email : ${sender} -- Subject : ${subject} -- Message :${message}`
+
+    var templateParams = {
+        name: name,
+        email: sender,
+        message: notes,
+    };
+
+    emailjs
+        .send(process.env.SERVICE_ID, process.env.TEMPLATE_ID, templateParams, {
+            publicKey: process.env.PUBLIC_KEY,
+            privateKey: process.env.PRIVATE_KEY, // optional, highly recommended for security reasons
+        })
+        .then(
+            function(response) {
+                console.log('SUCCESS!', response.status, response.text);
+                res.status(200).json({ message: "Message sent" })
+            },
+            function(err) {
+                console.log('FAILED...', err);
+                res.status(400).json({ message: "error  on sending message" })
+            },
+        );
+
+
 }
-
-
-// socials
 const createSocials = async(req, res) => {
     const { title: title, link: link } = req.body
     try {
@@ -697,6 +726,7 @@ module.exports = {
     updateExperiences,
     deleteExperiences,
     fetchExperiences,
+    sendEmail,
     createSocials,
     updateSocials,
     deleteSocials,

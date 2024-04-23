@@ -10,9 +10,9 @@ function LoginPage() {
     <div  className='relative flex w-full snap-y   snap-mandatory h-screen overflow-x-hidden overflow-y-hidden  lg:justify-between items-center px-10 place-content-center'>
      <div></div>
      <img src={me} alt="" className='w-80 absolute hidden lg:block h-80 rounded-full m-20 border border-solid border-blue-900 shadow-2xl'/>
-     <div  className="flex snap-center  flex-col  items-center space-y-4 bg-blue-950 justify-evenly rounded-md p-5 py-10 w-96 h-fit">
+     <div  className="flex snap-center shadow-2xl  flex-col  items-center space-y-4 bg-blue-950 justify-evenly rounded-md p-5 py-10 w-96 h-fit">
 
-      <form action="" className='w-full space-y-5'>
+      <form action="" className='w-full space-y-5 '>
       <h1 className="text-gray-300 block text-xl mb-10">Log in to Portfolio</h1>
       <div className='w-full'>
       <label htmlFor="email" className='block text-sm mb-2'>Email Address</label>
@@ -21,11 +21,11 @@ function LoginPage() {
       <div className='w-full '>
         <div className='flex justify-between items-center '>
           <label htmlFor="password"  className='block text-sm mb-2'>Password</label>
-          <button className='text-green-600 font-semibold'>Forgot password</button>
+          <button className='text-green-600 font-semibold'><Link to="/recover">Forgot password</Link></button>
         </div>
         <div className='relative'>
         <div class="max-w-sm ">
-   <input id="hs-toggle-password-with-checkbox" type="password" class="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" placeholder="Enter current password" value="12345qwerty"/>
+   <input id="hs-toggle-password-with-checkbox" type="password" class="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" placeholder="Enter current password" />
 
 
   <div class="flex mt-4">

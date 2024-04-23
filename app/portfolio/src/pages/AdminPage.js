@@ -28,7 +28,6 @@ const AdminPage=()=> {
     backgroundColor:"#1f1f38"
   }
   const [image,setImage]=useState('')
-  const [aboutData, setAboutData]=useState([])
   
   const fetchData=()=>{
     const URI="http://localhost:8000/api/v1/me/personal"
@@ -37,7 +36,7 @@ const AdminPage=()=> {
       
       
       setImage(res.data[0].pictures[1])
-      setAboutData(res.data[0])}
+      }
       
     )
     .catch(error=>console.log(error.message))

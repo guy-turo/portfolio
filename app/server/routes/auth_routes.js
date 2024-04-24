@@ -1,12 +1,10 @@
 const authRoutes = require('express').Router()
 const { login, signup, logout, recover } = require("../controllers/authController")
+const passport = require('passport')
 
-
-authRoutes.route("/login")
-    .get(login)
-
+authRoutes.post("/login", passport.authenticate('local'), login)
 authRoutes.route("/signup")
-    .get(signup)
+    .post(signup)
 
 authRoutes.route("/logout")
     .get(logout)

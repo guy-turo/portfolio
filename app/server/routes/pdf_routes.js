@@ -1,4 +1,5 @@
 const pdfRoute = require('express').Router()
+const { isAuth } = require("./authMiddleware")
 
 const {
     downloadPdf,
@@ -33,14 +34,13 @@ const { upload } = require('../utility/helper')
     // });
 
 
-pdfRoute.post('/upload', upload.single("file"), pdfUpload)
+pdfRoute.post('/upload', isAuth, upload.single("file"), pdfUpload)
 pdfRoute.get("/download-pdf/:urlPdf", downloadPdf)
 pdfRoute.route('/', )
     .get(fetchPdf)
-pdfRoute.put('/:id', upload.single('file'), updatePdf)
-pdfRoute.route('/:id')
-    .get(fetchSinglePdf)
-    .delete(deletePdf)
+pdfRoute.put('/:id', isAuth, upload.single('file'), updatePdf)
+pdfRoute.route('/:id').get(fetchSinglePdf)
+pdfRoute.delete("/:id", isAuth, deletePdf)
 
 
 

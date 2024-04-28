@@ -3,6 +3,7 @@ const cloudinary = require('cloudinary').v2
 const StatusCodes = require('http-status-codes')
 const { getCloudinaryImagePath } = require('../utility/helper')
 const emailjs = require('@emailjs/nodejs');
+const crypto = require('crypto');
 require('dotenv').config()
 
 const { ProjectModel } = require("../models/projectModel")
@@ -139,6 +140,8 @@ const deleteMe = async(req, res) => {
 const fetchMe = async(req, res) => {
     try {
         const data = await meModel.find()
+
+
 
         if (!data) {
             res.status(404).json({ message: "Item does not exist" })

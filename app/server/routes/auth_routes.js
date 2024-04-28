@@ -13,4 +13,5 @@ authRoutes.route("/recover")
     .get(recover)
 
 
+
 module.exports = { authRoutes }

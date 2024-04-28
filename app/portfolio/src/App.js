@@ -7,6 +7,7 @@ import NoPage from "./pages/NoPage";
 import AdminPage from "./pages/AdminPage";
 import SignUpPage from './pages/auth/RegisterPage';
 const App=()=> {
+  
   return (
   <main>
      <Routes>

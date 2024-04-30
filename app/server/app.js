@@ -34,10 +34,11 @@ const sessionStore = new MongoStore({
     mongooseConnection: mongoose.connection,
 })
 app.use(session({
+    cookieName: "usersSession",
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
-    store: sessionStore,
+    httpOnly: true,
     cookie: {
         maxAge: 1000 * 60 * 60 * 24,
     }

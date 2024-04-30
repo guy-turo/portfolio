@@ -14,11 +14,10 @@ const initializePassport = (passport) => {
             bcrypt.compare(password, user.hash, (error, result) => {
                 console.log(password, user.hash)
                 if (error) {
-                    console.log("error" + error)
+
                     return done(null, false, { message: "password incorrect" })
                 }
                 if (result) {
-                    console.log("result:" + result)
                     return done(null, user)
                 }
             })
@@ -28,11 +27,11 @@ const initializePassport = (passport) => {
     }
     passport.use(new localStrategy({ usernameField: "email" }, authenticateUser))
     passport.serializeUser((user, done) => {
-        console.log(user.id)
+
         done(null, user)
     })
     passport.deserializeUser((id, done) => {
-        console.log(id)
+
         UserModel.findById(id)
             .then(result => {
 

@@ -28,21 +28,38 @@ const AdminPage=()=> {
     backgroundColor:"#1f1f38"
   }
   const [image,setImage]=useState('')
-  
   const fetchData=()=>{
     const URI="http://localhost:8000/api/v1/me/personal"
     axios.get(URI)
     .then(res=>{
-      
-      
       setImage(res.data[0].pictures[1])
       }
-      
     )
     .catch(error=>console.log(error.message))
   }
   useEffect(()=>{
     fetchData()
+  },[])
+  useEffect(()=>{
+    console.log(localStorage.getItem('auth'))
+    const URI="http://localhost:8000/api/v1/auth/checkAuth"
+    axios.get(URI)
+      .then(res=>{
+          if(res.status===200){
+            console.log("response:"+res)
+            localStorage.setItem("auth",true)
+          }
+          localStorage.setItem("auth",false)
+      })
+      .catch(error=>{
+        if(error.response.status===401){
+          console.log("Unauthorized")
+          window.location.href= "/signin"
+        }
+        else{
+          console.log(error.message)
+        }
+      })
   },[])
   return (
     <div className=" flex flex-col h-screen">
@@ -58,7 +75,6 @@ const AdminPage=()=> {
                 className='flex rounded-sm  rounded-tr-3xl rounded-br-3xl justify-center border border-solid border-blue-800 bg-blue-100'
             >
               <div className="w-full flex flex-col justify-between rounded-md h-full ">
-                
               <div className="flex flex-col   rounded-tl-md rounded-bl-md w-12/12  p-1 items-center justify-items-center space-y-1">
               <div className="flex  flex-col items-center justify-center">
                   <div className="w-20 h-20 rounded-full  cursor-pointer">
@@ -87,15 +103,12 @@ const AdminPage=()=> {
                 <button className="bg-red-800 px-2  rounded-md h-8  flex  items-center space-x-2"><CiLogout /><h2>Logout</h2></button>
               </div>
               </div>
-              
-             
             </Drawer>
           <div className="w-4"></div>
             <div className="w-10 h-10 rounded-full  cursor-pointer">
             <Link to="/" className='p-0'>
             <img src={image} alt="" className="w-10 h-10 rounded-full"/>
             </Link>
-              
             </div>
           <h2 className="font-semibold fex self-end">Admin</h2>
         </div>

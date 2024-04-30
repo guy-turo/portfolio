@@ -8,14 +8,21 @@ initializePassport(
     passport,
 )
 const checkAuth = async(req, res) => {
-    if (req.isAuthenticated) {
-        res.status(200).json(req.isAuthenticated)
-    } else {
+    try {
+        if (req.isAuthenticated()) {
+            console.log("check :" + req.isAuthenticated())
+            res.status(200).json(req.isAuthenticated())
+        } else {
+            res.status(401).json({ message: 'You are not authenticated' })
+        }
+    } catch (error) {
         res.status(503).json({ message: "not found" })
     }
 }
 const login = async(req, res) => {
     if (req.isAuthenticated()) {
+        console.log("user:" + req.user)
+        console.log(req.isAuthenticated())
         res.status(200).json({ message: "authenticated" })
     } else {
         res.status(503).send({ message: "not found" })
@@ -24,12 +31,12 @@ const login = async(req, res) => {
 const signup = async(req, res) => {
     const { name: name, email: email, password: password } = req.body
     try {
-        console.log('try to log')
+
         const saltRounds = 10
         const salt = await bcrypt.genSalt(saltRounds)
         const hashPassword = await bcrypt.hash(password, salt)
 
-        console.log(hashPassword)
+
         const checkAccount = await UserModel.findOne({ email: email })
         if (checkAccount) {
             console.log("already exists")
@@ -41,13 +48,13 @@ const signup = async(req, res) => {
             hash: hashPassword,
             isAdmin: false,
         })
-        console.log(hashPassword)
+
         user.save().then((result) => {
             if (!result) {
                 return res.status(404).json({ message: "user not created" })
             }
             res.status(201).json(result)
-            console.log('createMe')
+
         }).catch((error) => console.error(error.message))
 
     } catch (err) {

@@ -6,12 +6,17 @@ const initializePassport = require("../passport-config")
 
 initializePassport(
     passport,
-    email => { return UserModel.findOne({ email: email }) },
-    id => { return UserModel.findOne({ _id: id }) }
 )
+const checkAuth = async(req, res) => {
+    if (req.isAuthenticated) {
+        res.status(200).json(req.isAuthenticated)
+    } else {
+        res.status(503).json({ message: "not found" })
+    }
+}
 const login = async(req, res) => {
-    if (req.user) {
-        res.json(req.user)
+    if (req.isAuthenticated()) {
+        res.status(200).json({ message: "authenticated" })
     } else {
         res.status(503).send({ message: "not found" })
     }
@@ -34,6 +39,7 @@ const signup = async(req, res) => {
             name: name,
             email: email,
             hash: hashPassword,
+            isAdmin: false,
         })
         console.log(hashPassword)
         user.save().then((result) => {
@@ -58,4 +64,4 @@ const logout = (req, res) => {
 
 
 
-module.exports = { login, signup, recover, logout }
+module.exports = { checkAuth, login, signup, recover, logout }

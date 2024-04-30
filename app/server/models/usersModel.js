@@ -10,6 +10,10 @@ const UserSchema = new schema({
     hash: {
         type: String,
         required: true
+    },
+    isAdmin: {
+        type: Boolean,
+        required: true,
     }
 }, { timestamps: true })
 const UserModel = new mongoose.model("User", UserSchema)

@@ -1,5 +1,5 @@
 import axios from 'axios'
-require("dotenv").config()
+
 const refreshToken = async() => {
     const URI = `${process.env.MAIN_HTTP}/auth/token`
     const initialToken = localStorage.getItem("refreshToken")

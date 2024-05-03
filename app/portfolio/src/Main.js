@@ -20,26 +20,15 @@ export default class Main extends React.PureComponent {
             this.setState({ online: window.navigator.onLine });
         }
         render() {
-                return (
-
-                    <
-                    div > {
-                        this.state.online ?
-                        ( < App / > ) :
-                            ( <
-                                div className = "flex  justify-center bg-gray-100 h-fit" >
-                                <
-                                div className = ' flex h-lvh items-center' >
-                                <
-                                p className = 'self-center text-red-600 font-semibold' >
+            return (
+                    <div > 
+                        {this.state.online ?(<App/> ) :(<div className = "flex  justify-center bg-gray-100 h-fit">
+                                <div className = ' flex h-lvh items-center' >
+                                <p className = 'self-center text-red-600 font-semibold' >
                                 You are no longer connected,
-                                please check your internet connection <
-                                /p> <
-                                /div>
+                                please check your internet connection </p> </div>
 
-                                <
-                                /div>)} <
-                                /div>
+                                </div>)} </div>
 
                             )
                     }

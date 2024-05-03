@@ -8,6 +8,8 @@ import AdminPage from "./pages/AdminPage";
 import SignUpPage from './pages/auth/RegisterPage';
 import axios from "axios"
 import PrivateRoute from "./pages/auth/helper/PrivateRoute";
+import api from "./utils/Helper"
+
 const App=()=> {
   const [isAuthenticated,setIsAuthenticated]=useState(false)
 
@@ -17,7 +19,7 @@ const App=()=> {
     e.preventDefault()
     console.log(email, password)
     const URI="http://localhost:8000/api/v1/auth/login"
-    axios.post(URI,
+    api.post(URI,
       {
       email:email,
       password:password,

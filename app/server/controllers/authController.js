@@ -1,9 +1,10 @@
-const bcrypt = require("bcrypt")
 const passport = require("passport")
+const bcrypt = require("bcrypt")
 const { UserModel } = require("../models/usersModel")
 const initializePassport = require("../passport-config")
 const { generateAccessToken, isValidEmail } = require('../utility/helper')
 const jwt = require("jsonwebtoken")
+const { TokenModel } = require("../models/tokenModel")
 require("dotenv").config()
 initializePassport(
     passport,
@@ -16,14 +17,16 @@ const checkAuth = async(req, res) => {
         res.status(503).json({ message: "not found" })
     }
 }
-let refreshTokens = []
 const token = async(req, res) => {
     try {
         const refreshToken = req.body.token
         console.log(console.log(refreshToken))
         if (refreshToken === null) return res.status(401)
-        if (!refreshTokens.includes(refreshToken)) return res.status(403)
-        console.log('generating...')
+
+        const tokens = await TokenModel.find()
+        const tokenSaved = tokens[0].refreshToken
+        if (tokenSaved !== refreshToken) return res.status(403)
+
         jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (error, user) => {
             if (error) return res.status(403)
             const accessToken = generateAccessToken({ name: user.name })
@@ -44,17 +47,58 @@ const login = async(req, res) => {
     //     res.status(503).send({ message: "not found" })
     // }
     try {
-        const { email: email } = req.body.email
+        const { email: email, password: password } = req.body
+        console.log(email, password)
         if (!isValidEmail(email)) return res.Status(406).json({ message: "Provide correct email" })
 
         const checkEmail = await UserModel.findOne({ email: email })
         if (!checkEmail) return res.status(404).json({ message: "This email not exist" })
 
-        const user = { id: checkEmail._id, name: checkEmail.name, email: email }
-        const accessToken = generateAccessToken(user)
-        const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, { expiresIn: "1d" })
-        refreshTokens.push(refreshToken)
-        res.json({ accessToken: accessToken, refreshToken: refreshToken })
+        bcrypt.compare(password, checkEmail.hash, async(error, result) => {
+            console.log(password, checkEmail.hash)
+            if (error) {
+                return res.status(401).json({ message: "Wrong password" })
+            }
+            if (result) {
+                const user = { id: checkEmail._id, name: checkEmail.name, email: email }
+                const accessToken = generateAccessToken(user)
+                const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, { expiresIn: "1d" })
+                console.log("AccessToken" + accessToken + "refreshToken : " + refreshToken)
+                const checkToken = await TokenModel.find()
+                if (checkToken.length !== 0) {
+                    console.log("Token saved :" + checkToken)
+                    const idToUpdate = checkToken[0]._id
+                    await TokenModel.findById(idToUpdate)
+
+                    .then(data => {
+                        if (!data) {
+                            return res.status(401).json({ message: "Unauthorized" })
+                        }
+                        data.refreshToken = refreshToken
+                        data.save().then(response => {
+                            return res.json({ accessToken: accessToken, refreshToken: refreshToken })
+                        }).catch(err => {
+                            console.log("Unauthorized" + err)
+                            res.status(401)
+                        })
+                    }).catch((err) => {
+                        res.status(401).json("Unauthorized")
+                    })
+                } else {
+                    const newToken = new TokenModel({
+                        refreshToken: refreshToken
+                    })
+                    newToken.save().then((res) => {
+                        return res.json({ accessToken: accessToken, refreshToken: refreshToken })
+                    }).catch(err => {
+                        res.status(401).json("unauthorized")
+                    })
+                }
+
+            }
+        })
+
+
     } catch (error) {
         return res.status(500).json(error.message)
     }

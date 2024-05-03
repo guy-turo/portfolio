@@ -2,7 +2,8 @@ const multer = require('multer');
 const cloudinary = require('cloudinary').v2
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const crypto = require('crypto');
-
+require('dotenv').config()
+const jwt = require("jsonwebtoken")
 const generateFileId = () => {
     return crypto.randomBytes(16).toString('hex')
 }
@@ -50,4 +51,13 @@ const generateDownloadLink = async(publicId) => {
     return url;
 };
 
-module.exports = { upload, getCloudinaryImagePath, generateDownloadLink }
+function isValidEmail(email) {
+    const regex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+    return regex.test(email);
+}
+
+const generateAccessToken = (user) => {
+    return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "45s" })
+}
+
+module.exports = { isValidEmail, upload, generateAccessToken, getCloudinaryImagePath, generateDownloadLink }

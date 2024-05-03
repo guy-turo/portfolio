@@ -32,7 +32,7 @@ const AdminPage=()=> {
     const URI="http://localhost:8000/api/v1/me/personal"
     axios.get(URI)
     .then(res=>{
-      setImage(res.data[0].pictures[1])
+      setImage(res.data[0].pictures[1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       ])
       }
     )
     .catch(error=>console.log(error.message))

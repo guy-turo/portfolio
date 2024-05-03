@@ -1,5 +1,5 @@
 const { upload } = require('../utility/helper')
-const { isAdmin } = require("./authMiddleware")
+const { isAdmin } = require("../middlewares/authMiddleware")
 const {
     createMe,
     updateMe,

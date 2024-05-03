@@ -1,32 +1,64 @@
 const bcrypt = require("bcrypt")
 const passport = require("passport")
 const { UserModel } = require("../models/usersModel")
-
 const initializePassport = require("../passport-config")
-
+const { generateAccessToken, isValidEmail } = require('../utility/helper')
+const jwt = require("jsonwebtoken")
+require("dotenv").config()
 initializePassport(
     passport,
 )
 const checkAuth = async(req, res) => {
     try {
-        if (req.isAuthenticated()) {
-            console.log("check :" + req.isAuthenticated())
-            res.status(200).json(req.isAuthenticated())
-        } else {
-            res.status(401).json({ message: 'You are not authenticated' })
-        }
+        console.log('hello')
+        res.status(200).json("hello")
     } catch (error) {
         res.status(503).json({ message: "not found" })
     }
 }
-const login = async(req, res) => {
-    if (req.isAuthenticated()) {
-        console.log("user:" + req.user)
-        console.log(req.isAuthenticated())
-        res.status(200).json({ message: "authenticated" })
-    } else {
-        res.status(503).send({ message: "not found" })
+let refreshTokens = []
+const token = async(req, res) => {
+    try {
+        const refreshToken = req.body.token
+        console.log(console.log(refreshToken))
+        if (refreshToken === null) return res.status(401)
+        if (!refreshTokens.includes(refreshToken)) return res.status(403)
+        console.log('generating...')
+        jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (error, user) => {
+            if (error) return res.status(403)
+            const accessToken = generateAccessToken({ name: user.name })
+
+            res.json({ accessToken: accessToken })
+        })
+    } catch (error) {
+        return res.status(500).json(error.message)
     }
+
+}
+const login = async(req, res) => {
+    // if (req.isAuthenticated()) {
+    //     console.log("user:" + req.user)
+    //     console.log(req.isAuthenticated())
+    //     res.status(200).json({ message: "authenticated" })
+    // } else {
+    //     res.status(503).send({ message: "not found" })
+    // }
+    try {
+        const { email: email } = req.body.email
+        if (!isValidEmail(email)) return res.Status(406).json({ message: "Provide correct email" })
+
+        const checkEmail = await UserModel.findOne({ email: email })
+        if (!checkEmail) return res.status(404).json({ message: "This email not exist" })
+
+        const user = { id: checkEmail._id, name: checkEmail.name, email: email }
+        const accessToken = generateAccessToken(user)
+        const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, { expiresIn: "1d" })
+        refreshTokens.push(refreshToken)
+        res.json({ accessToken: accessToken, refreshToken: refreshToken })
+    } catch (error) {
+        return res.status(500).json(error.message)
+    }
+
 }
 const signup = async(req, res) => {
     const { name: name, email: email, password: password } = req.body
@@ -65,10 +97,11 @@ const recover = (req, res) => {
     res.send("recover")
 }
 const logout = (req, res) => {
-    req.logout()
-    res.redirect("protected-route")
+    refreshTokens = refreshTokens.filter(token => token !== req.body.token)
+    console.log(refreshTokens)
+    res.sendStatus(204)
 }
 
 
 
-module.exports = { checkAuth, login, signup, recover, logout }
+module.exports = { token, checkAuth, login, signup, recover, logout }

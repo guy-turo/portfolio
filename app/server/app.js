@@ -23,21 +23,22 @@ const bodyParser = require('body-parser')
 const connect = require('./db/connect.js')
 const cors = require('cors')
 const app = express()
-connect.connectDB()
+    // connect.connectDB()
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(flash())
 
-const sessionStore = new MongoStore({
-    mongoUrl: process.env.MONGO_URI,
-    mongooseConnection: mongoose.connection,
-})
+// const sessionStore = new MongoStore({
+//     mongoUrl: process.env.MONGO_URI,
+//     mongooseConnection: mongoose.connection,
+// })
 app.use(session({
     cookieName: "usersSession",
     secret: process.env.SESSION_SECRET,
-    resave: false,
+    resave: true,
     saveUninitialized: true,
+    // store: sessionStore,
     httpOnly: true,
     cookie: {
         maxAge: 1000 * 60 * 60 * 24,
@@ -63,6 +64,7 @@ app.get("/", (req, res) => {
 const start = async() => {
     const port = process.env.PORT || 8000
     try {
+        connect.connectDB()
         app.listen(port, () => {
             console.log(`server is running on port :${port}`)
         })

@@ -1,0 +1,25 @@
+###
+GET http://localhost:8000/api/v1/auth/checkAuth
+Authorization:Bear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoia2Fzb25nb0BnbWFpbC5jb20iLCJpYXQiOjE3MTQ3MzIwMDgsImV4cCI6MTcxNDczMjA1M30.LlR2f3lOP5LM0L8GYuCAk-EdZIGcoxU4kVKunDOjpEA
+
+###
+POST http://localhost:8000/api/v1/auth/token
+Content-Type: application/json
+
+{
+    "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoia2Fzb25nb0BnbWFpbC5jb20iLCJpYXQiOjE3MTQ3MzIwMDh9.ECwmyqsKC-5t5wAptX1_yxx-klja70vbHNrDBLd1Vxk"
+}
+###
+DELETE http://localhost:8000/api/v1/auth/logout
+Content-Type: application/json
+
+{
+    "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoia2Fzb25nb0BnbWFpbC5jb20iLCJpYXQiOjE3MTQ3MzIwMDh9.ECwmyqsKC-5t5wAptX1_yxx-klja70vbHNrDBLd1Vxk"
+}
+###
+POST http://localhost:8000/api/v1/auth/login
+Content-Type:application/json
+
+{
+    "email":"kasongo@gmail.com"
+}

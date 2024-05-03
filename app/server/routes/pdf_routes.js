@@ -1,5 +1,5 @@
 const pdfRoute = require('express').Router()
-const { isAdmin } = require("./authMiddleware")
+const { isAdmin } = require("../middlewares/authMiddleware")
 
 const {
     downloadPdf,

@@ -21,14 +21,16 @@ const App=()=> {
       {
       email:email,
       password:password,
-    }
-    )
+    })
     .then((res)=>{
-      if(res.status===200){
+      if(res.data.accessToken && res.data.refreshToken){
+        localStorage.setItem("accessToken", res.data.accessToken)
+        localStorage.setItem("refreshToken", res.data.refreshToken)
         setIsAuthenticated(true)
+      }
       localStorage.setItem("auth",isAuthenticated)
       console.log("auth :"+localStorage.getItem("auth"))
-      }
+      
     }).catch(e=>alert(e.message))
   }
   return (

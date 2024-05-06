@@ -1,8 +1,6 @@
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios'
 
-const RefreshToken = async() => {
-    const navigate = useNavigate()
+const refreshToken = async() => {
     const URI = `http://localhost:8000/api/v1/auth/token`
     const initialToken = localStorage.getItem("refreshToken")
     if (initialToken !== '') {
@@ -14,7 +12,7 @@ const RefreshToken = async() => {
     } else {
         localStorage.setItem("refreshToken", '')
         localStorage.setItem("accessToken", '')
-        navigate("/signin")
+
     }
 }
 const api = axios.create()
@@ -27,7 +25,7 @@ api.interceptors.response.use(
     async(error) => {
         if (error.response && error.response.status === 401) {
             try {
-                const newToken = await RefreshToken()
+                const newToken = await refreshToken()
                 console.log(newToken)
                 if (newToken) {
                     localStorage.setItem("accessToken", newToken)

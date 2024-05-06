@@ -12,7 +12,7 @@ import PrivateRoute from "./pages/auth/helper/PrivateRoute";
 
 const App=()=> {
   const isAuthenticate= localStorage.getItem("accessToken")!==""?true:false
-
+  
   const login=(e, email, password,)=>{
     e.preventDefault()
     console.log(email, password)
@@ -40,7 +40,7 @@ const App=()=> {
      <Routes>
       <Route path="/" element={<PortfolioPage/>}/>
         <Route path='/signIn' element={
-          <LoginPage login={login}/>
+          isAuthenticate?<AdminPage/>:<LoginPage login={login}/>
         }/>
         <Route path='/admin' element={
           <PrivateRoute isAuthenticated={isAuthenticate} >

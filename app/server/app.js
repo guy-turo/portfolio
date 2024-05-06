@@ -27,25 +27,25 @@ const app = express()
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
-app.use(flash())
+    // app.use(flash())
 
 // const sessionStore = new MongoStore({
 //     mongoUrl: process.env.MONGO_URI,
 //     mongooseConnection: mongoose.connection,
 // })
-app.use(session({
-    cookieName: "usersSession",
-    secret: process.env.SESSION_SECRET,
-    resave: true,
-    saveUninitialized: true,
-    // store: sessionStore,
-    httpOnly: true,
-    cookie: {
-        maxAge: 1000 * 60 * 60 * 24,
-    }
-}))
-app.use(passport.initialize())
-app.use(passport.session())
+// app.use(session({
+//     cookieName: "usersSession",
+//     secret: process.env.SESSION_SECRET,
+//     resave: true,
+//     saveUninitialized: true,
+//     // store: sessionStore,
+//     httpOnly: true,
+//     cookie: {
+//         maxAge: 1000 * 60 * 60 * 24,
+//     }
+// }))
+// app.use(passport.initialize())
+// app.use(passport.session())
 app.use(cors())
 
 
@@ -53,14 +53,14 @@ const version = '/api/v1/'
 app.use(`${version}auth`, authRoutes.authRoutes)
 app.use(`${version}me`, routePerson.personRoutes)
 app.use(`${version}pdf`, pdfRoute.pdfRoute)
-app.get("/", (req, res) => {
-    if (req.session.viewCount) {
-        req.session.viewCount = req.session.viewCount + 1
-    } else {
-        req.session.viewCount = 1
-    }
-    res.send(`${req.session.viewCount} times `)
-})
+    // app.get("/", (req, res) => {
+    //     if (req.session.viewCount) {
+    //         req.session.viewCount = req.session.viewCount + 1
+    //     } else {
+    //         req.session.viewCount = 1
+    //     }
+    //     res.send(`${req.session.viewCount} times `)
+    // })
 const start = async() => {
     const port = process.env.PORT || 8000
     try {

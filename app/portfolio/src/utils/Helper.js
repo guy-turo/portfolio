@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const refreshToken = async() => {
-    const URI = `${process.env.MAIN_HTTP}/auth/token`
+    const URI = `http://localhost:8000/api/v1/auth/token`
     const initialToken = localStorage.getItem("refreshToken")
     const response = await axios.post(URI, {
         token: initialToken
@@ -20,15 +20,22 @@ api.interceptors.response.use(
         }
     },
     async(error) => {
-        if (error.response && error.response.status === 401 && !error.config.__isRetryRequest) {
-            try {
-                const newToken = await refreshToken()
-                axios.defaults.headers.common['Authorization'] = `Bearer ${newToken}`
 
+        if (error) {
+
+            try {
+
+                const newToken = refreshToken()
+                if (newToken) {
+                    api.defaults.headers.common['Authorization'] = `Bearer ${newToken}`
+
+                }
                 const originalRequest = error.config
+
                 originalRequest.headers["Authorization"] = `Bearer ${newToken}`
 
                 return axios(originalRequest)
+
             } catch (refreshError) {
                 return Promise.reject(refreshError)
             }
@@ -37,11 +44,14 @@ api.interceptors.response.use(
     })
 api.interceptors.request.use(
     (config) => {
-        let token = localStorage.getItem("token") || ""
-        config.headers = {
-            Authorization: `Bearer ${token}`,
-            "x-token": JSON.parse(token),
+        let token = localStorage.getItem("accessToken") || ""
+
+        if (token !== "") {
+
+            config.headers.Authorization = `Bearer ${token}`
+
         }
+
         return config
     },
     (error) => Promise.reject(error)

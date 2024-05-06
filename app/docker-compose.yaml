@@ -1,0 +1,49 @@
+version: v2.26.1-desktop.1
+services: 
+  web:
+    # depends_on:
+    #   - api
+    build: ./portfolio
+    ports:
+      - 3000:3000
+    environment:
+      API_URL: http://localhost:8000
+    volumes:
+      - ./web:/app
+    develop:
+      watch:
+        - path: ./portfolio/package.json
+          action: rebuild
+        - path: ./portfolio/package-lock.json
+          action: rebuild
+        - path: ./portfolio
+          target: /app
+          action: sync
+  api:
+    build: ./server
+    ports:
+      - 8000:8000
+    environment:
+      - MONGO_URI
+    # depends_on:
+    #   - mongo
+    develop:
+      watch:
+        - path: ./server/package.json
+          action: rebuild
+        - path: ./server/package-lock.json
+          action: rebuild
+          
+        - path: ./server
+          target: /app
+          action: sync
+    # mongo:
+    #   image: mongo:latest
+    #   ports:
+    #     - "27017:27017"
+    #   volumes:
+    #     - mongo-data:/data/db
+      
+    # volumes:
+    #   mongo-data:
+   

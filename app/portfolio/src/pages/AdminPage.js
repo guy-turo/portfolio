@@ -1,5 +1,6 @@
 import React,{useState, useEffect} from 'react'
 import axios from 'axios';
+import api from "../utils/Helper"
 import { CiLogout } from "react-icons/ci";
 import { MdPersonPin } from "react-icons/md";
 import { MdMenu } from "react-icons/md";
@@ -37,29 +38,26 @@ const AdminPage=()=> {
     )
     .catch(error=>console.log(error.message))
   }
+  const checkAuth=async()=>{
+    console.log(localStorage.getItem('refreshToken'))
+    console.log(localStorage.getItem('accessToken'))
+    const URI="auth/checkAuth"
+    api.post(URI)
+      .then(res=>{
+            console.log("response:"+res)
+      }) 
+      .catch(error=>{
+        if(error){
+          console.log(error)
+        }
+      })
+  }
   useEffect(()=>{
     fetchData()
+    checkAuth()
   },[])
   useEffect(()=>{
-    console.log(localStorage.getItem('auth'))
-    const URI="http://localhost:8000/api/v1/auth/checkAuth"
-    axios.get(URI)
-      .then(res=>{
-          if(res.status===200){
-            console.log("response:"+res)
-            localStorage.setItem("auth",true)
-          }
-          localStorage.setItem("auth",false)
-      })
-      .catch(error=>{
-        if(error.response.status===401){
-          console.log("Unauthorized")
-          window.location.href= "/signin"
-        }
-        else{
-          console.log(error.message)
-        }
-      })
+    
   },[])
   return (
     <div className=" flex flex-col h-screen">

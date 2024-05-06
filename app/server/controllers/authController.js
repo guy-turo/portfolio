@@ -20,7 +20,6 @@ const checkAuth = async(req, res) => {
 const token = async(req, res) => {
     try {
         const refreshToken = req.body.token
-        console.log(console.log(refreshToken))
         if (refreshToken === null) return res.status(401)
 
         const tokens = await TokenModel.find()
@@ -63,10 +62,8 @@ const login = async(req, res) => {
                 const user = { id: checkEmail._id, name: checkEmail.name, email: email }
                 const accessToken = generateAccessToken(user)
                 const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, { expiresIn: "1d" })
-                console.log("AccessToken" + accessToken + "refreshToken : " + refreshToken)
                 const checkToken = await TokenModel.find()
                 if (checkToken.length !== 0) {
-                    console.log("Token saved :" + checkToken)
                     const idToUpdate = checkToken[0]._id
                     await TokenModel.findById(idToUpdate)
 
@@ -78,7 +75,6 @@ const login = async(req, res) => {
                         data.save().then(response => {
                             return res.json({ accessToken: accessToken, refreshToken: refreshToken })
                         }).catch(err => {
-                            console.log("Unauthorized" + err)
                             res.status(401)
                         })
                     }).catch((err) => {
@@ -140,10 +136,19 @@ const signup = async(req, res) => {
 const recover = (req, res) => {
     res.send("recover")
 }
-const logout = (req, res) => {
-    refreshTokens = refreshTokens.filter(token => token !== req.body.token)
-    console.log(refreshTokens)
-    res.sendStatus(204)
+const logout = async(req, res) => {
+    const { token: token } = req.body.token
+    try {
+        const response = await TokenModel.find()
+        const getTokenSaved = response.refreshToken
+        if (getTokenSaved !== token) return res.sendStatus(401)
+        TokenModel.deleteOne({ refreshToken: getTokenSaved }).then(result => {
+            res.sendStatus(204)
+        }).catch(error => res.sendStatus(404).json(error))
+
+    } catch (error) {
+        res.sendStatus(500)
+    }
 }
 
 

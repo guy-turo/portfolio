@@ -39,12 +39,10 @@ const AdminPage=()=> {
     .catch(error=>console.log(error.message))
   }
   const checkAuth=async()=>{
-    console.log(localStorage.getItem('refreshToken'))
-    console.log(localStorage.getItem('accessToken'))
-    const URI="auth/checkAuth"
-    api.post(URI)
+    const URI="http://localhost:8000/api/v1/auth/checkAuth"
+    api.get(URI)
       .then(res=>{
-            console.log("response:"+res)
+            console.log(res)
       }) 
       .catch(error=>{
         if(error){

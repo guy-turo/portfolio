@@ -1,15 +1,14 @@
 version: v2.26.1-desktop.1
 services: 
   web:
-    # depends_on:
-    #   - api
+    depends_on:
+      - api
     build: ./portfolio
     ports:
-      - 3000:3000
+      - "3000:3000"
     environment:
       API_URL: http://localhost:8000
-    volumes:
-      - ./web:/app
+      
     develop:
       watch:
         - path: ./portfolio/package.json
@@ -22,7 +21,7 @@ services:
   api:
     build: ./server
     ports:
-      - 8000:8000
+      - "8000:8000"
     environment:
       - MONGO_URI
     # depends_on:

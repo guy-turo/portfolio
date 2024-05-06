@@ -61,7 +61,7 @@ function Footer() {
         <ul className='items-center flex flex-col'>
           {portfolioData && firstFourElements.map((item, index)=><li key={index}><a href={item.linkGithub}>{item.title}</a></li>)
           }
-          <a href="https://github.com/guy-turo?tab=repositories"  className="flex text-nowrap">more</a>
+          <a href="https://github.com/guy-turo?tab=repositories"  className="flex text-nowrap">more...</a>
         </ul>
         </div>
         {/* <div className='items-center justify-items-center flex flex-col'>

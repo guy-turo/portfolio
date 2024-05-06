@@ -9,11 +9,9 @@ import SignUpPage from './pages/auth/RegisterPage';
 import axios from "axios"
 import PrivateRoute from "./pages/auth/helper/PrivateRoute";
 
-
 const App=()=> {
   const [isAuthenticated,setIsAuthenticated]=useState(false)
   const isAuthenticate= localStorage.getItem("accessToken")?true:false
- 
 
   const login=(e, email, password,)=>{
     e.preventDefault()
@@ -39,7 +37,7 @@ const App=()=> {
   useEffect(()=>{
     const accessToken= localStorage.getItem("accessToken")
     const refreshToken= localStorage.getItem("refreshToken")
-    console.log(accessToken, refreshToken)
+
     if(!accessToken && !refreshToken){
       setIsAuthenticated(false)
     }else{
@@ -47,7 +45,7 @@ const App=()=> {
     }
 
   },[isAuthenticated])
-  console.log(isAuthenticated)
+
   return (
   <main>
      <Routes>

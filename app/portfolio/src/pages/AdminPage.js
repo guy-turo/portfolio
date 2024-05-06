@@ -9,9 +9,10 @@ import 'react-modern-drawer/dist/index.css'
 import {MdDashboard} from 'react-icons/md'
 import Data from '../components/admin/Data'
 import Dashboard from '../components/admin/Dashboard'
-import {Link} from "react-router-dom"
+import {Link, useNavigate} from "react-router-dom"
 const AdminPage=()=> {
   const [isOpen, setIsOpen] = useState(false)
+  const navigate= useNavigate()
   const toggleDrawer = () => {
       setIsOpen((prevState) => !prevState)
   }
@@ -23,7 +24,7 @@ const AdminPage=()=> {
       return
     }
     setToggleState(index)
-    console.log(toggleState)
+  
   }
   const colors={
     backgroundColor:"#1f1f38"
@@ -43,19 +44,42 @@ const AdminPage=()=> {
     api.get(URI)
       .then(res=>{
             console.log(res)
-      }) 
+      })
       .catch(error=>{
         if(error){
           console.log(error)
         }
       })
   }
+  const logout=async(e)=>{
+    e.preventDefault()
+    const URI="http://localhost:8000/api/v1/auth/logout"
+    const initialToken=localStorage.getItem("refreshToken")
+    await axios.put(URI, {
+      token: initialToken
+  }).then((response) => {
+      if (response.data.status === 401) {
+        localStorage.setItem("refreshToken", '')
+        localStorage.setItem("accessToken", '')
+          navigate("/signin")
+      } else if (response.data.status === 204) {
+        localStorage.setItem("refreshToken", '')
+        localStorage.setItem("accessToken", '')
+          navigate("/signin")
+      }
+  })
+  .catch(error => {
+    setTimeout(() => {
+      localStorage.setItem("refreshToken", '')
+      localStorage.setItem("accessToken", '')
+      navigate('/signin')
+      alert("something went wrong , please try again to logout")
+    }, 1500);
+  })
+  }
   useEffect(()=>{
     fetchData()
     checkAuth()
-  },[])
-  useEffect(()=>{
-    
   },[])
   return (
     <div className=" flex flex-col h-screen">
@@ -110,7 +134,7 @@ const AdminPage=()=> {
         </div>
         <div className=" flex hidden md:block space-x-1">
         <button className="bg-blue-800  px-2 rounded-md h-8"><MdPersonPin /></button>
-        <button className="bg-red-800 px-2  rounded-md h-8"><CiLogout /></button>
+        <button onClick={logout} className="bg-red-800 px-2  rounded-md h-8"><CiLogout /></button>
         </div>
       </div>
       <div className="w-full h-full p-1 flex  justify-center rounded-lg shadow-lg  ">

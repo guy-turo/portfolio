@@ -52,7 +52,7 @@ const login = async(req, res) => {
                 const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, { expiresIn: "1d" })
                 crfToken = refreshToken
                 const checkToken = await TokenModel.find()
-                if (checkToken[0].refreshToken !== '') {
+                if (checkToken.length !== 0 && checkToken[0].refreshToken) {
                     const idToUpdate = checkToken[0]._id
                     await TokenModel.findById(idToUpdate)
                         .then(data => {
@@ -134,10 +134,13 @@ const logout = async(req, res) => {
         }
         const getTokenSaved = response[0].refreshToken
         if (getTokenSaved !== token) return res.sendStatus(401)
-        TokenModel.deleteOne({ refreshToken: getTokenSaved }).then(result => {
-            res.sendStatus(204)
+        TokenModel.deleteOne({ refreshToken: getTokenSaved })
+            .then((result) => {
+                res.sendStatus(204)
 
-        }).catch(error => res.sendStatus(404).json(error))
+            }).catch((error) => {
+                res.sendStatus(404).json(error)
+            })
 
     } catch (error) {
         res.sendStatus(500)

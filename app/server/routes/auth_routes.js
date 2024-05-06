@@ -10,7 +10,7 @@ authRoutes.route("/signup")
 
 authRoutes.post("/token", token)
 authRoutes.route("/logout")
-    .delete(logout)
+    .put(logout)
 authRoutes.get("/checkAuth", authenticateToken, checkAuth)
 
 

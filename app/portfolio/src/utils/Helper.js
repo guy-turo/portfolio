@@ -1,17 +1,20 @@
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios'
 
-const refreshToken = async() => {
+const RefreshToken = async() => {
+    const navigate = useNavigate()
     const URI = `http://localhost:8000/api/v1/auth/token`
     const initialToken = localStorage.getItem("refreshToken")
-    if (initialToken) {
+    if (initialToken !== '') {
         const response = await axios.post(URI, {
             token: initialToken
         })
         const newToken = response.data.accessToken
-        console.log("token generated :" + newToken)
         return newToken
     } else {
-        console.error("Refresh token not found. User needs to re-authenticate.")
+        localStorage.setItem("refreshToken", '')
+        localStorage.setItem("accessToken", '')
+        navigate("/signin")
     }
 }
 const api = axios.create()
@@ -24,7 +27,8 @@ api.interceptors.response.use(
     async(error) => {
         if (error.response && error.response.status === 401) {
             try {
-                const newToken = await refreshToken()
+                const newToken = await RefreshToken()
+                console.log(newToken)
                 if (newToken) {
                     localStorage.setItem("accessToken", newToken)
                     error.config.headers.Authorization = `Bearer ${newToken}`

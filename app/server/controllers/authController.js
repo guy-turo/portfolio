@@ -51,41 +51,25 @@ const login = async(req, res) => {
                 const accessToken = generateAccessToken(user)
                 const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, { expiresIn: "1d" })
                 crfToken = refreshToken
+                console.log(refreshToken)
                 const checkToken = await TokenModel.find()
-                if (checkToken.length !== 0 && checkToken[0].refreshToken) {
-                    const idToUpdate = checkToken[0]._id
-                    await TokenModel.findById(idToUpdate)
-                        .then(data => {
-                            if (!data) {
-                                return res.status(401).json({ message: "Unauthorized" })
-                            }
-                            data.refreshToken = refreshToken
-                            data.save().then(response => {
-                                if (response !== null) {
-                                    return res.json({ accessToken: accessToken, refreshToken: refreshToken, crfToken: crfToken })
-                                }
-
-                            }).catch(err => {
-                                res.status(401)
-                            })
-                        }).catch((err) => {
-                            res.status(401).json("Unauthorized")
-                        })
-                } else {
-                    const newToken = new TokenModel({
-                        refreshToken: refreshToken
-                    })
-                    newToken.save().then((res) => {
+                if (checkToken.length !== 0) {
+                    for (let i = 0; i < checkToken.length; i++) {
+                        await TokenModel.deleteOne({ refreshToken: checkToken[i].refreshToken })
+                    }
+                }
+                const newToken = new TokenModel({
+                    refreshToken: refreshToken
+                })
+                newToken.save()
+                    .then((res) => {
+                        console.log("created")
                         return res.json({ accessToken: accessToken, refreshToken: refreshToken })
                     }).catch(err => {
-                        res.status(401).json("unauthorized")
+                        console.log('error')
                     })
-                }
-
             }
         })
-
-
     } catch (error) {
         return res.status(500).json(error.message)
     }
@@ -128,20 +112,16 @@ const recover = (req, res) => {
 const logout = async(req, res) => {
     const { token: token } = req.body
     try {
-        const response = await TokenModel.find()
-        if (!response) {
-            return res.sendStatus(401)
-        }
-        const getTokenSaved = response[0].refreshToken
-        if (getTokenSaved !== token) return res.sendStatus(401)
-        TokenModel.deleteOne({ refreshToken: getTokenSaved })
-            .then((result) => {
-                res.sendStatus(204)
-
-            }).catch((error) => {
+        await TokenModel.findOne({ refreshToken: token })
+            .then((response) => {
+                if (!response) return res.sendStatus(401)
+                TokenModel.deleteOne({ refreshToken: response.refreshToken })
+                    .then(data => res.sendStatus(204))
+                    .catch(err => res.sendStatus(404).json(err))
+            })
+            .catch((error) => {
                 res.sendStatus(404).json(error)
             })
-
     } catch (error) {
         res.sendStatus(500)
     }

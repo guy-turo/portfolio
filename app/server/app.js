@@ -1,11 +1,11 @@
 if (process.env.NODE_ENV !== "production") {
-    require("dotenv").config()
+    require("dotenv").config({ path: ".env.development.local" })
 }
 const express = require('express')
-const session = require("express-session")
-const MongoStore = require('connect-mongo')
-const mongoose = require('mongoose')
-const passport = require("passport")
+    // const session = require("express-session")
+    // const MongoStore = require('connect-mongo')
+    // const mongoose = require('mongoose')
+    // const passport = require("passport")
 
 
 require('express-async-errors')

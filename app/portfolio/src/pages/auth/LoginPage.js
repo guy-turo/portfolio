@@ -1,11 +1,18 @@
 import React, {useState} from 'react'
 import me from "../../assets/me.png"
-import {Link} from "react-router-dom"
+import {Link, useNavigate} from "react-router-dom"
 
 function LoginPage({login}) {
   const [email, setEmail]=useState('')
   const [password,setPassword]=useState("")
- 
+  const navigate= useNavigate()
+  const toAdmin=()=>{
+    const refreshToken=localStorage.getItem('refreshToken')
+    const accessToken= localStorage.getItem('accessToken')
+    if(refreshToken!=='' && accessToken!==''){
+      navigate('/admin')
+    }
+  }
   return (
     <div  className='relative flex w-full snap-y   snap-mandatory h-screen overflow-x-hidden overflow-y-hidden  lg:justify-between items-center px-10 place-content-center'>
      <div></div>
@@ -16,7 +23,11 @@ function LoginPage({login}) {
      <div  className="flex snap-center shadow-2xl  flex-col  items-center space-y-4 bg-blue-950 justify-evenly rounded-md p-5 py-10 w-96 h-fit">
 
       <form 
-        onSubmit={(e)=>login(e,email,password)} 
+        onSubmit={(e)=>{
+            e.preventDefault();
+          login(email,password)
+          toAdmin()
+        }} 
         className='w-full space-y-5 '
       >
       <h1 className="text-gray-300 block text-xl mb-10">Log in to Portfolio</h1>

@@ -1,0 +1,17 @@
+appVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: personalPortfolio
+spec:
+  rules:
+  - host: www.kasongokakumbiguy.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: web
+            port:
+              number: 3000
+ingressClassName: personalPortfolio

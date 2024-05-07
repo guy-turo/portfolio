@@ -51,13 +51,14 @@ const AdminPage=()=> {
         }
       })
   }
-  const logout=async(e)=>{
-    e.preventDefault()
+  const logout=async()=>{
+   
     const URI="http://localhost:8000/api/v1/auth/logout"
     const initialToken=localStorage.getItem("refreshToken")
     await axios.put(URI, {
       token: initialToken
   }).then((response) => {
+    console.log(response+response.data + response.status)
       if (response.data.status === 401) {
         localStorage.setItem("refreshToken", '')
         localStorage.setItem("accessToken", '')
@@ -134,7 +135,11 @@ const AdminPage=()=> {
         </div>
         <div className=" flex hidden md:block space-x-1">
         <button className="bg-blue-800  px-2 rounded-md h-8"><MdPersonPin /></button>
-        <button onClick={logout} className="bg-red-800 px-2  rounded-md h-8"><CiLogout /></button>
+        <button onClick={(e)=>{
+           e.preventDefault(e)
+          logout()
+          navigate("/signin")
+        }} className="bg-red-800 px-2  rounded-md h-8"><CiLogout /></button>
         </div>
       </div>
       <div className="w-full h-full p-1 flex  justify-center rounded-lg shadow-lg  ">

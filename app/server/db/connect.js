@@ -1,4 +1,4 @@
-require("dotenv").config()
+require("dotenv").config({ path: ".env.development.local" })
 const mongoose = require('mongoose')
 const connectDB = async() => {
     try {

@@ -1,4 +1,4 @@
-require("dotenv").config()
+require("dotenv").config({ path: ".env.development.local" })
 const jwt = require("jsonwebtoken")
 module.exports.isAuth = (req, res, next) => {
     if (req.isAuthenticated()) {

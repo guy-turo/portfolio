@@ -2,7 +2,7 @@ const multer = require('multer');
 const cloudinary = require('cloudinary').v2
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const crypto = require('crypto');
-require('dotenv').config()
+require('dotenv').config({ path: ".env.development.local" })
 const jwt = require("jsonwebtoken")
 const generateFileId = () => {
     return crypto.randomBytes(16).toString('hex')

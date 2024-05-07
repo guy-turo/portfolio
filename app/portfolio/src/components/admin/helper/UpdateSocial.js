@@ -1,6 +1,6 @@
 import React,{useState} from 'react'
 import Dialog from "../../../utils/Dialog"
-import axios from 'axios'
+import api from "../../../utils/Helper"
 const UpdateSocials=({item})=> {
   const [message,setMessage]=useState('')
   const [successMessage, setSuccessMessage]=useState("")
@@ -13,7 +13,7 @@ const UpdateSocials=({item})=> {
 const update= async(e)=>{
     e.preventDefault()
       const URI=`http://localhost:8000/api/v1/me/Socials/${item._id}`
-     axios.put(URI,{
+     api.put(URI,{
       title:title,
       link:link
      })

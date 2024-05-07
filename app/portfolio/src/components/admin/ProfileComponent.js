@@ -1,6 +1,6 @@
 import React,{useState, useEffect} from 'react'
 import { LuImagePlus } from "react-icons/lu";
-import axios from 'axios'
+import api from "../../utils/Helper"
 
 function ProfileComponent() {
   const [meData, setMeData]=useState([])
@@ -37,7 +37,7 @@ function ProfileComponent() {
     formData.append("clients",clients)
     formData.append("projects",projects)
       const URI="http://localhost:8000/api/v1/me/personal"
-      axios.post(URI,formData)
+      api.post(URI,formData)
       .then((response)=>{
         if(response.status===200){
           console.log('created')
@@ -60,7 +60,7 @@ function ProfileComponent() {
 
 const fetchData=()=>{
   const URI="http://localhost:8000/api/v1/me/personal"
-  axios.get(URI)
+  api.get(URI)
   .then(res=>{
     setMeData(res.data[0])}
     
@@ -70,12 +70,11 @@ const fetchData=()=>{
 useEffect(()=>{
   fetchData()
 },[])
-
+console.log(meData)
 const updateProfile=(id)=>{
  setProcess(!process)
   const formDataUpdate=new FormData()
   meImage.forEach(image=>formDataUpdate.append("file",image))
-  console.log(meImage)
   formDataUpdate.append("fullName", fullName)
   formDataUpdate.append("title",title)
   formDataUpdate.append("description",description)
@@ -85,7 +84,7 @@ const updateProfile=(id)=>{
   formDataUpdate.append("clients",clients)
   formDataUpdate.append("projects",projects)
   const URI=`http://localhost:8000/api/v1/me/personal/${id}`
-  axios.put(URI, formDataUpdate)
+  api.put(URI, formDataUpdate)
   .then(re=>{
     setProcess(!process)
     setSuccessMessage("Data has been Updated successfully")

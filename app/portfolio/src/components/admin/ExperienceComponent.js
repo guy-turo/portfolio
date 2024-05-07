@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from 'react'
-import axios from 'axios'
+import api from "../../utils/Helper"
 import { FaRegCircleRight } from "react-icons/fa6";
 import { FaRegCircleLeft } from "react-icons/fa6";
 
@@ -21,7 +21,7 @@ const addService=(e)=>{
   e.preventDefault()
   setProcess(!process)
   const URI="http://localhost:8000/api/v1/me/experiences"
-    axios.post(URI,{
+    api.post(URI,{
       frontend:frontendS,
      backend:backendS,
      other:otherS
@@ -34,7 +34,7 @@ const addService=(e)=>{
 
 const fetchServices=()=>{
   const URI=`http://localhost:8000/api/v1/me/experiences`
-  axios.get(URI)
+  api.get(URI)
   .then((response)=>{
     setExperiencesData(response.data)
   })

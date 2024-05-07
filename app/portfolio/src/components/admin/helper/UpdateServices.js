@@ -1,6 +1,6 @@
 import React,{useState} from 'react'
 import Dialog from "../../../utils/Dialog"
-import axios from 'axios'
+import api from "../../../utils/Helper"
 import { LiaEditSolid } from "react-icons/lia";
 const UpdateSocials=({item, el,id })=> {
   const [message,setMessage]=useState('')
@@ -13,7 +13,7 @@ const  onClose=()=>setOpen(!open)
 const update= async(e)=>{
     e.preventDefault()
       const URI=`http://localhost:8000/api/v1/me/services/${id}`
-     axios.put(URI,{
+     api.put(URI,{
       text:text,
       el:el
      })

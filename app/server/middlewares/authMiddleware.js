@@ -23,7 +23,7 @@ module.exports.authenticateToken = (req, res, next) => {
             const decode = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
             req.user = decode
             if (req.user && req.user.admin === true) {
-                console.log(req.user)
+
                 next()
             } else {
                 return res.status(401).json({ message: "You are not authorized to view this resource" })

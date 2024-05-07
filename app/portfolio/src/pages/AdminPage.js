@@ -1,8 +1,7 @@
 import React,{useState, useEffect} from 'react'
-import axios from 'axios';
 import api from "../utils/Helper"
 import { CiLogout } from "react-icons/ci";
-import { MdPersonPin } from "react-icons/md";
+import { CiSettings } from "react-icons/ci";
 import { MdMenu } from "react-icons/md";
 import Drawer from 'react-modern-drawer'
 import 'react-modern-drawer/dist/index.css'
@@ -30,11 +29,12 @@ const AdminPage=()=> {
     backgroundColor:"#1f1f38"
   }
   const [image,setImage]=useState('')
+  console.log(image)
   const fetchData=()=>{
     const URI="http://localhost:8000/api/v1/me/personal"
-    axios.get(URI)
+    api.get(URI)
     .then(res=>{
-      setImage(res.data[0].pictures[1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       ])
+      setImage(res.data[0].pictures[1])
       }
     )
     .catch(error=>console.log(error.message))
@@ -45,13 +45,7 @@ const AdminPage=()=> {
       .then(res=>{
         if(res){
           console.log(res)
-        }else{
-          localStorage.removeItem("refreshToken")
-          localStorage.removeItem("accessToken")
-          navigate('/signin')
-          alert("something went wrong ,You are not allowed to access this page")
         }
-         
       })
       .catch(error=>{
         if(error){
@@ -62,7 +56,7 @@ const AdminPage=()=> {
   const logout=async()=>{
     const URI="http://localhost:8000/api/v1/auth/logout"
     const initialToken=localStorage.getItem("refreshToken")
-    await axios.put(URI, {
+    await  api.put(URI, {
       token: initialToken
   }).then((response) => {
     if(response){
@@ -122,8 +116,11 @@ const AdminPage=()=> {
                  <h2 className=" cursor-pointer flex justify-center ">Data</h2></div>
                 </div>
               <div className=" flex  space-x-1">
-               <button className="bg-blue-800  px-2 rounded-md h-8 flex  items-center space-x-2"><MdPersonPin /><h2 >Profile</h2></button>
-                <button className="bg-red-800 px-2  rounded-md h-8  flex  items-center space-x-2"><CiLogout /><h2>Logout</h2></button>
+               <button className="bg-blue-800  px-2 rounded-md h-8 flex  items-center space-x-2"><CiSettings /><h2 >Settings</h2></button>
+                <button onClick={(e)=>{
+                      e.preventDefault(e)
+                      logout()
+                      navigate("/signin")}} className="bg-red-800 px-2  rounded-md h-8  flex  items-center space-x-2"><CiLogout /><h2>Logout</h2></button>
               </div>
               </div>
             </Drawer>
@@ -136,7 +133,7 @@ const AdminPage=()=> {
           <h2 className="font-semibold fex self-end">Admin</h2>
         </div>
         <div className=" flex hidden md:block space-x-1">
-        <button className="bg-blue-800  px-2 rounded-md h-8"><MdPersonPin /></button>
+        <button className="bg-blue-800  px-2 rounded-md h-8"><CiSettings /></button>
         <button onClick={(e)=>{
            e.preventDefault(e)
           logout()

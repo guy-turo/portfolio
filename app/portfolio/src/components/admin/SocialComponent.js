@@ -1,5 +1,5 @@
 import React,{useEffect, useState} from 'react'
-import axios from 'axios'
+import api from "../../utils/Helper"
 import { FaRegCircleRight } from "react-icons/fa6";
 import { FaRegCircleLeft } from "react-icons/fa6";
 import UpdateSocials from './helper/UpdateSocial'
@@ -20,7 +20,7 @@ const addSocial=(e)=>{
   e.preventDefault()
   setProcess(!process)
   const URI="http://localhost:8000/api/v1/me/socials"
-    axios.post(URI,{
+    api.post(URI,{
      title:titleSC,
       link:linkSC,
     })
@@ -41,7 +41,7 @@ const addSocial=(e)=>{
 
 const deleteSocial=(id)=>{
   const URI=`http://localhost:8000/api/v1/me/socials/${id}`
-  axios.delete(URI)
+  api.delete(URI)
   .then((response)=>{
     if(response.status===200){
      console.log(response.data)
@@ -51,7 +51,7 @@ const deleteSocial=(id)=>{
 }
 const fetchData=()=>{
   const URI="http://localhost:8000/api/v1/me/socials"
-  axios.get(URI)
+  api.get(URI)
   .then((response)=>{
     if(response.status===200){
       setSocialData(response.data)

@@ -1,7 +1,7 @@
 import React,{useState} from 'react'
 import Dialog from "../../../utils/Dialog"
 import { LuImagePlus } from "react-icons/lu";
-import axios from 'axios'
+import api from "../../../utils/Helper"
 const UploadImage=({model})=> {
   const [message,setMessage]=useState('')
   const [successMessage, setSuccessMessage]=useState("")
@@ -28,7 +28,7 @@ const UploadImage=({model})=> {
 
       const URI=`http://localhost:8000/api/v1/images/${model}`
      
-     axios.post(URI,formData,{
+     api.post(URI,formData,{
       headers:{
         "Content-Type":"multipart/form-data"
       },

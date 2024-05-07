@@ -27,7 +27,6 @@ const App=()=> {
     })
     .then((res)=>{
       if(res){
-        console.log(res.data)
         if(res.data.accessToken && res.data.refreshToken){
         localStorage.setItem("accessToken", res.data.accessToken)
         localStorage.setItem("refreshToken", res.data.refreshToken)

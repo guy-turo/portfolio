@@ -141,8 +141,6 @@ const fetchMe = async(req, res) => {
     try {
         const data = await meModel.find()
 
-
-
         if (!data) {
             res.status(404).json({ message: "Item does not exist" })
         }

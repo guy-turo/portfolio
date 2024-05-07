@@ -1,6 +1,6 @@
 import React,{useState,useEffect} from 'react'
 import { FaRegFilePdf } from "react-icons/fa";
-import axios from "axios"
+import api from "../../utils/Helper"
 import { MdDelete } from "react-icons/md";
 
 
@@ -11,16 +11,16 @@ function PdfComponent() {
   const [successMessage,setSuccessMessage]=useState('')
 
   const [pdfData,setPdfData]=useState(null)
-  const [fileName,setFileName]=useState('')
   const [process,setProcess]=useState(true)
  const addPdfData=()=>{
   setProcess(!process)
  const URI="http://localhost:8000/api/v1/pdf/upload"
  const formData = new FormData()
  formData.append('file',pdfData)
- formData.append('fileName',fileName)
-  axios.post(URI,formData)
+ console.log(formData)
+  api.post(URI,formData)
   .then(res=>{
+    console.log(res)
     if(res.status===200){
         setSuccessMessage('Pdf has been created')
         setTimeout(()=>{
@@ -29,12 +29,11 @@ function PdfComponent() {
           setPdfData(null)
         },1500)
     }
-
   }).catch(e=>alert("Error :"+e.message))
  }
   const fetchData=()=>{
     const URI="http://localhost:8000/api/v1/pdf"
-    axios.get(URI)
+    api.get(URI)
     .then(res=>{
       if(res.status===200){
         setData(res.data[0])
@@ -47,7 +46,7 @@ function PdfComponent() {
   },[])
   const deletePdf=(id)=>{
     const URI=`http://localhost:8000/api/v1/pdf/${id}`
-    axios.delete(URI)
+    api.delete(URI)
     .then(res=>alert("deleted"))
     .catch(error=>alert("error :"+error.message))
   }
@@ -56,15 +55,13 @@ function PdfComponent() {
     const URI=`http://localhost:8000/api/v1/pdf/${id}`
     const formData=new FormData()
     formData.append('file',pdfData)
-    formData.append('fileName',fileName)
-    axios.put(URI,formData)
+    api.put(URI,formData)
     .then(res=>{
       if(res){
         setSuccessMessage(res.data.message)
         setTimeout(()=>{
           setMessage('')
           setSuccessMessage("")
-          setFileName('')
           setPdfData(null)
         },1500)
       }
@@ -77,41 +74,28 @@ function PdfComponent() {
   }
   return (
     <div className='flex flex-col  container space-y-2 shadow-2xl border border-solid border-gray-400 mt-4 p-2 rounded-md'>
-     
    <h1 className='text-gray-400'>CV</h1>
    <div onClick={()=>deletePdf(data?._id)} className="flex cursor-pointer items-center rounded-md border border-solid border-red-800  w-fit bg-red-300 px-2">
    <MdDelete  className="size-6 text-red-600 shadow-2xl" />
   <h2 className='font-normal text-red-500 '>Delete</h2>
    </div>
-     <label htmlFor="fileName">
-      <h2>File name</h2>
-    </label>
-    <input type="text" id='fileName' value={fileName} onChange={(e)=>setFileName(e.target.value)} placeholder={data?.fileName} className='w-fit px-2 text-black rounded-md bg-gray-400'/>
     <label htmlFor="pdf">
       {!data&& 
       <div className='flex '>
         {pdfData && <div className='w-5 h-5 rounded-full bg-blue-700'></div>}
         <h2 className="rounded-sm px-2 border border-solid border-blue-950 w-fit shadow-lg bg-blue-950 font-normal">Select pdf</h2>
-    
       </div>
         }
        {data &&
-        
         <div className="flex">
           <div className='flex cursor-pointer hover:bg-blue-900 flex-col items-end p-3 rounded-sm px-2 border border-solid border-blue-950 w-fit shadow-lg  font-normal'>
-          
-         
           <div  className="flex">
-          
            {data?.pdfUrl&&<FaRegFilePdf className="size-10 text-blue-950"/>}
           <h2 className="font-normal text-gray-400">{data?.fileName}</h2>
           </div>
-         
         </div>
         <h2 className="rounded-sm px-2 items-center flex  w-fit shadow-lg bg-transparent font-normal">Select pdf</h2>
-         
         </div>
-       
       }
     </label>
     <input type="file" id='pdf' onChange={(e)=>setPdfData(e.target.files[0])} hidden/>
@@ -127,7 +111,6 @@ function PdfComponent() {
             {!message &&successMessage==="" && <h3>{process?"Update pdf":"updating pdf"}</h3>}
             {successMessage && <h3>updated pdf</h3>}
           </button>}
-   
     </div>
     </div>
   )

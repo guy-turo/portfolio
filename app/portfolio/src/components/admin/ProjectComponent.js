@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from 'react'
-import axios from 'axios'
+import api from "../../utils/Helper"
 import { LuImagePlus } from "react-icons/lu";
 import { FaRegCircleRight } from "react-icons/fa6";
 import { FaRegCircleLeft } from "react-icons/fa6";
@@ -42,7 +42,7 @@ const addProject=(e)=>{
   formData.append("linkGithub", linkGithub)
   formData.append("linkLive",linkLive)
   const URI="http://localhost:8000/api/v1/me/projects"
-    axios.post(URI, formData)
+    api.post(URI, formData)
     .then((response)=>{
       setProcess(!process)
      setSuccessMessage(response.data)
@@ -58,7 +58,7 @@ const addProject=(e)=>{
 }
 const fetchProjectData=()=>{
   const URI="http://localhost:8000/api/v1/me/projects"
-  axios.get(URI)
+  api.get(URI)
   .then((res)=>{
     setProjectsData(res.data)
   })
@@ -71,7 +71,7 @@ useEffect(()=>{
 },[])
 const deleteProject=(id)=>{
   const URI=`http://localhost:8000/api/v1/me/projects/${id}`
-  axios.delete(URI)
+  api.delete(URI)
     .then((res)=>{
       if(res.status===200){
         console.log("deleted")

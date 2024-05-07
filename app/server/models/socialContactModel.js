@@ -4,11 +4,9 @@ const schema = mongoose.Schema
 const socialContactSchema = new schema({
     title: {
         type: String,
-
     },
     link: {
         type: String,
-
     },
 }, { timestamps: true })
 

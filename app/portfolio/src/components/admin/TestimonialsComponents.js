@@ -1,5 +1,5 @@
 import React ,{useState , useEffect} from 'react'
-import axios from 'axios'
+import api from "../../utils/Helper"
 import UpdateTestimonials from './helper/UpdateTestimonials'
 import { FaRegCircleRight } from "react-icons/fa6";
 import { FaRegCircleLeft } from "react-icons/fa6";
@@ -24,7 +24,7 @@ const TestimonialsComponent=()=>{
   const [process,setProcess]=useState(true)
   const fetchTestimonialData=()=>{
     const URI="http://localhost:8000/api/v1/me/testimonials"
-    axios.get(URI)
+    api.get(URI)
     .then((res)=>{
       setTestimonialData(res.data)
     })
@@ -51,7 +51,7 @@ const TestimonialsComponent=()=>{
       formData.append('title',titleT)
       formData.append('testimonials',testimonialsT)
     const URI="http://localhost:8000/api/v1/me/testimonials"
-      axios.post(URI,formData)
+      api.post(URI,formData)
       .then((response)=>{
        
           setProcess(!process)
@@ -72,7 +72,7 @@ const TestimonialsComponent=()=>{
   const deleteTestimonial=(id)=>{
     
     const URI=`http://localhost:8000/api/v1/me/testimonials/${id}`
-    axios.delete(URI)
+    api.delete(URI)
     .then((response)=>{
       if(response.status===200){
         setMessage('Deleted')

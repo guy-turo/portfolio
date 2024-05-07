@@ -1,6 +1,6 @@
 import React,{useState} from 'react'
 import Dialog from "../../../utils/Dialog"
-import axios from 'axios'
+import api from "../../../utils/Helper"
 import { LiaEditSolid } from "react-icons/lia";
 const UpdateProject=({item})=> {
   const [message,setMessage]=useState('')
@@ -29,7 +29,7 @@ formData.append("linkGithub", linkGithub)
 const update= async(e)=>{
     e.preventDefault()
       const URI=`http://localhost:8000/api/v1/me/projects/${item._id}`
-     axios.put(URI,formData)
+     api.put(URI,formData)
      .then((response)=>{
       if(response){
         setSuccessMessage("Updated")

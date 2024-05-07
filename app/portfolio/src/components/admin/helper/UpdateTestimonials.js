@@ -1,6 +1,6 @@
 import React,{useState} from 'react'
 import Dialog from "../../../utils/Dialog"
-import axios from 'axios'
+import api from "../../../utils/Helper"
 const UpdateTestimonials=({item})=> {
   const [message,setMessage]=useState('')
   const [successMessage, setSuccessMessage]=useState("")
@@ -33,7 +33,7 @@ const UpdateTestimonials=({item})=> {
 
       const URI=`http://localhost:8000/api/v1/me/testimonials/${item._id}`
      
-     axios.put(URI,formData,{
+     api.put(URI,formData,{
       headers:{
         "Content-Type":"multipart/form-data"
       },

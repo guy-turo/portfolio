@@ -1,5 +1,6 @@
 const { upload } = require('../utility/helper')
-const { isAdmin } = require("../middlewares/authMiddleware")
+const { authenticateToken } = require('../middlewares/authMiddleware')
+
 const {
     createMe,
     updateMe,
@@ -30,39 +31,39 @@ const {
 
 const personRoutes = require('express').Router()
 
-personRoutes.post('/testimonials', isAdmin, upload.single('file'), createTestimonials)
+personRoutes.post('/testimonials', authenticateToken, upload.single('file'), createTestimonials)
 personRoutes.route('/testimonials').get(fetchTestimonials)
-personRoutes.put("/testimonials/:id", isAdmin, upload.single('file'), updateTestimonials)
-personRoutes.delete('/testimonials/:id', isAdmin, deleteTestimonials)
+personRoutes.put("/testimonials/:id", authenticateToken, upload.single('file'), updateTestimonials)
+personRoutes.delete('/testimonials/:id', authenticateToken, deleteTestimonials)
     // experiences
-personRoutes.post("/experiences", isAdmin, createExperiences)
+personRoutes.post("/experiences", authenticateToken, createExperiences)
 personRoutes.get("/experiences", fetchExperiences)
-personRoutes.put("/experiences/:id", isAdmin, updateExperiences)
-personRoutes.delete("/experiences/:id", isAdmin, deleteExperiences)
+personRoutes.put("/experiences/:id", authenticateToken, updateExperiences)
+personRoutes.delete("/experiences/:id", authenticateToken, deleteExperiences)
 
 // socials
-personRoutes.post('/socials', isAdmin, createSocials)
+personRoutes.post('/socials', authenticateToken, createSocials)
 personRoutes.get('/socials', fetchSocials)
 personRoutes.route("/sendEmail").post(sendEmail)
-personRoutes.put("/socials/:id", isAdmin, updateSocials)
-personRoutes.delete("/socials/:id", isAdmin, deleteSocials)
+personRoutes.put("/socials/:id", authenticateToken, updateSocials)
+personRoutes.delete("/socials/:id", authenticateToken, deleteSocials)
 
 // Services
-personRoutes.post("/services", isAdmin, createServices)
+personRoutes.post("/services", authenticateToken, createServices)
 personRoutes.get("/services", fetchServices)
-personRoutes.put('/services/:id', isAdmin, updateServices)
-personRoutes.patch('/services/:id', isAdmin, deleteServices)
+personRoutes.put('/services/:id', authenticateToken, updateServices)
+personRoutes.patch('/services/:id', authenticateToken, deleteServices)
 
 // person
 personRoutes.route('/personal').get(fetchMe)
-personRoutes.post("/personal", isAdmin, upload.array('file'), createMe)
-personRoutes.delete('/personal/:id', isAdmin, deleteMe)
-personRoutes.put("/personal/:id", isAdmin, upload.array('file'), updateMe)
+personRoutes.post("/personal", authenticateToken, upload.array('file'), createMe)
+personRoutes.delete('/personal/:id', authenticateToken, deleteMe)
+personRoutes.put("/personal/:id", authenticateToken, upload.array('file'), updateMe)
 
 // Projects
-personRoutes.post("/projects", isAdmin, upload.array("file"), createProject)
+personRoutes.post("/projects", authenticateToken, upload.array("file"), createProject)
 personRoutes.route("/projects").get(fetchProject)
-personRoutes.put("/projects/:id", isAdmin, upload.array("file"), updateProject)
-personRoutes.delete("/projects/:id", isAdmin, deleteProject)
+personRoutes.put("/projects/:id", authenticateToken, upload.array("file"), updateProject)
+personRoutes.delete("/projects/:id", authenticateToken, deleteProject)
 
 module.exports = { personRoutes }

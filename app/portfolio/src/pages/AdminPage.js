@@ -43,7 +43,15 @@ const AdminPage=()=> {
     const URI="http://localhost:8000/api/v1/auth/checkAuth"
     api.get(URI)
       .then(res=>{
-            console.log(res)
+        if(res){
+          console.log(res)
+        }else{
+          localStorage.removeItem("refreshToken")
+          localStorage.removeItem("accessToken")
+          navigate('/signin')
+          alert("something went wrong ,You are not allowed to access this page")
+        }
+         
       })
       .catch(error=>{
         if(error){

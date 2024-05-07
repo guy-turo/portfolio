@@ -26,7 +26,6 @@ api.interceptors.response.use(
         if (error.response && error.response.status === 401) {
             try {
                 const newToken = await refreshToken()
-                console.log(newToken)
                 if (newToken) {
                     localStorage.setItem("accessToken", newToken)
                     error.config.headers.Authorization = `Bearer ${newToken}`

@@ -94,7 +94,7 @@ const signup = async(req, res) => {
                 return res.status(200).json({ message: "Email already exist" })
             }
             const checkDb = await UserModel.find()
-            if (checkDb === null) {
+            if (checkDb.length === 0) {
                 const user = new UserModel({
                     name: name,
                     email: email,

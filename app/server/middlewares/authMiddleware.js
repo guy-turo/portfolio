@@ -22,8 +22,12 @@ module.exports.authenticateToken = (req, res, next) => {
         try {
             const decode = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
             req.user = decode
-            console.log(req.user)
-            next()
+            if (req.user && req.user.admin === true) {
+                console.log(req.user)
+                next()
+            } else {
+                return res.status(401).json({ message: "You are not authorized to view this resource" })
+            }
         } catch (error) {
             if (error.name === 'TokenExpiredError') {
                 return res.status(401).json({ message: "Unauthorized: Token expired" })

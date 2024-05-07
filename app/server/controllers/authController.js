@@ -2,7 +2,7 @@ const passport = require("passport")
 const bcrypt = require("bcrypt")
 const { UserModel } = require("../models/usersModel")
 const initializePassport = require("../passport-config")
-const { generateAccessToken, isValidEmail } = require('../utility/helper')
+const { generateAccessToken, isValidEmail, isValidPassword } = require('../utility/helper')
 const jwt = require("jsonwebtoken")
 const { TokenModel } = require("../models/tokenModel")
 require("dotenv").config()
@@ -51,7 +51,7 @@ const login = async(req, res) => {
                 const accessToken = generateAccessToken(user)
                 const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, { expiresIn: "1d" })
                 crfToken = refreshToken
-                console.log(refreshToken)
+
                 const checkToken = await TokenModel.find()
                 if (checkToken.length !== 0) {
                     for (let i = 0; i < checkToken.length; i++) {
@@ -61,13 +61,13 @@ const login = async(req, res) => {
                 const newToken = new TokenModel({
                     refreshToken: refreshToken
                 })
-                newToken.save()
-                    .then((res) => {
-                        console.log("created")
-                        return res.json({ accessToken: accessToken, refreshToken: refreshToken })
-                    }).catch(err => {
-                        console.log('error')
-                    })
+                newToken.save().then((response) => {
+                    res.json({ accessToken: accessToken, refreshToken: refreshToken })
+                }).catch((err) => {
+                    if (err) {
+                        console.log(err.message)
+                    }
+                })
             }
         })
     } catch (error) {
@@ -78,30 +78,52 @@ const login = async(req, res) => {
 const signup = async(req, res) => {
     const { name: name, email: email, password: password } = req.body
     try {
-
         const saltRounds = 10
         const salt = await bcrypt.genSalt(saltRounds)
-        const hashPassword = await bcrypt.hash(password, salt)
+        const passwordChecked = isValidPassword(password)
+        console.log(passwordChecked)
+        if (passwordChecked === false) {
+            return res.status(208).json({ message: "Please provide strong password" })
 
-
-        const checkAccount = await UserModel.findOne({ email: email })
-        if (checkAccount) {
-            return res.status(200).json({ message: "Email already exist" })
-        }
-        const user = new UserModel({
-            name: name,
-            email: email,
-            hash: hashPassword,
-            isAdmin: false,
-        })
-        user.save().then((result) => {
-            if (!result) {
-                return res.status(404).json({ message: "user not created" })
+        } else {
+            const hashPassword = await bcrypt.hash(password, salt)
+            console.log(hashPassword)
+            const checkAccount = await UserModel.findOne({ email: email })
+            console.log(checkAccount)
+            if (checkAccount !== null) {
+                return res.status(200).json({ message: "Email already exist" })
             }
-            res.status(201).json(result)
+            const checkDb = await UserModel.find()
+            if (checkDb === null) {
+                const user = new UserModel({
+                    name: name,
+                    email: email,
+                    hash: hashPassword,
+                    isAdmin: true,
+                })
+                user.save().then((result) => {
+                    if (!result) {
+                        return res.status(404).json({ message: "user not created" })
+                    }
+                    res.status(201).json(result)
 
-        }).catch((error) => console.error(error.message))
+                }).catch((error) => console.error(error.message))
+            } else {
+                const user = new UserModel({
+                    name: name,
+                    email: email,
+                    hash: hashPassword,
+                    isAdmin: false,
+                })
+                user.save().then((result) => {
+                    if (!result) {
+                        return res.status(404).json({ message: "user not created" })
+                    }
+                    res.status(201).json(result)
 
+                }).catch((error) => console.error(error.message))
+            }
+        }
     } catch (err) {
         res.redirect("api/v1/auth/register")
     }
@@ -116,7 +138,11 @@ const logout = async(req, res) => {
             .then((response) => {
                 if (!response) return res.sendStatus(401)
                 TokenModel.deleteOne({ refreshToken: response.refreshToken })
-                    .then(data => res.sendStatus(204))
+                    .then(data => {
+                        if (data.deletedCount === 1) {
+                            res.sendStatus(204)
+                        }
+                    })
                     .catch(err => res.sendStatus(404).json(err))
             })
             .catch((error) => {

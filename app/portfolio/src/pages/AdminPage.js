@@ -52,27 +52,21 @@ const AdminPage=()=> {
       })
   }
   const logout=async()=>{
-   
     const URI="http://localhost:8000/api/v1/auth/logout"
     const initialToken=localStorage.getItem("refreshToken")
     await axios.put(URI, {
       token: initialToken
   }).then((response) => {
-    console.log(response+response.data + response.status)
-      if (response.data.status === 401) {
-        localStorage.setItem("refreshToken", '')
-        localStorage.setItem("accessToken", '')
-          navigate("/signin")
-      } else if (response.data.status === 204) {
-        localStorage.setItem("refreshToken", '')
-        localStorage.setItem("accessToken", '')
-          navigate("/signin")
-      }
+    if(response){
+      localStorage.removeItem("refreshToken")
+      localStorage.removeItem("accessToken")
+      navigate("/signin")
+    }
   })
   .catch(error => {
     setTimeout(() => {
-      localStorage.setItem("refreshToken", '')
-      localStorage.setItem("accessToken", '')
+      localStorage.removeItem("refreshToken")
+      localStorage.removeItem("accessToken")
       navigate('/signin')
       alert("something went wrong , please try again to logout")
     }, 1500);

@@ -60,4 +60,17 @@ const generateAccessToken = (user) => {
     return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "45s" })
 }
 
-module.exports = { isValidEmail, upload, generateAccessToken, getCloudinaryImagePath, generateDownloadLink }
+function isValidPassword(password) {
+    if (!password || typeof password !== 'string') {
+        return false;
+    }
+    const minLength = 8;
+    if (password.length < minLength) {
+        return false;
+    }
+    const regex = /(?=.*\d)(?=.*[^a-zA-Z\d])/g;
+    const hasNumberAndSymbol = regex.test(password);
+    return hasNumberAndSymbol;
+}
+
+module.exports = { isValidEmail, isValidPassword, upload, generateAccessToken, getCloudinaryImagePath, generateDownloadLink }

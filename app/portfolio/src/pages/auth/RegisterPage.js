@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
 import me1 from "../../assets/me1.png"
-import {Link} from "react-router-dom"
+import {Link,useNavigate} from "react-router-dom"
 import axios from "axios"
 const SignUpPage=()=>{
   const [name,setName]=useState('')
   const [email,setEmail]=useState('')
   const [password, setPassword]=useState('')
+  const navigate=useNavigate()
   const register=(e)=>{
     e.preventDefault()
     console.log(name,email, password)
@@ -16,8 +17,18 @@ const SignUpPage=()=>{
       password:password,
     })
     .then((res)=>{
-      console.log("okay")
-    }).catch(e=>alert(e.message))
+      if(res.status===200){
+        alert("Email already exists")
+      }
+     if(res.status===201){
+        navigate('/signin')
+     }
+     if(res.status===208){
+      alert(res.data.message)
+     }
+    }).catch(e=>{
+      alert(e.message)
+    })
   }
   return (
     <div  className='  static flex w-full snap-y   snap-mandatory h-screen overflow-x-hidden overflow-y-hidden  lg:justify-between items-center px-10 place-content-center'>

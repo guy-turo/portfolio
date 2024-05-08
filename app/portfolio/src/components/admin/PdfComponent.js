@@ -17,10 +17,8 @@ function PdfComponent() {
  const URI="http://localhost:8000/api/v1/pdf/upload"
  const formData = new FormData()
  formData.append('file',pdfData)
- console.log(formData)
   api.post(URI,formData)
   .then(res=>{
-    console.log(res)
     if(res.status===200){
         setSuccessMessage('Pdf has been created')
         setTimeout(()=>{
@@ -29,7 +27,11 @@ function PdfComponent() {
           setPdfData(null)
         },1500)
     }
-  }).catch(e=>alert("Error :"+e.message))
+  }).catch(e=>{
+    console.log(e)
+    alert("Error :"+e.message)
+   
+  })
  }
   const fetchData=()=>{
     const URI="http://localhost:8000/api/v1/pdf"

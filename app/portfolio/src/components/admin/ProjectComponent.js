@@ -139,11 +139,8 @@ const deleteProject=(id)=>{
                     <UpdateProject  item={item}/>
                     <button onClick={()=>deleteProject(item._id)} className=' text-red-600 '><MdDelete className="size-5"/></button>
                   </div>
-                 <ul className="flex flex-row">
-                  {item.pictures.map((el,index)=><li key={index} className="flex flex-row space-x-1">
-                    <img src={el} alt='' className="w-16 h-16  shadow-md rounded-md pb-1 border border-solid border-gray-500"/>
-                  </li>)}
-                </ul>
+                <img src={item.pictures[0]} alt='' className="w-16 h-16  shadow-md rounded-md pb-1 border border-solid border-gray-500"/>
+                
                 <h2 className="text-blue-950">{item.title}</h2>
                 <h3 className="font-normal">{item.description}</h3>
                 <div className="flex space-x-2">

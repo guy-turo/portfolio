@@ -71,7 +71,7 @@ const update= async(e)=>{
             <form  onSubmit={update} className="flex flex-col items-center justify-center">
             <div className=' flex flex-col items-center space-x-2 '>
               <div  className="w-full flex items-center justify-center  cursor-pointer ">
-              <label htmlFor='fil'>
+              <label htmlFor='fil' require>
                 <div className="w-full flex flex-col items-center justify-center  cursor-pointer">
                 <div className="w-full flex items-center  cursor-pointer p-2 bg-slate-500  rounded-md border border-solid border-blue-700">
                 {image.length===0 &&
@@ -93,15 +93,13 @@ const update= async(e)=>{
               <h2 className="font-normal text-blue-950">select image</h2>
                 </div>
              </label>
-              <input type="file" id='fil' multiple onChange={handleFileName} accept='image/*' hidden />
+              <input type="file" id='fil' multiple onChange={handleFileName} require accept='image/*' hidden />
               </div>
               <div className="space-y-2">
                  <input type="text" value={title} onChange={(e)=>setTitle(e.target.value)} placeholder={item.title} className=" bg-gray-300 border w-full rounded-md px-2 text-black border-solid border-blue-800"/>
-                
-                <textarea  type="text" value={description}  onChange={(e)=> setDescription(e.target.value)} placeholder={item.testimonials} className=" bg-gray-300 w-full border rounded-md px-2 text-black border-solid border-blue-800"/>
-                
-                <input type="text" value={linkLive} onChange={(e)=>setLinkLive(e.target.value)} placeholder={item.title} className=" bg-gray-300 border rounded-md w-full px-2 text-black border-solid border-blue-800"/>
-                <input type="text" value={linkGithub}  onChange={(e)=> setLinkGithub(e.target.value)} placeholder={item.testimonials} className=" bg-gray-300 border w-full rounded-md px-2 text-black border-solid border-blue-800"/>
+                <textarea  type="text" value={description}  onChange={(e)=> setDescription(e.target.value)} placeholder={item.description||"description"} className=" bg-gray-300 w-full border rounded-md px-2 text-black border-solid border-blue-800"/>
+                <input type="text" value={linkLive} onChange={(e)=>setLinkLive(e.target.value)} placeholder={item.linkLive ||"link live"} className=" bg-gray-300 border rounded-md w-full px-2 text-black border-solid border-blue-800"/>
+                <input type="text" value={linkGithub}  onChange={(e)=> setLinkGithub(e.target.value)} placeholder={item.linkGithub ||"live github"} className=" bg-gray-300 border w-full rounded-md px-2 text-black border-solid border-blue-800"/>
               </div>
               </div>
               <div className="space-y-1">

@@ -44,8 +44,14 @@ api.interceptors.request.use(
         if (token !== "") {
             config.headers.Authorization = "Bearer " + token
         }
+        if (config.data instanceof FormData) {
+            config.headers['Content-Type'] = 'multipart/form-data';
+        }
+        console.log(config)
         return config
     },
-    (error) => Promise.reject(error)
+    (error) => {
+        Promise.reject(error)
+    }
 )
 export default api

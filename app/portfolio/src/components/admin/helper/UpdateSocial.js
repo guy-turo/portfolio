@@ -18,7 +18,9 @@ const update= async(e)=>{
       link:link
      })
      .then((response)=>{
+      console.log(response)
       if(response){
+        
         setSuccessMessage("Updated")
           setTimeout(()=>{
             onClose()

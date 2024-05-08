@@ -29,7 +29,6 @@ const AdminPage=()=> {
     backgroundColor:"#1f1f38"
   }
   const [image,setImage]=useState('')
-  console.log(image)
   const fetchData=()=>{
     const URI="http://localhost:8000/api/v1/me/personal"
     api.get(URI)

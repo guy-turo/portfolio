@@ -70,6 +70,7 @@ const updateMe = async(req, res) => {
         description: description,
         projects: projects,
     } = req.body
+    console.log(req)
     try {
         const checkData = await meModel.find()
         if (!checkData) {
@@ -584,6 +585,7 @@ const createSocials = async(req, res) => {
     } catch (err) { console.log(err) }
 }
 const updateSocials = async(req, res) => {
+    console.log("updating")
     try {
         const { id: id } = req.params
 
@@ -592,8 +594,9 @@ const updateSocials = async(req, res) => {
         if (!data) {
             return res.status(404).json({ message: "Item not fount" })
         }
+        console.log(req.body.title, req.body.link)
         data.title = req.body.title || data.title
-        data.testimonials = req.body.link || data.link
+        data.link = req.body.link || data.link
 
         await data.save()
         res.status(200).json({ message: 'Item updated successfully' })

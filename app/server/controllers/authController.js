@@ -27,7 +27,7 @@ const token = async(req, res) => {
 
         jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, async(error, user) => {
             if (error) return res.status(403)
-            const accessToken = generateAccessToken({ id: user.id, name: user.name, email: user.email })
+            const accessToken = generateAccessToken({ id: user.id, name: user.name, email: user.email, admin: user.admin })
             res.json({ accessToken: accessToken })
         })
     } catch (error) {

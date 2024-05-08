@@ -70,7 +70,6 @@ const fetchData=()=>{
 useEffect(()=>{
   fetchData()
 },[])
-console.log(meData)
 const updateProfile=(id)=>{
  setProcess(!process)
   const formDataUpdate=new FormData()
@@ -85,20 +84,23 @@ const updateProfile=(id)=>{
   formDataUpdate.append("projects",projects)
   const URI=`http://localhost:8000/api/v1/me/personal/${id}`
   api.put(URI, formDataUpdate)
-  .then(re=>{
-    setProcess(!process)
-    setSuccessMessage("Data has been Updated successfully")
-    setTimeout(()=>{
-      setMeImage([])
-      setTitle('')
-      setFullName('')
-      setDescription('')
-      setEmail('')
-      setPhoneNumber('')
-      setExperienceYear('')
-      setClients('')
-      setProjects('')
-    },1500)
+  .then(res=>{
+    if(res.status===200){
+      setProcess(!process)
+      setSuccessMessage("Data has been Updated successfully")
+      setTimeout(()=>{
+        setMeImage([])
+        setTitle('')
+        setFullName('')
+        setDescription('')
+        setEmail('')
+        setPhoneNumber('')
+        setExperienceYear('')
+        setClients('')
+        setProjects('')
+      },1500)
+    }
+    
   })
   .catch(error=>setMessage(error.message))
 }
@@ -189,17 +191,18 @@ const updateProfile=(id)=>{
               </ul>
               
              }
+
           </div>
           <h2 className="flex font-normal px-2 rounded bg-blue-950 ">Select image</h2>
          </label>
         <input type="file" required multiple id='role'  onChange={handleImage} accept='image/*' hidden/>
         
       </div>
+      <p className='flex font-mono  w-full text-gray-400'>You only need 2 pictures</p>
       {meData?.length!==0&&<div className="space-y-1">
           {message && <textarea rows="1" cols="40" className='text-black  rounded-md  bg-red-500'>{message}</textarea>}
           {successMessage && <textarea rows="1" cols="40" value="Image uploaded successfully" className='text-black items-center justify-center flex  rounded-md  bg-green-500 text-center text-blue-800'></textarea>}
           <button onClick={()=>{
-            console.log("id:"+meData._id)
             updateProfile(meData._id)}
             } className="px-4 bg-green-700 w-fit rounded-md hover:text-blue-400">
             {message!=='' && <h3 className='text-red-700'>try again to Update</h3>}

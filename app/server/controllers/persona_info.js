@@ -186,6 +186,7 @@ const createProject = async(req, res) => {
     }
 }
 const updateProject = async(req, res) => {
+    console.log("hello")
     try {
         const { id: id } = req.params
         const data = await ProjectModel.findById(id)

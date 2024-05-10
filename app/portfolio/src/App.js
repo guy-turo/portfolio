@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React,{useState, useEffect} from 'react';
 import {Routes,Route}from "react-router-dom"
 import PortfolioPage from "./pages/PortfolioPage";
 import LoginPage from './pages/auth/LoginPage';
@@ -9,6 +9,7 @@ import SignUpPage from './pages/auth/RegisterPage';
 import axios from "axios"
 import PrivateRoute from "./pages/auth/helper/PrivateRoute";
 import { useNavigate } from 'react-router-dom';
+import api from './utils/Helper';
 
 
 const App=()=> {

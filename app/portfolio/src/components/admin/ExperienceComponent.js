@@ -20,7 +20,7 @@ function ExperienceComponent() {
 const addService=(e)=>{
   e.preventDefault()
   setProcess(!process)
-  const URI="http://localhost:8000/api/v1/me/experiences"
+  const URI="/me/experiences"
     api.post(URI,{
       frontend:frontendS,
      backend:backendS,
@@ -33,7 +33,7 @@ const addService=(e)=>{
 }
 
 const fetchServices=()=>{
-  const URI=`http://localhost:8000/api/v1/me/experiences`
+  const URI=`/me/experiences`
   api.get(URI)
   .then((response)=>{
     setExperiencesData(response.data)

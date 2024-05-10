@@ -1,13 +1,13 @@
 import React,{useEffect,useState} from 'react'
 
-import axios from 'axios'
+import api from '../../../utils/Helper'
 import ViewDetailPortfolio from './helper/ViewDetailPortfolio'
 const  Portfolio=()=> {
   const [portfolioData, setPortfolioData]=useState([])
   
   const fetchProjectData=()=>{
-    const URI="http://localhost:8000/api/v1/me/projects"
-    axios.get(URI)
+    const URI="/me/projects"
+    api.get(URI)
     .then((res)=>{
       setPortfolioData(res.data)
     })

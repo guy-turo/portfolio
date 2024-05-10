@@ -14,7 +14,7 @@ function PdfComponent() {
   const [process,setProcess]=useState(true)
  const addPdfData=()=>{
   setProcess(!process)
- const URI="http://localhost:8000/api/v1/pdf/upload"
+ const URI="/pdf/upload"
  const formData = new FormData()
  formData.append('file',pdfData)
   api.post(URI,formData)
@@ -28,13 +28,11 @@ function PdfComponent() {
         },1500)
     }
   }).catch(e=>{
-    console.log(e)
     alert("Error :"+e.message)
-   
   })
  }
   const fetchData=()=>{
-    const URI="http://localhost:8000/api/v1/pdf"
+    const URI="/pdf"
     api.get(URI)
     .then(res=>{
       if(res.status===200){
@@ -47,14 +45,14 @@ function PdfComponent() {
     fetchData()
   },[])
   const deletePdf=(id)=>{
-    const URI=`http://localhost:8000/api/v1/pdf/${id}`
+    const URI=`/pdf/${id}`
     api.delete(URI)
     .then(res=>alert("deleted"))
     .catch(error=>alert("error :"+error.message))
   }
   const updatePdf=(id)=>{
     setProcess(!process)
-    const URI=`http://localhost:8000/api/v1/pdf/${id}`
+    const URI=`/pdf/${id}`
     const formData=new FormData()
     formData.append('file',pdfData)
     api.put(URI,formData)

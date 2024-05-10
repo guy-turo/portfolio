@@ -36,7 +36,7 @@ function ProfileComponent() {
     formData.append("experienceYear",experienceYear)
     formData.append("clients",clients)
     formData.append("projects",projects)
-      const URI="http://localhost:8000/api/v1/me/personal"
+      const URI="/me/personal"
       api.post(URI,formData)
       .then((response)=>{
         if(response.status===200){
@@ -59,7 +59,7 @@ function ProfileComponent() {
     }
 
 const fetchData=()=>{
-  const URI="http://localhost:8000/api/v1/me/personal"
+  const URI="/me/personal"
   api.get(URI)
   .then(res=>{
     setMeData(res.data[0])}
@@ -82,7 +82,7 @@ const updateProfile=(id)=>{
   formDataUpdate.append("experienceYear",experienceYear)
   formDataUpdate.append("clients",clients)
   formDataUpdate.append("projects",projects)
-  const URI=`http://localhost:8000/api/v1/me/personal/${id}`
+  const URI=`/me/personal/${id}`
   api.put(URI, formDataUpdate)
   .then(res=>{
     if(res.status===200){

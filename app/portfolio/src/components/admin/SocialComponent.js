@@ -19,7 +19,7 @@ function SocialComponent() {
 const addSocial=(e)=>{
   e.preventDefault()
   setProcess(!process)
-  const URI="http://localhost:8000/api/v1/me/socials"
+  const URI="/me/socials"
     api.post(URI,{
      title:titleSC,
       link:linkSC,
@@ -40,7 +40,7 @@ const addSocial=(e)=>{
 
 
 const deleteSocial=(id)=>{
-  const URI=`http://localhost:8000/api/v1/me/socials/${id}`
+  const URI=`/me/socials/${id}`
   api.delete(URI)
   .then((response)=>{
     if(response.status===200){
@@ -50,7 +50,7 @@ const deleteSocial=(id)=>{
   .catch(error=>console.error(error.message))
 }
 const fetchData=()=>{
-  const URI="http://localhost:8000/api/v1/me/socials"
+  const URI="/me/socials"
   api.get(URI)
   .then((response)=>{
     if(response.status===200){

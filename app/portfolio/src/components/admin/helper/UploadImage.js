@@ -26,7 +26,7 @@ const UploadImage=({model})=> {
       formData.append('title',title)
       formData.append('description',description)
 
-      const URI=`http://localhost:8000/api/v1/images/${model}`
+      const URI=`/images/${model}`
      
      api.post(URI,formData,{
       headers:{

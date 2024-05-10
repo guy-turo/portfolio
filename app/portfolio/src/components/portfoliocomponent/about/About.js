@@ -3,20 +3,17 @@ import './about.css'
 import { FaAward } from "react-icons/fa6";
 import { FaUsers } from "react-icons/fa";
 import { AiOutlineFundProjectionScreen } from "react-icons/ai";
-import axios from 'axios'
+import api from '../../../utils/Helper';
 const  About=()=> {
   const [image,setImage]=useState('')
   const [aboutData, setAboutData]=useState([])
   
   const fetchData=()=>{
-    const URI="http://localhost:8000/api/v1/me/personal"
-    axios.get(URI)
+    const URI="/me/personal"
+    api.get(URI)
     .then(res=>{
-      
-      
       setImage(res.data[0].pictures[1])
       setAboutData(res.data[0])}
-      
     )
     .catch(error=>console.log(error.message))
   }

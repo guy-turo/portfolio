@@ -646,9 +646,12 @@ const createTestimonials = async(req, res) => {
             pictures: req.file.path
         })
         testimonialData.save()
-            .then((res) => res.status(200).json(res))
+            .then((res) => {
+                console.log('image uploaded successfully')
+                res.status(200).json(res)
+            })
             .catch(err => res.status(500).json(err.message))
-        console.log('image uploaded successfully')
+
     } catch (err) { console.error(err) }
 }
 const updateTestimonials = async(req, res) => {

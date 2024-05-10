@@ -1,13 +1,13 @@
 import React,{useEffect,useState} from 'react'
 import {BsPatchCheckFill} from 'react-icons/bs'
 import '../../../index.css'
-import axios from 'axios'
+import api from '../../../utils/Helper'
 
 function Experience() {
   const [experiencesData,setExperiencesData]=useState([])
   const fetchExperiences=()=>{
-    const URI=`http://localhost:8000/api/v1/me/experiences`
-    axios.get(URI)
+    const URI=`/me/experiences`
+    api.get(URI)
     .then((response)=>{
       setExperiencesData(response.data)
     })

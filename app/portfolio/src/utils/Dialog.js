@@ -1,8 +1,5 @@
 import React from 'react'
-
-
 const Dialog=({open , onClose, children})=>{
-
 
  if(!open)return null
  const handleClose=(e)=>{

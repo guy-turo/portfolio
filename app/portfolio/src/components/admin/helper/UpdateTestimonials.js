@@ -31,7 +31,7 @@ const UpdateTestimonials=({item})=> {
       formData.append('title',title)
       formData.append("testimonials", testimonials)
 
-      const URI=`http://localhost:8000/api/v1/me/testimonials/${item._id}`
+      const URI=`/me/testimonials/${item._id}`
      
      api.put(URI,formData,{
       headers:{

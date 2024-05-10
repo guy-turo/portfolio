@@ -1,12 +1,12 @@
 import React,{useEffect, useState} from 'react'
 import {BiCheck} from 'react-icons/bi'
-import axios from 'axios'
+import api from '../../../utils/Helper'
 
 function Services() {
   const [servicesData,setServicesData]=useState([])
   const fetchServices=()=>{
-    const URI=`http://localhost:8000/api/v1/me/services`
-    axios.get(URI)
+    const URI=`/me/services`
+    api.get(URI)
     .then((response)=>{
       setServicesData(response.data)
     })

@@ -1,30 +1,16 @@
 import React,{useEffect,useState} from 'react'
 
-import axios from 'axios'
+import api from '../../../utils/Helper'
 
 function CTA() {
   const [pdfData,setPdfData]=useState([])
   const [isDownloading, setIsDownloading] = useState(false)
-  const handleDownload = async () => {
-    setIsDownloading(true);
-    try {
-        const downloadLink = document.createElement('a');
-        downloadLink.href = pdfData?.pdfUrl;
-        downloadLink.target = '_blank';
-        downloadLink.click();
-      
-    } catch (error) {
-      alert("Something went wrong with your connection while downloading"+error.message);
-    } finally {
-      setIsDownloading(false);
-    }
-  };
+  
   const fetchData=()=>{
-    const URI="http://localhost:8000/api/v1/pdf"
-    axios.get(URI)
+    const URI="/pdf"
+    api.get(URI)
     .then(res=>{
       if(res.status===200){
-        console.log(res.data[0])
         setPdfData(res.data[0])
       }
     })

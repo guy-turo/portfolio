@@ -30,7 +30,7 @@ const AdminPage=()=> {
   }
   const [image,setImage]=useState('')
   const fetchData=()=>{
-    const URI="http://localhost:8000/api/v1/me/personal"
+    const URI="/me/personal"
     api.get(URI)
     .then(res=>{
       setImage(res.data[0].pictures[1])
@@ -39,7 +39,7 @@ const AdminPage=()=> {
     .catch(error=>console.log(error.message))
   }
   const checkAuth=async()=>{
-    const URI="http://localhost:8000/api/v1/auth/checkAuth"
+    const URI="/auth/checkAuth"
     api.get(URI)
       .then(res=>{
         if(res){
@@ -53,7 +53,7 @@ const AdminPage=()=> {
       })
   }
   const logout=async()=>{
-    const URI="http://localhost:8000/api/v1/auth/logout"
+    const URI="/auth/logout"
     const initialToken=localStorage.getItem("refreshToken")
     await  api.put(URI, {
       token: initialToken

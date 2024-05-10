@@ -41,7 +41,7 @@ const addProject=(e)=>{
   formData.append("description",description)
   formData.append("linkGithub", linkGithub)
   formData.append("linkLive",linkLive)
-  const URI="http://localhost:8000/api/v1/me/projects"
+  const URI="/me/projects"
     api.post(URI, formData)
     .then((response)=>{
       setProcess(!process)
@@ -57,7 +57,7 @@ const addProject=(e)=>{
     .catch(error=>setMessage(error))
 }
 const fetchProjectData=()=>{
-  const URI="http://localhost:8000/api/v1/me/projects"
+  const URI="/me/projects"
   api.get(URI)
   .then((res)=>{
     setProjectsData(res.data)
@@ -70,7 +70,7 @@ useEffect(()=>{
   fetchProjectData()
 },[])
 const deleteProject=(id)=>{
-  const URI=`http://localhost:8000/api/v1/me/projects/${id}`
+  const URI=`/me/projects/${id}`
   api.delete(URI)
     .then((res)=>{
       if(res.status===200){

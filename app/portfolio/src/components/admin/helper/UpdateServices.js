@@ -12,7 +12,7 @@ const UpdateSocials=({item, el,id })=> {
 const  onClose=()=>setOpen(!open)
 const update= async(e)=>{
     e.preventDefault()
-      const URI=`http://localhost:8000/api/v1/me/services/${id}`
+      const URI=`/me/services/${id}`
      api.put(URI,{
       text:text,
       el:el

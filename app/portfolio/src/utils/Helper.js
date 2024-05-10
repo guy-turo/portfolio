@@ -15,7 +15,9 @@ const refreshToken = async() => {
 
     }
 }
-const api = axios.create()
+const api = axios.create({
+    baseURL: "https://app-api-bixtdry5xq-uc.a.run.app/api/v1/",
+})
 api.interceptors.response.use(
     (response) => {
         if (response.status === 200) {

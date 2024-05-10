@@ -23,7 +23,7 @@ const TestimonialsComponent=()=>{
   }
   const [process,setProcess]=useState(true)
   const fetchTestimonialData=()=>{
-    const URI="http://localhost:8000/api/v1/me/testimonials"
+    const URI="/me/testimonials"
     api.get(URI)
     .then((res)=>{
       setTestimonialData(res.data)
@@ -50,7 +50,7 @@ const TestimonialsComponent=()=>{
       formData.append('name', nameT)
       formData.append('title',titleT)
       formData.append('testimonials',testimonialsT)
-    const URI="http://localhost:8000/api/v1/me/testimonials"
+    const URI="/me/testimonials"
       api.post(URI,formData)
       .then((response)=>{
        
@@ -71,7 +71,7 @@ const TestimonialsComponent=()=>{
   }
   const deleteTestimonial=(id)=>{
     
-    const URI=`http://localhost:8000/api/v1/me/testimonials/${id}`
+    const URI=`/me/testimonials/${id}`
     api.delete(URI)
     .then((response)=>{
       if(response.status===200){

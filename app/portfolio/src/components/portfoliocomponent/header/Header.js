@@ -2,14 +2,14 @@ import React, {useEffect,useState} from 'react'
 import './header.css'
 import CTA from './CTA'
 import HeaderSection from './HeaderSection'
-import axios from 'axios'
+import api from '../../../utils/Helper'
 
 function Header() {
   const [image,setImage]=useState('')
   const [personalData,setPersonalData]=useState([])
   const fetchData=()=>{
-    const URI="http://localhost:8000/api/v1/me/personal"
-    axios.get(URI)
+    const URI="/me/personal"
+    api.get(URI)
     .then(res=>{
       setPersonalData(res.data[0])
       setImage(res.data[0].pictures[0])

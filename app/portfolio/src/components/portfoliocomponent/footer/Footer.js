@@ -1,15 +1,17 @@
 import React,{useState,useEffect} from  'react'
-import axios from 'axios'
+import api from '../../../utils/Helper'
 
-function Footer() {
+const  Footer=()=> {
+
   const [SocialsData,setSocialsData]=useState([])
+  const [portfolioData, setPortfolioData]=useState([])
+  const firstFourElements = portfolioData.slice(0,7);
   const fetchData=()=>{
-    const URI="http://localhost:8000/api/v1/me/socials"
-    axios.get(URI)
+    const URI="/me/socials"
+    api.get(URI)
     .then((response)=>{
       if(response.status===200){
         setSocialsData(response.data)
-       
       }
     })
     .catch(error=>console.error(error.message))
@@ -17,11 +19,11 @@ function Footer() {
   useEffect(()=>{
     fetchData()
   },[])
-  const [portfolioData, setPortfolioData]=useState([])
-  const firstFourElements = portfolioData.slice(0,7);
+
+  
   const fetchProjectData=()=>{
-    const URI="http://localhost:8000/api/v1/me/projects"
-    axios.get(URI)
+    const URI="/me/projects"
+    api.get(URI)
     .then((res)=>{
       setPortfolioData(res.data)
     })

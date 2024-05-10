@@ -28,7 +28,7 @@ formData.append("linkLive",linkLive)
 formData.append("linkGithub", linkGithub)
 const update= async(e)=>{
     e.preventDefault()
-      const URI=`http://localhost:8000/api/v1/me/projects/${item._id}`
+      const URI=`/me/projects/${item._id}`
      api.put(URI,formData)
      .then((response)=>{
       if(response){

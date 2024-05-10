@@ -1,15 +1,15 @@
 import React,{useState,useEffect} from 'react'
 import { FiChevronRight, FiChevronLeft } from 'react-icons/fi';
 import { FaQuoteRight } from 'react-icons/fa';
-import axios from 'axios'
+import api from '../../../utils/Helper';
 import './testimonial.css'
 
-function Testimonial() {
+const  Testimonial=()=> {
   const [index , setIndex]=useState(0)
   const [testimonialData,setTestimonialData]=useState([])
   const fetchTestimonialData=()=>{
-    const URI="http://localhost:8000/api/v1/me/testimonials"
-    axios.get(URI)
+    const URI="/me/testimonials"
+    api.get(URI)
     .then((res)=>{
       setTestimonialData(res.data)
     })

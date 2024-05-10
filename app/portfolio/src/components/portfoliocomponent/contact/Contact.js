@@ -1,15 +1,16 @@
 import React,{useEffect, useState} from 'react'
 import {MdOutlineEmail} from 'react-icons/md'
 import {BsWhatsapp} from 'react-icons/bs'
-import axios from 'axios'
+import api from '../../../utils/Helper'
+import axios from "axios"
 
 
-function Contact() {
+const  Contact=()=> {
   const [aboutData, setAboutData]=useState([])
   
   const fetchData=()=>{
-    const URI="http://localhost:8000/api/v1/me/personal"
-    axios.get(URI)
+    const URI="/me/personal"
+    api.get(URI)
     .then(res=>{
       setAboutData(res.data[0])}
     )

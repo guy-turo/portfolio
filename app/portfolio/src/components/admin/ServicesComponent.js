@@ -24,7 +24,7 @@ const addService=(e)=>{
 
   e.preventDefault()
   setProcess(!process)
-  const URI="http://localhost:8000/api/v1/me/services"
+  const URI="/me/services"
     api.post(URI,{
       userExp:userExpS,
       frontend:frontendS,
@@ -38,7 +38,7 @@ const addService=(e)=>{
 }
 
 const fetchServices=()=>{
-  const URI=`http://localhost:8000/api/v1/me/services`
+  const URI=`/me/services`
   api.get(URI)
   .then((response)=>{
     setServicesData(response.data)

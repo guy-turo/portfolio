@@ -9,8 +9,6 @@ import SignUpPage from './pages/auth/RegisterPage';
 import axios from "axios"
 import PrivateRoute from "./pages/auth/helper/PrivateRoute";
 import { useNavigate } from 'react-router-dom';
-import api from './utils/Helper';
-
 
 const App=()=> {
   const accessToken=localStorage.getItem("accessToken")!==null

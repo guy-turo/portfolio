@@ -7,18 +7,18 @@ import axios from "axios"
 
 export const signupRequest = () => {
     return {
-        this: SIGNUP_REQUEST
+        type: SIGNUP_REQUEST
     }
 }
 export const signupSuccess = (data) => {
     return {
-        this: SIGNUP_SUCCESS,
+        type: SIGNUP_SUCCESS,
         payload: data
     }
 }
 export const signupFailure = (error) => {
     return {
-        this: SIGNUP_FAILURE,
+        type: SIGNUP_FAILURE,
         payload: error,
     }
 }
@@ -26,8 +26,8 @@ export const signupFailure = (error) => {
 export const signup = (name, email, password) => {
     const URI = "http://localhost:8000/api/v1/auth/signup"
     return (dispatch) => {
-        dispatch(signupRequest)
-
+        console.log('clicked23')
+        dispatch(signupRequest())
         axios.post(URI, {
                 name: name,
                 email: email,
@@ -41,7 +41,7 @@ export const signup = (name, email, password) => {
                     dispatch(signupSuccess(res.data))
                 }
                 if (res.status === 208) {
-                    alert(res.data.message)
+                    dispatch(signupSuccess(res.data))
                 }
             }).catch(error => {
                 dispatch(signupFailure(error.message))

@@ -1,19 +1,15 @@
 import {
-    ADD_ME_REQUEST,
-    ADD_ME_SUCCESS,
-    ADD_ME_FAILURE,
+    ADD_SERVICE_REQUEST,
+    ADD_SERVICE_SUCCESS,
+    ADD_SERVICE_FAILURE,
 
-    FETCH_ME_SUCCESS,
-    FETCH_ME_REQUEST,
-    FETCH_ME_FAILURE,
+    FETCH_SERVICE_SUCCESS,
+    FETCH_SERVICE_REQUEST,
+    FETCH_SERVICE_FAILURE,
 
-    DELETE_ME_REQUEST,
-    DELETE_ME_SUCCESS,
-    DELETE_ME_FAILURE,
-
-    UPDATE_ME_REQUEST,
-    UPDATE_ME_SUCCESS,
-    UPDATE_ME_FAILURE
+    UPDATE_SERVICE_REQUEST,
+    UPDATE_SERVICE_SUCCESS,
+    UPDATE_SERVICE_FAILURE
 } from "./service_action_types"
 
 const initialState = {
@@ -21,51 +17,51 @@ const initialState = {
     data: [],
     error: ""
 }
-const meReducer = (state = initialState, action) => {
+const serviceReducer = (state = initialState, action) => {
     switch (action.type) {
-        case ADD_ME_REQUEST:
+        case ADD_SERVICE_REQUEST:
             return {
                 ...state,
                 loading: true,
             }
-        case ADD_ME_SUCCESS:
+        case ADD_SERVICE_SUCCESS:
             return {
                 ...state,
                 data: action.payload,
             }
-        case ADD_ME_FAILURE:
+        case ADD_SERVICE_FAILURE:
             return {
                 ...state,
                 error: action.payload,
             }
 
-        case FETCH_ME_REQUEST:
+        case FETCH_SERVICE_REQUEST:
             return {
                 ...state,
                 loading: true,
             }
-        case FETCH_ME_SUCCESS:
+        case FETCH_SERVICE_SUCCESS:
             return {
                 ...state,
                 data: action.payload
             }
-        case FETCH_ME_FAILURE:
+        case FETCH_SERVICE_FAILURE:
             return {
                 ...state,
                 error: action.payload
             }
 
-        case UPDATE_ME_REQUEST:
+        case UPDATE_SERVICE_REQUEST:
             return {
                 ...state,
                 loading: true
             }
-        case UPDATE_ME_SUCCESS:
+        case UPDATE_SERVICE_SUCCESS:
             return {
                 ...state,
                 data: action.payload
             }
-        case UPDATE_ME_FAILURE:
+        case UPDATE_SERVICE_FAILURE:
             return {
                 ...state,
                 error: action.payload
@@ -74,4 +70,4 @@ const meReducer = (state = initialState, action) => {
             return state
     }
 }
-export default meReducer
+export default serviceReducer

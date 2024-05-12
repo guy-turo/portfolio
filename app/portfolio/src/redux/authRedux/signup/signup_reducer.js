@@ -19,12 +19,14 @@ const signupReducer = (state = initialState, action) => {
         case SIGNUP_SUCCESS:
             return {
                 ...state,
+                loading: false,
                 data: action.payload
             }
         case SIGNUP_FAILURE:
             return {
                 ...state,
-                data: action.payload
+                loading: false,
+                error: action.payload
             }
 
         default:

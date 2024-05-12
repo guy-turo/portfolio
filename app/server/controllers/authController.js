@@ -35,18 +35,25 @@ const token = async(req, res) => {
     }
 }
 const login = async(req, res) => {
+    console.log("login...")
     try {
         const { email: email, password: password } = req.body
+        console.log(email, password)
         let crfToken
-        if (!isValidEmail(email)) return res.Status(406).json({ message: "Provide correct email" })
+        if (!isValidEmail(email)) {
+            console.log('invalid email')
+            return res.Status(406).json({ message: "Provide correct email" })
+        }
 
         const checkEmail = await UserModel.findOne({ email: email })
         if (!checkEmail) return res.status(404).json({ message: "This email not exist" })
+
         bcrypt.compare(password, checkEmail.hash, async(error, result) => {
             if (error) {
-                return res.status(401).json({ message: "Wrong password" })
+
             }
             if (result) {
+                console.log(result)
                 const user = { id: checkEmail._id, name: checkEmail.name, email: email, admin: checkEmail.isAdmin }
                 const accessToken = generateAccessToken(user)
                 const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, { expiresIn: "1d" })
@@ -62,21 +69,25 @@ const login = async(req, res) => {
                     refreshToken: refreshToken
                 })
                 newToken.save().then((response) => {
+                    console.log(response)
                     res.json({ accessToken: accessToken, refreshToken: refreshToken })
                 }).catch((err) => {
                     if (err) {
                         console.log(err.message)
                     }
                 })
+            } else {
+                console.log('sent')
+                res.status(401).json({ message: "Wrong password" })
             }
         })
     } catch (error) {
         return res.status(500).json(error.message)
     }
-
 }
 const signup = async(req, res) => {
     const { name: name, email: email, password: password } = req.body
+    console.log(name)
     try {
         const saltRounds = 10
         const salt = await bcrypt.genSalt(saltRounds)
@@ -90,7 +101,7 @@ const signup = async(req, res) => {
             console.log(hashPassword)
             const checkAccount = await UserModel.findOne({ email: email })
             console.log(checkAccount)
-            if (checkAccount !== null) {
+            if (!checkAccount) {
                 return res.status(200).json({ message: "Email already exist" })
             }
             const checkDb = await UserModel.find()

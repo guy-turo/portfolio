@@ -21,18 +21,18 @@ import api from "../../../utils/Helper"
 //ADD Me
 export const addMeRequest = () => {
     return {
-        this: ADD_ME_REQUEST,
+        type: ADD_ME_REQUEST,
     }
 }
 export const addMeSuccess = (me) => {
     return {
-        this: ADD_ME_SUCCESS,
+        type: ADD_ME_SUCCESS,
         payload: me
     }
 }
 export const addMeFailure = (error) => {
     return {
-        this: ADD_ME_FAILURE,
+        type: ADD_ME_FAILURE,
         payload: error
     }
 }
@@ -66,18 +66,18 @@ export const addMe = (images, fullName, title, description, email, phoneNumber, 
 //Fetch Me
 export const fetchMeRequest = () => {
     return {
-        this: FETCH_ME_REQUEST
+        type: FETCH_ME_REQUEST
     }
 }
 export const fetchMeSuccess = (me) => {
     return {
-        this: FETCH_ME_SUCCESS,
+        type: FETCH_ME_SUCCESS,
         payload: me
     }
 }
 export const fetchMeFailure = (error) => {
     return {
-        this: FETCH_ME_FAILURE,
+        type: FETCH_ME_FAILURE,
         payload: error
     }
 }
@@ -100,18 +100,18 @@ export const fetchMe = () => {
 
 export const deleteMeRequest = () => {
     return {
-        this: DELETE_ME_REQUEST
+        type: DELETE_ME_REQUEST
     }
 }
 export const deleteMeSuccess = (me) => {
     return {
-        this: DELETE_ME_SUCCESS,
+        type: DELETE_ME_SUCCESS,
         payload: me
     }
 }
 export const deleteMeFailure = (error) => {
     return {
-        this: DELETE_ME_FAILURE,
+        type: DELETE_ME_FAILURE,
         payload: error
     }
 }
@@ -121,18 +121,18 @@ export const deleteMe = () => {
     //update Me
 export const updateMeRequest = () => {
     return {
-        this: UPDATE_ME_REQUEST
+        type: UPDATE_ME_REQUEST
     }
 }
 export const updateMeSuccess = (me) => {
     return {
-        this: UPDATE_ME_SUCCESS,
+        type: UPDATE_ME_SUCCESS,
         payload: me
     }
 }
 export const updateMeFailure = (error) => {
     return {
-        this: UPDATE_ME_FAILURE,
+        type: UPDATE_ME_FAILURE,
         payload: error
     }
 }

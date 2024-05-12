@@ -17,18 +17,18 @@ import api from "../../../utils/Helper"
 //ADD Me
 export const addServiceRequest = () => {
     return {
-        this: ADD_SERVICE_REQUEST,
+        type: ADD_SERVICE_REQUEST,
     }
 }
-export const addServiceSuccess = (me) => {
+export const addServiceSuccess = (data) => {
     return {
-        this: ADD_SERVICE_SUCCESS,
-        payload: me
+        type: ADD_SERVICE_SUCCESS,
+        payload: data
     }
 }
 export const addServiceFailure = (error) => {
     return {
-        this: ADD_SERVICE_FAILURE,
+        type: ADD_SERVICE_FAILURE,
         payload: error
     }
 }
@@ -52,18 +52,18 @@ export const addService = (userExp, frontend, backend, other) => {
 //Fetch Me
 export const fetchServiceRequest = () => {
     return {
-        this: FETCH_SERVICE_REQUEST
+        type: FETCH_SERVICE_REQUEST
     }
 }
 export const fetchServiceSuccess = (data) => {
     return {
-        this: FETCH_SERVICE_SUCCESS,
+        type: FETCH_SERVICE_SUCCESS,
         payload: data
     }
 }
 export const fetchServiceFailure = (error) => {
     return {
-        this: FETCH_SERVICE_FAILURE,
+        type: FETCH_SERVICE_FAILURE,
         payload: error
     }
 }
@@ -86,18 +86,18 @@ export const fetchService = () => {
 //update Me
 export const updateServiceRequest = () => {
     return {
-        this: UPDATE_SERVICE_REQUEST
+        type: UPDATE_SERVICE_REQUEST
     }
 }
 export const updateServiceSuccess = (me) => {
     return {
-        this: UPDATE_SERVICE_SUCCESS,
+        type: UPDATE_SERVICE_SUCCESS,
         payload: me
     }
 }
 export const updateServiceFailure = (error) => {
     return {
-        this: UPDATE_SERVICE_FAILURE,
+        type: UPDATE_SERVICE_FAILURE,
         payload: error
     }
 }

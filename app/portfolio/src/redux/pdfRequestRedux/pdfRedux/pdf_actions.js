@@ -21,18 +21,18 @@ import api from "../../../utils/Helper"
 //ADD Me
 export const addPdfRequest = () => {
     return {
-        this: ADD_PDF_REQUEST,
+        type: ADD_PDF_REQUEST,
     }
 }
 export const addPdfSuccess = (me) => {
     return {
-        this: ADD_PDF_SUCCESS,
+        type: ADD_PDF_SUCCESS,
         payload: me
     }
 }
 export const addPdfFailure = (error) => {
     return {
-        this: ADD_PDF_FAILURE,
+        type: ADD_PDF_FAILURE,
         payload: error
     }
 }

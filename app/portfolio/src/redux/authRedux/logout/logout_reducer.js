@@ -24,7 +24,7 @@ const logoutReducer = (state = initialState, action) => {
         case LOGOUT_FAILURE:
             return {
                 ...state,
-                data: action.payload
+                error: action.payload
             }
 
         default:

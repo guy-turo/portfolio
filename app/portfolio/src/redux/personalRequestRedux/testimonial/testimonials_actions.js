@@ -21,18 +21,18 @@ import api from "../../../utils/Helper"
 //ADD Me
 export const addTestimonialsRequest = () => {
     return {
-        this: ADD_TESTIMONIALS_REQUEST,
+        type: ADD_TESTIMONIALS_REQUEST,
     }
 }
 export const addTestimonialsSuccess = (me) => {
     return {
-        this: ADD_TESTIMONIALS_SUCCESS,
+        type: ADD_TESTIMONIALS_SUCCESS,
         payload: me
     }
 }
 export const addTestimonialsFailure = (error) => {
     return {
-        this: ADD_TESTIMONIALS_FAILURE,
+        type: ADD_TESTIMONIALS_FAILURE,
         payload: error
     }
 }
@@ -66,18 +66,18 @@ export const addTestimonials = (image, name, title, testimonial) => {
 //Fetch Me
 export const fetchTestimonialsRequest = () => {
     return {
-        this: FETCH_TESTIMONIALS_REQUEST
+        type: FETCH_TESTIMONIALS_REQUEST
     }
 }
 export const fetchMeSuccess = (me) => {
     return {
-        this: FETCH_TESTIMONIALS_SUCCESS,
+        type: FETCH_TESTIMONIALS_SUCCESS,
         payload: me
     }
 }
 export const fetchTestimonialsFailure = (error) => {
     return {
-        this: FETCH_TESTIMONIALS_FAILURE,
+        type: FETCH_TESTIMONIALS_FAILURE,
         payload: error
     }
 }
@@ -100,18 +100,18 @@ export const fetchTestimonials = () => {
 
 export const deleteTestimonialsRequest = () => {
     return {
-        this: DELETE_TESTIMONIALS_REQUEST
+        type: DELETE_TESTIMONIALS_REQUEST
     }
 }
 export const deleteTestimonialsSuccess = (me) => {
     return {
-        this: DELETE_TESTIMONIALS_SUCCESS,
+        type: DELETE_TESTIMONIALS_SUCCESS,
         payload: me
     }
 }
 export const deleteTestimonialsFailure = (error) => {
     return {
-        this: DELETE_TESTIMONIALS_FAILURE,
+        type: DELETE_TESTIMONIALS_FAILURE,
         payload: error
     }
 }
@@ -132,18 +132,18 @@ export const deleteTestimonials = (id) => {
     //update Me
 export const updateTestimonialsRequest = () => {
     return {
-        this: UPDATE_TESTIMONIALS_REQUEST
+        type: UPDATE_TESTIMONIALS_REQUEST
     }
 }
 export const updateTestimonialsSuccess = (me) => {
     return {
-        this: UPDATE_TESTIMONIALS_SUCCESS,
+        type: UPDATE_TESTIMONIALS_SUCCESS,
         payload: me
     }
 }
 export const updateTestimonialsFailure = (error) => {
     return {
-        this: UPDATE_TESTIMONIALS_FAILURE,
+        type: UPDATE_TESTIMONIALS_FAILURE,
         payload: error
     }
 }

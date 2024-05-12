@@ -21,18 +21,18 @@ import api from "../../../utils/Helper"
 //ADD Me
 export const addProjectRequest = () => {
     return {
-        this: ADD_PROJECT_REQUEST,
+        type: ADD_PROJECT_REQUEST,
     }
 }
 export const addProjectSuccess = (data) => {
     return {
-        this: ADD_PROJECT_SUCCESS,
+        type: ADD_PROJECT_SUCCESS,
         payload: data
     }
 }
 export const addProjectFailure = (error) => {
     return {
-        this: ADD_PROJECT_FAILURE,
+        type: ADD_PROJECT_FAILURE,
         payload: error
     }
 }
@@ -60,18 +60,18 @@ export const addProject = (images, title, description, linkGithub, linkLive) => 
 //Fetch Me
 export const fetchProjectRequest = () => {
     return {
-        this: FETCH_PROJECT_REQUEST
+        type: FETCH_PROJECT_REQUEST
     }
 }
 export const fetchProjectSuccess = (data) => {
     return {
-        this: FETCH_PROJECT_SUCCESS,
+        type: FETCH_PROJECT_SUCCESS,
         payload: data
     }
 }
 export const fetchProjectFailure = (error) => {
     return {
-        this: FETCH_PROJECT_FAILURE,
+        type: FETCH_PROJECT_FAILURE,
         payload: error
     }
 }
@@ -92,22 +92,22 @@ export const fetchProject = () => {
 //delete Me
 export const deleteProjectRequest = () => {
     return {
-        this: DELETE_PROJECT_REQUEST
+        type: DELETE_PROJECT_REQUEST
     }
 }
 export const deleteProjectSuccess = (data) => {
     return {
-        this: DELETE_PROJECT_SUCCESS,
+        type: DELETE_PROJECT_SUCCESS,
         payload: data
     }
 }
 export const deleteProjectFailure = (error) => {
     return {
-        this: DELETE_PROJECT_FAILURE,
+        type: DELETE_PROJECT_FAILURE,
         payload: error
     }
 }
-export const deleteMe = (id) => {
+export const deleteProject = (id) => {
         const URI = `/me/projects/${id}`
         return (dispatch) => {
             dispatch(deleteProjectRequest)
@@ -125,18 +125,18 @@ export const deleteMe = (id) => {
     //update Me
 export const updateProjectRequest = () => {
     return {
-        this: UPDATE_PROJECT_REQUEST
+        type: UPDATE_PROJECT_REQUEST
     }
 }
 export const updateProjectSuccess = (data) => {
     return {
-        this: UPDATE_PROJECT_SUCCESS,
+        type: UPDATE_PROJECT_SUCCESS,
         payload: data
     }
 }
 export const updateProjectFailure = (error) => {
     return {
-        this: UPDATE_PROJECT_FAILURE,
+        type: UPDATE_PROJECT_FAILURE,
         payload: error
     }
 }

@@ -17,18 +17,18 @@ import api from "../../../utils/Helper"
 //ADD Me
 export const addExperienceRequest = () => {
     return {
-        this: ADD_EXPERIENCE_REQUEST,
+        type: ADD_EXPERIENCE_REQUEST,
     }
 }
 export const addExperienceSuccess = (data) => {
     return {
-        this: ADD_EXPERIENCE_SUCCESS,
+        type: ADD_EXPERIENCE_SUCCESS,
         payload: data
     }
 }
 export const addExperienceFailure = (error) => {
     return {
-        this: ADD_EXPERIENCE_FAILURE,
+        type: ADD_EXPERIENCE_FAILURE,
         payload: error
     }
 }
@@ -51,18 +51,18 @@ export const addExperience = (frontend, backend, other) => {
 //Fetch Me
 export const fetchExperienceRequest = () => {
     return {
-        this: FETCH_EXPERIENCE_REQUEST
+        type: FETCH_EXPERIENCE_REQUEST
     }
 }
 export const fetchExperienceSuccess = (data) => {
     return {
-        this: FETCH_EXPERIENCE_SUCCESS,
+        type: FETCH_EXPERIENCE_SUCCESS,
         payload: data
     }
 }
 export const fetchExperienceFailure = (error) => {
     return {
-        this: FETCH_EXPERIENCE_FAILURE,
+        type: FETCH_EXPERIENCE_FAILURE,
         payload: error
     }
 }
@@ -83,18 +83,18 @@ export const fetchExperience = () => {
     //update Me
 export const updateExperienceRequest = () => {
     return {
-        this: UPDATE_EXPERIENCE_REQUEST
+        type: UPDATE_EXPERIENCE_REQUEST
     }
 }
 export const updateExperienceSuccess = (me) => {
     return {
-        this: UPDATE_EXPERIENCE_SUCCESS,
+        type: UPDATE_EXPERIENCE_SUCCESS,
         payload: me
     }
 }
 export const updateExperienceFailure = (error) => {
     return {
-        this: UPDATE_EXPERIENCE_FAILURE,
+        type: UPDATE_EXPERIENCE_FAILURE,
         payload: error
     }
 }

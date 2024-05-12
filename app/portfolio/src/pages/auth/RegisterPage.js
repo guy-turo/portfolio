@@ -1,35 +1,29 @@
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import me1 from "../../assets/me1.png"
 import {Link,useNavigate} from "react-router-dom"
-import axios from "axios"
-const SignUpPage=()=>{
+import {connect} from "react-redux"
+import { signup } from '../../redux/authRedux/signup/signup_action'
+import Loading from '../../components/helper/loadingComponent/Loading'
+const SignUpPage=({signUpData ,signup})=>{
   const [name,setName]=useState('')
   const [email,setEmail]=useState('')
   const [password, setPassword]=useState('')
-  const navigate=useNavigate()
+  const [hiddenPassword, setHiddenPassword]=useState(true)
+  const navigate= useNavigate()
   const register=(e)=>{
     e.preventDefault()
-    console.log(name,email, password)
-    const URI="http://localhost:8000/api/v1/auth/signup"
-    axios.post(URI,{
-      name:name,
-      email:email,
-      password:password,
-    })
-    .then((res)=>{
-      if(res.status===200){
-        alert("Email already exists")
-      }
-     if(res.status===201){
-        navigate('/signin')
-     }
-     if(res.status===208){
-      alert(res.data.message)
-     }
-    }).catch(e=>{
-      alert(e.message)
-    })
+    console.log('clicked')
+    signup(name,email,password)
+    console.log(signUpData)
   }
+  
+  useEffect(()=>{
+    const accessToken= localStorage.getItem('access_token')
+
+    if(signUpData.data ||accessToken ){
+      navigate("/admin")
+    }
+  },[navigate, signUpData.data])
   return (
     <div  className='  static flex w-full snap-y   snap-mandatory h-screen overflow-x-hidden overflow-y-hidden  lg:justify-between items-center px-10 place-content-center'>
      <div className=' w-80 hidden lg:block h-80 rounded-full m-20 border border-solid border-blue-700 shadow-2xl'>
@@ -42,10 +36,10 @@ const SignUpPage=()=>{
       <h1 className="text-gray-300 block text-xl mb-10">Sign Up to Portfolio</h1>
       <div className='w-full'>
       <label htmlFor="username" className='block text-sm mb-2'>Username </label>
-      <input type="text" value={name} onChange={(e)=>setName(e.target.value)} id='username'  placeholder="e.g James" name="username" className="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"/>
+      <input  required type="text"  value={name} onChange={(e)=>setName(e.target.value)} id='username'  placeholder="e.g James" name="username" className="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"/>
       
       <label htmlFor="email" className='block text-sm mb-2'>Email Address</label>
-      <input type="text" value={email} onChange={(e)=>setEmail(e.target.value)} id='email'  placeholder="e.g example@email.com" name="Email" className="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"/>
+      <input type="text" required  value={email} onChange={(e)=>setEmail(e.target.value)} id='email'  placeholder="e.g example@email.com" name="Email" className="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"/>
       </div>
       <div className='w-full '>
         <div className='flex justify-between items-center '>
@@ -54,20 +48,34 @@ const SignUpPage=()=>{
         </div>
         <div className='relative'>
         <div class="max-w-sm ">
-   <input id="hs-toggle-password-with-checkbox" value={password} onChange={(e)=>setPassword(e.target.value)} type="password" class="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" placeholder="Enter current password" />
+   <input 
+      id="hs-toggle-password-with-checkbox" 
+      required
+      value={password} 
+      onChange={(e)=>setPassword(e.target.value)} 
+      type={`${hiddenPassword?"password":"text"}`}  
+      class="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" 
+      placeholder="Enter current password" />
 
 
   <div class="flex mt-4">
     <input data-hs-toggle-password='{
         "target": "#hs-toggle-password-with-checkbox"
-      }' id="hs-toggle-password-checkbox"  type="checkbox" class="shrink-0 mt-0.5 border-gray-200 rounded text-blue-600 focus:ring-blue-500 dark:bg-neutral-800 dark:border-neutral-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800"/>
+      }' 
+      id="hs-toggle-password-checkbox"  
+      type="checkbox" 
+      value={hiddenPassword}
+      onChange={(e)=>setHiddenPassword(!hiddenPassword)}
+      class="shrink-0 mt-0.5 border-gray-200 rounded text-blue-600 focus:ring-blue-500 dark:bg-neutral-800 dark:border-neutral-700 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800"/>
     <label for="hs-toggle-password-checkbox" class="text-sm text-gray-500 ms-3 dark:text-neutral-400">Show password</label>
   </div>
 
 </div>
         </div>
          </div>
-      <button id='submit' className='rounded-lg bg-green-600 w-full p-1 text-black font-semibold'>Sign Up</button>
+      <button id='submit' className='rounded-lg bg-green-600 w-full p-1 text-black font-semibold'>
+        Sign Up {signUpData.loading===true && <Loading/> }
+        </button>
       </form>
       <p className='flex place-items-center items-center justify-center '>Have an account?<span className='text-green-500 space-x-3 font-semibold hover:text-blue-600 cursor-pointer'><Link to="/signin">Sign In</Link></span></p>
      </div>
@@ -75,4 +83,14 @@ const SignUpPage=()=>{
   )
 }
 
-export default SignUpPage
+const mapStateToProps=(state)=>{
+  return {
+    signUpData:state.signup
+  }
+}
+const mapDispatchToProps=(dispatch)=>{
+  return{
+    signup:(name,email, password)=>dispatch(signup(name,email, password))
+  }
+}
+export default connect(mapStateToProps,mapDispatchToProps)(SignUpPage)

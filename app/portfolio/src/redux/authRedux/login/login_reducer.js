@@ -19,12 +19,14 @@ const loginReducer = (state = initialState, action) => {
         case LOGIN_SUCCESS:
             return {
                 ...state,
+                loading: false,
                 data: action.payload
             }
         case LOGIN_FAILURE:
             return {
                 ...state,
-                data: action.payload
+                loading: false,
+                error: action.payload
             }
 
         default:

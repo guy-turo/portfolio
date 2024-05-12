@@ -7,18 +7,18 @@ import axios from "axios"
 
 export const loginRequest = () => {
     return {
-        this: LOGIN_REQUEST
+        type: LOGIN_REQUEST
     }
 }
 export const loginSuccess = (data) => {
     return {
-        this: LOGIN_SUCCESS,
+        type: LOGIN_SUCCESS,
         payload: data
     }
 }
 export const loginFailure = (error) => {
     return {
-        this: LOGIN_FAILURE,
+        type: LOGIN_FAILURE,
         payload: error,
     }
 }
@@ -26,17 +26,27 @@ export const loginFailure = (error) => {
 export const login = (email, password) => {
     const URI = "http://localhost:8000/api/v1/auth/login"
     return (dispatch) => {
-        dispatch(loginRequest)
+        dispatch(loginRequest())
         axios.post(URI, {
                 email: email,
                 password: password,
             })
             .then((response) => {
+                console.log("this is the response", response)
                 if (response) {
-                    dispatch(loginSuccess(response.data))
+                    console.log(response)
+                    if (response.data.accessToken && response.data.refreshToken) {
+                        localStorage.setItem("accessToken", response.data.accessToken)
+                        localStorage.setItem("refreshToken", response.data.refreshToken)
+                        dispatch(loginSuccess(response.data))
+                    }
                 }
+                else {
+                    throw new Error("Invalid login response format")
+                  }
             }).catch(error => {
-                dispatch(loginFailure(error.message))
+                const errorMessage = error.response?.data?.message || error.message
+                dispatch(loginFailure(errorMessage))
             })
     }
 }

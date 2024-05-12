@@ -7,18 +7,18 @@ import api from "../../../utils/Helper"
 
 export const logoutRequest = () => {
     return {
-        this: LOGOUT_REQUEST
+        type: LOGOUT_REQUEST
     }
 }
 export const logoutSuccess = (data) => {
     return {
-        this: LOGOUT_SUCCESS,
+        type: LOGOUT_SUCCESS,
         payload: data
     }
 }
 export const logoutFailure = (error) => {
     return {
-        this: LOGOUT_FAILURE,
+        type: LOGOUT_FAILURE,
         payload: error,
     }
 }

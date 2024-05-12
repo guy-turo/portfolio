@@ -21,18 +21,18 @@ import api from "../../../utils/Helper"
 //ADD Me
 export const addSocialRequest = () => {
     return {
-        this: ADD_SOCIAL_REQUEST,
+        type: ADD_SOCIAL_REQUEST,
     }
 }
 export const addSocialSuccess = (me) => {
     return {
-        this: ADD_SOCIAL_SUCCESS,
+        type: ADD_SOCIAL_SUCCESS,
         payload: me
     }
 }
 export const addSocialFailure = (error) => {
     return {
-        this: ADD_SOCIAL_FAILURE,
+        type: ADD_SOCIAL_FAILURE,
         payload: error
     }
 }
@@ -56,18 +56,18 @@ export const addSocial = (titleSC, linkSC) => {
 //Fetch Me
 export const fetchSocialRequest = () => {
     return {
-        this: FETCH_SOCIAL_REQUEST
+        type: FETCH_SOCIAL_REQUEST
     }
 }
 export const fetchSocialSuccess = (data) => {
     return {
-        this: FETCH_SOCIAL_SUCCESS,
+        type: FETCH_SOCIAL_SUCCESS,
         payload: data
     }
 }
 export const fetchSocialFailure = (error) => {
     return {
-        this: FETCH_SOCIAL_FAILURE,
+        type: FETCH_SOCIAL_FAILURE,
         payload: error
     }
 }
@@ -89,18 +89,18 @@ export const fetchSocial = () => {
 
 export const deleteSocialRequest = () => {
     return {
-        this: DELETE_SOCIAL_REQUEST
+        type: DELETE_SOCIAL_REQUEST
     }
 }
 export const deleteSocialSuccess = (data) => {
     return {
-        this: DELETE_SOCIAL_SUCCESS,
+        type: DELETE_SOCIAL_SUCCESS,
         payload: data
     }
 }
 export const deleteSocialFailure = (error) => {
     return {
-        this: DELETE_SOCIAL_FAILURE,
+        type: DELETE_SOCIAL_FAILURE,
         payload: error
     }
 }
@@ -120,18 +120,18 @@ export const deleteSocial = (id) => {
     //update Me
 export const updateSocialRequest = () => {
     return {
-        this: UPDATE_SOCIAL_REQUEST
+        type: UPDATE_SOCIAL_REQUEST
     }
 }
 export const updateSocialSuccess = (data) => {
     return {
-        this: UPDATE_SOCIAL_SUCCESS,
+        type: UPDATE_SOCIAL_SUCCESS,
         payload: data
     }
 }
 export const updateSocialFailure = (error) => {
     return {
-        this: UPDATE_SOCIAL_FAILURE,
+        type: UPDATE_SOCIAL_FAILURE,
         payload: error
     }
 }

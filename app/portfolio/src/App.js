@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React,{useState,useEffect} from 'react';
 import {Routes,Route}from "react-router-dom"
 import PortfolioPage from "./pages/PortfolioPage";
 import LoginPage from './pages/auth/LoginPage';
@@ -7,8 +7,9 @@ import NoPage from "./pages/NoPage";
 import AdminPage from "./pages/AdminPage";
 import SignUpPage from './pages/auth/RegisterPage';
 import PrivateRoute from "./pages/auth/helper/PrivateRoute";
-const App=({signIn})=> {
+const App=({signed})=> {
   const accessToken=localStorage.getItem("accessToken")!==null
+  console.log(accessToken)
   const [isAuthenticate,seIsAuthenticate]=useState(accessToken)
   return (
   <main>

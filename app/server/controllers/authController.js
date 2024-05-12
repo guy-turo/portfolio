@@ -92,16 +92,13 @@ const signup = async(req, res) => {
         const saltRounds = 10
         const salt = await bcrypt.genSalt(saltRounds)
         const passwordChecked = isValidPassword(password)
-        console.log(passwordChecked)
         if (passwordChecked === false) {
             return res.status(208).json({ message: "Please provide strong password" })
 
         } else {
             const hashPassword = await bcrypt.hash(password, salt)
-            console.log(hashPassword)
             const checkAccount = await UserModel.findOne({ email: email })
-            console.log(checkAccount)
-            if (!checkAccount) {
+            if (checkAccount !== null) {
                 return res.status(200).json({ message: "Email already exist" })
             }
             const checkDb = await UserModel.find()

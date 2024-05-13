@@ -4,18 +4,43 @@ import {Link} from "react-router-dom"
 import {connect} from "react-redux"
 import { login } from '../../redux/authRedux/login/login_action'
 import Loading from '../../components/helper/loadingComponent/Loading'
+import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import { loginRequest,loginSuccess,loginFailure } from '../../redux/authRedux/login/login_action'
+import axios from 'axios'
 
-function LoginPage({signInData, login}) {
+function LoginPage({signInData}) {
   const [email, setEmail]=useState('')
   const [password,setPassword]=useState("")
   const [hiddenPassword, setHiddenPassword]=useState(true)
   const [disableButton, setDisableButton]=useState(false)
+  const navigate= useNavigate()
+  const dispatch= useDispatch()
+
   
-  console.log(signInData)
-  const handleLogin=( e,email, password,)=>{
+
+  const handleLogin=async( e,email, password,)=>{
     e.preventDefault()
-    setDisableButton(true)
-   login(email, password)
+    try{
+      const URI = "http://localhost:8000/api/v1/auth/login"
+      dispatch(loginRequest())
+      const response =  await axios.post(URI,{email:email,password:password})
+      if (response) {
+        if (response.data.accessToken && response.data.refreshToken) {
+          console.log('checked')
+            localStorage.setItem("accessToken", response.data.accessToken)
+            localStorage.setItem("refreshToken", response.data.refreshToken)
+            dispatch(loginSuccess(response.data))
+            navigate('/admin')
+        }
+    }
+    else {
+        throw new Error("Invalid login response format")
+      }
+    }catch(error){
+      const errorMessage = error.response?.data?.message || error.message
+      dispatch(loginFailure(errorMessage))
+    }
 }
   return (
     <div  className='relative flex w-full snap-y   snap-mandatory h-screen overflow-x-hidden overflow-y-hidden  lg:justify-between items-center px-10 place-content-center'>
@@ -67,7 +92,7 @@ function LoginPage({signInData, login}) {
     placeholder="Enter current password" 
     />
 
-    {signInData.error==="Wrong password"&&<p className="text-red-500 font-normal text-sm"> wrong password</p>}
+    {signInData.data.message==="Please provide strong password"&&<p className="text-red-500 font-normal text-sm"> Please provide strong password e.g"Rnvoi123.@/"</p>}
   <div class="flex mt-4">
     <input data-hs-toggle-password='{"target": "#hs-toggle-password-with-checkbox"}' 
       id="hs-toggle-password-checkbox" 
@@ -111,10 +136,10 @@ const mapStateToProps=(state)=>{
     signInData:state.login
   }
 }
-const mapDispatchToProps=(dispatch)=>{
-  return{
-    login:(email, password)=>dispatch(login(email,password))
-  }
-}
+// const mapDispatchToProps=(dispatch)=>{
+//   return{
+//     login:(email, password)=>dispatch(login(email,password))
+//   }
+// }
 
-export default connect(mapStateToProps,mapDispatchToProps) (LoginPage)
+export default connect(mapStateToProps,null) (LoginPage)

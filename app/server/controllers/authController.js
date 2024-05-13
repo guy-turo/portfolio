@@ -35,13 +35,11 @@ const token = async(req, res) => {
     }
 }
 const login = async(req, res) => {
-    console.log("login...")
     try {
         const { email: email, password: password } = req.body
         console.log(email, password)
         let crfToken
         if (!isValidEmail(email)) {
-            console.log('invalid email')
             return res.Status(406).json({ message: "Provide correct email" })
         }
 
@@ -50,10 +48,9 @@ const login = async(req, res) => {
 
         bcrypt.compare(password, checkEmail.hash, async(error, result) => {
             if (error) {
-
+                res.status(401).json({ message: "Wrong password" })
             }
             if (result) {
-                console.log(result)
                 const user = { id: checkEmail._id, name: checkEmail.name, email: email, admin: checkEmail.isAdmin }
                 const accessToken = generateAccessToken(user)
                 const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, { expiresIn: "1d" })
@@ -77,7 +74,6 @@ const login = async(req, res) => {
                     }
                 })
             } else {
-                console.log('sent')
                 res.status(401).json({ message: "Wrong password" })
             }
         })
@@ -87,7 +83,6 @@ const login = async(req, res) => {
 }
 const signup = async(req, res) => {
     const { name: name, email: email, password: password } = req.body
-    console.log(name)
     try {
         const saltRounds = 10
         const salt = await bcrypt.genSalt(saltRounds)

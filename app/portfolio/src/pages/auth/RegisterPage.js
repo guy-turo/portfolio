@@ -4,26 +4,47 @@ import {Link,useNavigate} from "react-router-dom"
 import {connect} from "react-redux"
 import { signup } from '../../redux/authRedux/signup/signup_action'
 import Loading from '../../components/helper/loadingComponent/Loading'
+import { useDispatch } from 'react-redux'
+import { signupRequest, signupSuccess,signupFailure } from '../../redux/authRedux/signup/signup_action'
+import axios from 'axios'
+
 const SignUpPage=({signUpData ,signup})=>{
   const [name,setName]=useState('')
   const [email,setEmail]=useState('')
   const [password, setPassword]=useState('')
+  const [checkPassword, setCheckPassword]=useState('')
+  
+  const [passwordChecking, setPasswordChecking]=useState(false)
+ 
+
   const [hiddenPassword, setHiddenPassword]=useState(true)
   const navigate= useNavigate()
-  const register=(e)=>{
+  const dispatch= useDispatch()
+  const register=async(e, name, email, password)=>{
     e.preventDefault()
-    console.log('clicked')
-    signup(name,email,password)
-    console.log(signUpData)
-  }
-  
-  useEffect(()=>{
-    const accessToken= localStorage.getItem('access_token')
-
-    if(signUpData.data ||accessToken ){
-      navigate("/admin")
+    try{
+      if(password !==checkPassword){
+        setPasswordChecking(true)
+        return
+      }
+      const URI = "http://localhost:8000/api/v1/auth/signup"
+      dispatch(signupRequest())
+      const response = await axios.post(URI, {name,email,password})
+      console.log(response)
+      if (response.status === 200) {
+        dispatch(signupSuccess(response.data))
     }
-  },[navigate, signUpData.data])
+    if (response.status === 201) {
+        dispatch(signupSuccess(response.data))
+        navigate('/signin')
+    }
+    if (response.status === 208) {
+        dispatch(signupSuccess(response.data))
+    }
+    }catch(error){
+      dispatch(signupFailure(error.message))
+    }
+  }
   return (
     <div  className='  static flex w-full snap-y   snap-mandatory h-screen overflow-x-hidden overflow-y-hidden  lg:justify-between items-center px-10 place-content-center'>
      <div className=' w-80 hidden lg:block h-80 rounded-full m-20 border border-solid border-blue-700 shadow-2xl'>
@@ -32,7 +53,7 @@ const SignUpPage=({signUpData ,signup})=>{
      </div>
       <div  className="flex snap-center shadow-2xl  flex-col  items-center space-y-4 bg-blue-950 justify-evenly rounded-md p-5 py-10 w-96 h-fit">
 
-      <form onSubmit={register} className='w-full space-y-5'>
+      <form onSubmit={(e)=>register(e,name, email, password)} className='w-full space-y-5'>
       <h1 className="text-gray-300 block text-xl mb-10">Sign Up to Portfolio</h1>
       <div className='w-full'>
       <label htmlFor="username" className='block text-sm mb-2'>Username </label>
@@ -47,7 +68,7 @@ const SignUpPage=({signUpData ,signup})=>{
           <button className='text-green-600 font-semibold'><Link to="/recover">Forgot password</Link> </button>
         </div>
         <div className='relative'>
-        <div class="max-w-sm ">
+        <div class="max-w-sm space-y-2">
    <input 
       id="hs-toggle-password-with-checkbox" 
       required
@@ -56,8 +77,20 @@ const SignUpPage=({signUpData ,signup})=>{
       type={`${hiddenPassword?"password":"text"}`}  
       class="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" 
       placeholder="Enter current password" />
-
-
+    <label htmlFor="checkPassword"  className='block text-sm mb-2'>check Password</label>
+    <input 
+      id="checkPassword" 
+      required
+      value={checkPassword} 
+      onChange={(e)=>setCheckPassword(e.target.value)} 
+      type={`${hiddenPassword?"password":"text"}`}  
+      class="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" 
+      placeholder="Enter current password" />
+   
+    {signUpData.error==="Wrong password"&&<p className="text-red-500 font-normal text-sm"> wrong password</p>}
+    {signUpData.data.message==="Please provide strong password"&&<p className="text-red-500 font-normal text-sm"> Please provide strong password e.g"Rnvoi123.@/"</p>}
+    {passwordChecking===true&&<p className="text-red-500 font-normal text-sm">Password not match</p>}
+   
   <div class="flex mt-4">
     <input data-hs-toggle-password='{
         "target": "#hs-toggle-password-with-checkbox"
@@ -88,9 +121,5 @@ const mapStateToProps=(state)=>{
     signUpData:state.signup
   }
 }
-const mapDispatchToProps=(dispatch)=>{
-  return{
-    signup:(name,email, password)=>dispatch(signup(name,email, password))
-  }
-}
-export default connect(mapStateToProps,mapDispatchToProps)(SignUpPage)
+
+export default connect(mapStateToProps,null)(SignUpPage)

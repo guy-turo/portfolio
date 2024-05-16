@@ -27,27 +27,32 @@ const serviceReducer = (state = initialState, action) => {
         case ADD_SERVICE_SUCCESS:
             return {
                 ...state,
+                loading: false,
                 data: action.payload,
             }
         case ADD_SERVICE_FAILURE:
             return {
                 ...state,
+                loading: false,
                 error: action.payload,
             }
 
         case FETCH_SERVICE_REQUEST:
             return {
                 ...state,
+
                 loading: true,
             }
         case FETCH_SERVICE_SUCCESS:
             return {
                 ...state,
+                loading: false,
                 data: action.payload
             }
         case FETCH_SERVICE_FAILURE:
             return {
                 ...state,
+                loading: false,
                 error: action.payload
             }
 
@@ -59,11 +64,13 @@ const serviceReducer = (state = initialState, action) => {
         case UPDATE_SERVICE_SUCCESS:
             return {
                 ...state,
+                loading: false,
                 data: action.payload
             }
         case UPDATE_SERVICE_FAILURE:
             return {
                 ...state,
+                loading: false,
                 error: action.payload
             }
         default:

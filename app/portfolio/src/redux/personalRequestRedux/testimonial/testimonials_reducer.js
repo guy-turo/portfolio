@@ -27,11 +27,13 @@ const testimonialsReducer = (state = initialState, action) => {
         case ADD_TESTIMONIALS_SUCCESS:
             return {
                 ...state,
+                loading: false,
                 data: action.payload,
             }
         case ADD_TESTIMONIALS_FAILURE:
             return {
                 ...state,
+                loading: false,
                 error: action.payload,
             }
 
@@ -43,11 +45,13 @@ const testimonialsReducer = (state = initialState, action) => {
         case FETCH_TESTIMONIALS_SUCCESS:
             return {
                 ...state,
+                loading: false,
                 data: action.payload
             }
         case FETCH_TESTIMONIALS_FAILURE:
             return {
                 ...state,
+                loading: false,
                 error: action.payload
             }
 
@@ -59,11 +63,13 @@ const testimonialsReducer = (state = initialState, action) => {
         case UPDATE_TESTIMONIALS_SUCCESS:
             return {
                 ...state,
+                loading: false,
                 data: action.payload
             }
         case UPDATE_TESTIMONIALS_FAILURE:
             return {
                 ...state,
+                loading: false,
                 error: action.payload
             }
         default:

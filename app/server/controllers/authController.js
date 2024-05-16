@@ -37,7 +37,6 @@ const token = async(req, res) => {
 const login = async(req, res) => {
     try {
         const { email: email, password: password } = req.body
-        console.log(email, password)
         let crfToken
         if (!isValidEmail(email)) {
             return res.Status(406).json({ message: "Provide correct email" })
@@ -45,6 +44,7 @@ const login = async(req, res) => {
 
         const checkEmail = await UserModel.findOne({ email: email })
         if (!checkEmail) return res.status(404).json({ message: "This email not exist" })
+
 
         bcrypt.compare(password, checkEmail.hash, async(error, result) => {
             if (error) {
@@ -66,11 +66,10 @@ const login = async(req, res) => {
                     refreshToken: refreshToken
                 })
                 newToken.save().then((response) => {
-                    console.log(response)
                     res.json({ accessToken: accessToken, refreshToken: refreshToken })
                 }).catch((err) => {
                     if (err) {
-                        console.log(err.message)
+                        res.status(400).json({ message: "Try again " })
                     }
                 })
             } else {
@@ -134,14 +133,17 @@ const signup = async(req, res) => {
 const recover = (req, res) => {
     res.send("recover")
 }
-const logout = async(req, res) => {
+const logout = (req, res) => {
     const { token: token } = req.body
+    console.log(token)
     try {
-        await TokenModel.findOne({ refreshToken: token })
+        TokenModel.findOne({ refreshToken: token })
             .then((response) => {
+                console.log(response)
                 if (!response) return res.sendStatus(401)
                 TokenModel.deleteOne({ refreshToken: response.refreshToken })
                     .then(data => {
+                        console.log(data)
                         if (data.deletedCount === 1) {
                             res.sendStatus(204)
                         }

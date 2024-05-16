@@ -15,8 +15,9 @@ const refreshToken = async() => {
 
     }
 }
+const productUri = "https://app-api-bixtdry5xq-uc.a.run.app/api/v1/"
 const api = axios.create({
-    baseURL: "https://app-api-bixtdry5xq-uc.a.run.app/api/v1/",
+    baseURL: "http://localhost:8000/api/v1/"
 })
 api.interceptors.response.use(
     (response) => {
@@ -49,7 +50,6 @@ api.interceptors.request.use(
         if (config.data instanceof FormData) {
             config.headers['Content-Type'] = 'multipart/form-data';
         }
-        console.log(config)
         return config
     },
     (error) => {

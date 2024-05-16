@@ -19,11 +19,13 @@ const logoutReducer = (state = initialState, action) => {
         case LOGOUT_SUCCESS:
             return {
                 ...state,
+                loading: false,
                 data: action.payload
             }
         case LOGOUT_FAILURE:
             return {
                 ...state,
+                loading: false,
                 error: action.payload
             }
 

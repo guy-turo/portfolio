@@ -27,11 +27,13 @@ const pdfReducer = (state = initialState, action) => {
         case ADD_PDF_SUCCESS:
             return {
                 ...state,
+                loading: false,
                 data: action.payload,
             }
         case ADD_PDF_FAILURE:
             return {
                 ...state,
+                loading: false,
                 error: action.payload,
             }
 
@@ -43,11 +45,13 @@ const pdfReducer = (state = initialState, action) => {
         case FETCH_PDF_SUCCESS:
             return {
                 ...state,
+                loading: false,
                 data: action.payload
             }
         case FETCH_PDF_FAILURE:
             return {
                 ...state,
+                loading: false,
                 error: action.payload
             }
 
@@ -59,11 +63,13 @@ const pdfReducer = (state = initialState, action) => {
         case UPDATE_PDF_SUCCESS:
             return {
                 ...state,
+                loading: false,
                 data: action.payload
             }
         case UPDATE_PDF_FAILURE:
             return {
                 ...state,
+                loading: false,
                 error: action.payload
             }
         default:

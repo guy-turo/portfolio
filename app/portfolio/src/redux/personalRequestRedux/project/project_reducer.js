@@ -27,27 +27,32 @@ const projectReducer = (state = initialState, action) => {
         case ADD_PROJECT_SUCCESS:
             return {
                 ...state,
+                loading: false,
                 data: action.payload,
             }
         case ADD_PROJECT_FAILURE:
             return {
                 ...state,
+                loading: false,
                 error: action.payload,
             }
 
         case FETCH_PROJECT_REQUEST:
             return {
                 ...state,
+
                 loading: true,
             }
         case FETCH_PROJECT_SUCCESS:
             return {
                 ...state,
+                loading: false,
                 data: action.payload
             }
         case FETCH_PROJECT_FAILURE:
             return {
                 ...state,
+                loading: false,
                 error: action.payload
             }
 
@@ -59,11 +64,13 @@ const projectReducer = (state = initialState, action) => {
         case UPDATE_PROJECT_SUCCESS:
             return {
                 ...state,
+                loading: false,
                 data: action.payload
             }
         case UPDATE_PROJECT_FAILURE:
             return {
                 ...state,
+                loading: false,
                 error: action.payload
             }
         default:

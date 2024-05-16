@@ -460,7 +460,9 @@ const createServices = async(req, res) => {
                 }).catch(e => console.error(e.message))
         }
 
-    } catch (err) { console.log(err) }
+    } catch (err) {
+        res.status(500).json(error.message)
+    }
 }
 const updateServices = async(req, res) => {
     try {

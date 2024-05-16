@@ -22,37 +22,3 @@ export const logoutFailure = (error) => {
         payload: error,
     }
 }
-
-export const logout = (initialToken) => {
-    const URI = "/auth/logout"
-    return async(dispatch) => {
-        dispatch(logoutRequest)
-        await api.put(URI, {
-                token: initialToken
-            }).then((response) => {
-                if (response) {
-                    const refreshToken = localStorage.getItem('refreshToken')
-                    const accessToken = localStorage.getItem('accessToken')
-                    if (refreshToken && accessToken) {
-                        localStorage.removeItem("refreshToken")
-                        localStorage.removeItem("accessToken")
-                    }
-
-                    //   navigate("/signin")
-                    dispatch(logoutSuccess(response.data))
-                }
-            })
-            .catch(error => {
-                setTimeout(() => {
-                    const refreshToken = localStorage.getItem('refreshToken')
-                    const accessToken = localStorage.getItem('accessToken')
-                    if (refreshToken && accessToken) {
-                        localStorage.removeItem("refreshToken")
-                        localStorage.removeItem("accessToken")
-                    }
-                    //   navigate('/signin')
-                    dispatch(logoutFailure(error.message))
-                }, 1500);
-            })
-    }
-}

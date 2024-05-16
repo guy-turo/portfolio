@@ -14,6 +14,8 @@ import {
 
 const initialState = {
     loading: false,
+    loadingAdd: false,
+    loadingUpdate: false,
     data: [],
     error: ""
 }
@@ -27,11 +29,16 @@ const meReducer = (state = initialState, action) => {
         case ADD_ME_SUCCESS:
             return {
                 ...state,
-                data: action.payload,
+                loading: false,
+                data: [
+                    ...state.data,
+                    action.payload
+                ],
             }
         case ADD_ME_FAILURE:
             return {
                 ...state,
+                loading: false,
                 error: action.payload,
             }
 
@@ -43,11 +50,13 @@ const meReducer = (state = initialState, action) => {
         case FETCH_ME_SUCCESS:
             return {
                 ...state,
+                loading: false,
                 data: action.payload
             }
         case FETCH_ME_FAILURE:
             return {
                 ...state,
+                loading: false,
                 error: action.payload
             }
 
@@ -59,11 +68,16 @@ const meReducer = (state = initialState, action) => {
         case UPDATE_ME_SUCCESS:
             return {
                 ...state,
-                data: action.payload
+                loading: false,
+                data: state.data.map(
+                    (item) => item._id === action.payload._id ?
+                    action.payload : item
+                )
             }
         case UPDATE_ME_FAILURE:
             return {
                 ...state,
+                loading: false,
                 error: action.payload
             }
         default:

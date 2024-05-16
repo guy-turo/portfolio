@@ -9,74 +9,66 @@ import {MdDashboard} from 'react-icons/md'
 import Data from '../components/admin/Data'
 import Dashboard from '../components/admin/Dashboard'
 import {Link, useNavigate} from "react-router-dom"
-const AdminPage=()=> {
+import { connect } from 'react-redux'
+import { fetchMe } from '../redux/personalRequestRedux/me/me_actions'
+import { useDispatch } from 'react-redux';
+import { logoutRequest, logoutSuccess,logoutFailure } from '../redux/authRedux/logout/logout_action';
+import Skeleton from '../components/helper/skeleton/Skeleton';
+import Loading from '../components/helper/loadingComponent/Loading';
+
+const AdminPage=({data,fetchData, outData})=> {
   const [isOpen, setIsOpen] = useState(false)
   const navigate= useNavigate()
+  const dispatch= useDispatch()
   const toggleDrawer = () => {
       setIsOpen((prevState) => !prevState)
   }
   const [toggleState,setToggleState]=useState(1)
-
   const toggleTab=(index)=>{
-   
     if(toggleState===index){
       return
     }
     setToggleState(index)
-  
   }
   const colors={
     backgroundColor:"#1f1f38"
   }
-  const [image,setImage]=useState('')
-  const fetchData=()=>{
-    const URI="/me/personal"
-    api.get(URI)
-    .then(res=>{
-      setImage(res.data[0].pictures[1])
-      }
-    )
-    .catch(error=>console.log(error.message))
-  }
-  const checkAuth=async()=>{
-    const URI="/auth/checkAuth"
-    api.get(URI)
-      .then(res=>{
-        if(res){
-          console.log(res)
-        }
-      })
-      .catch(error=>{
-        if(error){
-          console.log(error)
-        }
-      })
-  }
   const logout=async()=>{
-    const URI="/auth/logout"
-    const initialToken=localStorage.getItem("refreshToken")
-    await  api.put(URI, {
-      token: initialToken
-  }).then((response) => {
-    if(response){
-      localStorage.removeItem("refreshToken")
-      localStorage.removeItem("accessToken")
-      navigate("/signin")
-    }
-  })
-  .catch(error => {
-    setTimeout(() => {
-      localStorage.removeItem("refreshToken")
-      localStorage.removeItem("accessToken")
-      navigate('/signin')
-      alert("something went wrong , please try again to logout")
-    }, 1500);
-  })
-  }
+ 
+      const URI = "/auth/logout"
+          dispatch(logoutRequest())
+          try{
+            const initialToken=localStorage.getItem("refreshToken")
+            const response = await api.put(URI,{token:initialToken})
+            if(response.status ===204){
+              const refreshToken = localStorage.getItem('refreshToken')
+              const accessToken = localStorage.getItem('accessToken')
+              if (refreshToken && accessToken) {
+                  localStorage.removeItem("refreshToken")
+                  localStorage.removeItem("accessToken")
+                  dispatch(logoutSuccess(response.data))
+                  setTimeout(() => {
+                    navigate('/signin')
+                  }, 1500);
+              }
+            }
+          }catch(error){
+            setTimeout(() => {
+              const refreshToken = localStorage.getItem('refreshToken')
+              const accessToken = localStorage.getItem('accessToken')
+              if (refreshToken && accessToken) {
+                  localStorage.removeItem("refreshToken")
+                  localStorage.removeItem("accessToken")
+              }
+              dispatch(logoutFailure(error.message))
+          }, 1500);
+          }
+         
+        }
   useEffect(()=>{
     fetchData()
-    checkAuth()
   },[])
+  const full= "full"
   return (
     <div className=" flex flex-col h-screen">
       <div className="items-center justify-items-center  ">
@@ -93,8 +85,9 @@ const AdminPage=()=> {
               <div className="w-full flex flex-col justify-between rounded-md h-full ">
               <div className="flex flex-col   rounded-tl-md rounded-bl-md w-12/12  p-1 items-center justify-items-center space-y-1">
               <div className="flex  flex-col items-center justify-center">
-                  <div className="w-20 h-20 rounded-full  cursor-pointer">
-                  <img src={image} alt="" className="w-20 h-20 rounded-full"/>
+                  <div className="w-20 border border-gray-800 border-solid shadow-2xl h-20 rounded-full  cursor-pointer">
+                  {data.loading===false && data &&<img src={data?.data[0]?.pictures[1]} alt="" className="w-20 h-20 rounded-full"/>}
+                  {data.loading=== true && <Skeleton width={20} height={20} borderRadius={full}/>}
                   </div>
                   <h2 className="fex font-bold">Admin</h2>
                 </div>
@@ -116,17 +109,16 @@ const AdminPage=()=> {
                 </div>
               <div className=" flex  space-x-1">
                <button className="bg-blue-800  px-2 rounded-md h-8 flex  items-center space-x-2"><CiSettings /><h2 >Settings</h2></button>
-                <button onClick={(e)=>{
-                      e.preventDefault(e)
-                      logout()
-                      navigate("/signin")}} className="bg-red-800 px-2  rounded-md h-8  flex  items-center space-x-2"><CiLogout /><h2>Logout</h2></button>
+                <button onClick={logout} className="bg-red-800 px-2  rounded-md h-8  flex  items-center space-x-2"><CiLogout /><h2>Logout</h2> {outData.loading===true&&<Loading/>}</button>
               </div>
               </div>
             </Drawer>
           <div className="w-4"></div>
-            <div className="w-10 h-10 rounded-full  cursor-pointer">
+            <div className="w-10 border border-gray-800 border-solid shadow-xl h-10 rounded-full  cursor-pointer">
             <Link to="/" className='p-0'>
-            <img src={image} alt="" className="w-10 h-10 rounded-full"/>
+                {data&&data.loading===false&&<img  src={data?.data[0]?.pictures[1]} alt="" className="w-10 h-10 rounded-full"/>}
+                {data.loading=== true && <Skeleton width={10} height={10} borderRadius={full}/>}
+                
             </Link>
             </div>
           <h2 className="font-semibold fex self-end">Admin</h2>
@@ -134,10 +126,10 @@ const AdminPage=()=> {
         <div className=" flex hidden md:block space-x-1">
         <button className="bg-blue-800  px-2 rounded-md h-8"><CiSettings /></button>
         <button onClick={(e)=>{
-           e.preventDefault(e)
+          e.preventDefault()
           logout()
-          navigate("/signin")
-        }} className="bg-red-800 px-2  rounded-md h-8"><CiLogout /></button>
+         
+          }} className="bg-red-800 px-2  rounded-md h-8"><CiLogout />{outData.loading===true&&<Loading/>}</button>
         </div>
       </div>
       <div className="w-full h-full p-1 flex  justify-center rounded-lg shadow-lg  ">
@@ -172,4 +164,15 @@ const AdminPage=()=> {
   )
 }
 
-export default AdminPage
+const mapStateToProps= (state)=>{
+  return{
+    data:state.me,
+    outData:state.logout
+  }
+}
+const mapDispatchToProps= (dispatch)=>{
+  return{
+    fetchData:()=>dispatch(fetchMe()),
+  }
+}
+export default connect(mapStateToProps,mapDispatchToProps)(AdminPage)

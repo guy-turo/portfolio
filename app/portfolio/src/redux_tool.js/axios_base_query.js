@@ -1,6 +1,6 @@
 import api from "../utils/Helper"
 const axiosBaseQuery = ({baseUrl}={baseUrl:""})=>
-async({url, method,data,params, headers})=>{
+async({url, method,data,params, headers, body})=>{
     try{
         const fullUrl= baseUrl+ url
         const result = await api({
@@ -8,7 +8,8 @@ async({url, method,data,params, headers})=>{
             url:fullUrl,
             data,
             params,
-            headers
+            headers,
+            body,
         })
         return {data:result.data}
 

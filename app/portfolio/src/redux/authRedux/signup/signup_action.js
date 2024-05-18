@@ -22,29 +22,3 @@ export const signupFailure = (error) => {
         payload: error,
     }
 }
-
-export const signup = (name, email, password) => {
-    const URI = "http://localhost:8000/api/v1/auth/signup"
-    return (dispatch) => {
-        console.log('clicked23')
-        dispatch(signupRequest())
-        axios.post(URI, {
-                name: name,
-                email: email,
-                password: password,
-            })
-            .then((res) => {
-                if (res.status === 200) {
-                    alert("Email already exists")
-                }
-                if (res.status === 201) {
-                    dispatch(signupSuccess(res.data))
-                }
-                if (res.status === 208) {
-                    dispatch(signupSuccess(res.data))
-                }
-            }).catch(error => {
-                dispatch(signupFailure(error.message))
-            })
-    }
-}

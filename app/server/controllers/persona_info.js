@@ -70,49 +70,52 @@ const updateMe = async(req, res) => {
         description: description,
         projects: projects,
     } = req.body
-    console.log(req)
+    console.log("body:", req.body)
     try {
-        const checkData = await meModel.find()
+        const checkData = await meModel.findById({ _id: req.params.id })
         if (!checkData) {
             res.status(404).json({ message: "does not exist" })
         }
         const img = []
-        if (!req.files) {
+
+        if (checkData?.pictures.length === 0) {
             res.status(404).json({ message: "please upload image" })
         }
 
-        for (let z = 0; z < checkData[0].pictures.length; z++) {
-            let newImageId = getCloudinaryImagePath(checkData[0].pictures[z])
+        for (let z = 0; z < checkData?.pictures.length; z++) {
+            let newImageId = getCloudinaryImagePath(checkData.pictures[z])
             if (!newImageId) return console.log('No picture found')
             const result = await cloudinary.uploader.destroy(newImageId)
             if (result.result === "ok") {
                 console.log(`Images ${z} has been updated successfully`)
             }
         }
+       
         const dataImg = req.files
-        if (dataImg.length === 0) {
-            for (let j = 0; j < checkData[0].pictures.length; j++) {
-                const jData = checkData[0].pictures[j]
+        if (dataImg?.length === 0) {
+            for (let j = 0; j < checkData?.pictures.length; j++) {
+                const jData = checkData?.pictures[j]
                 img.push(jData)
             }
-        } else if (dataImg.length !== 0) {
-            for (let i = 0; i < dataImg.length; i++) {
+
+        } else if (dataImg?.length !== 0) {
+            for (let i = 0; i < dataImg?.length; i++) {
                 const image = dataImg[i].path
                 img.push(image)
             }
         }
-        console.log(img)
+        console.log('already pass')
         const newData = {
             $set: {
-                fullName: fullName || checkData[0].fullName,
-                title: title || checkData[0].title,
-                email: email || checkData[0].email,
-                phoneNumber: phoneNumber || checkData[0].phoneNumber,
-                experienceYear: experienceYear || checkData[0].experienceYear,
-                clients: client || checkData[0].clients,
-                description: description || checkData[0].description,
-                projects: projects || checkData[0].projects,
-                pictures: img
+                fullName: fullName || checkData.fullName,
+                title: title || checkData.title,
+                email: email || checkData.email,
+                phoneNumber: phoneNumber || checkData.phoneNumber,
+                experienceYear: experienceYear || checkData.experienceYear,
+                clients: client || checkData.clients,
+                description: description || checkData.description,
+                projects: projects || checkData.projects,
+                pictures: img || checkData.pictures
             }
         }
         const update = await meModel.updateMany({ _id: req.params.id }, newData)
@@ -122,6 +125,7 @@ const updateMe = async(req, res) => {
             res.status(200).json({ message: "Data has been updated successfully" })
         }
     } catch (error) {
+        console.log(error)
         res.status(500).json(error.message)
     }
 }

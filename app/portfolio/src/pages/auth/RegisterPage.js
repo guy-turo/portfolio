@@ -1,47 +1,39 @@
-import React, { useState,useEffect } from 'react'
+import React, { useState } from 'react'
 import me1 from "../../assets/me1.png"
 import {Link,useNavigate} from "react-router-dom"
 import {connect} from "react-redux"
-import { signup } from '../../redux/authRedux/signup/signup_action'
 import Loading from '../../components/helper/loadingComponent/Loading'
-import { useDispatch } from 'react-redux'
-import { signupRequest, signupSuccess,signupFailure } from '../../redux/authRedux/signup/signup_action'
-import axios from 'axios'
+import { useSignUpMutation } from '../../redux_tool.js/service/authApi/authApi'
 
-const SignUpPage=({signUpData ,signup})=>{
+const SignUpPage=()=>{
   const [name,setName]=useState('')
   const [email,setEmail]=useState('')
   const [password, setPassword]=useState('')
   const [checkPassword, setCheckPassword]=useState('')
   
-  const [passwordChecking, setPasswordChecking]=useState(false)
- 
+  const [passwordChecking, setPasswordChecking]=useState(null)
 
   const [hiddenPassword, setHiddenPassword]=useState(true)
   const navigate= useNavigate()
-  const dispatch= useDispatch()
+  const [signUp,{data, isLoading, isError, error}]=useSignUpMutation()
   const register=async(e, name, email, password)=>{
     e.preventDefault()
     try{
       if(password !==checkPassword){
-        setPasswordChecking(true)
+        setPasswordChecking(false)
         return
       }
-      const URI = "http://localhost:8000/api/v1/auth/signup"
-      dispatch(signupRequest())
-      const response = await axios.post(URI, {name,email,password})
-      if (response.status === 200) {
-        dispatch(signupSuccess(response.data))
-    }
-    if (response.status === 201) {
-        dispatch(signupSuccess(response.data))
+      setPasswordChecking(true)
+      const response = await signUp({
+        name:name,
+        email:email,
+        password:password,
+      })
+    if (response.data ) {
         navigate('/signin')
     }
-    if (response.status === 208) {
-        dispatch(signupSuccess(response.data))
-    }
     }catch(error){
-      dispatch(signupFailure(error.message))
+      console.log(error.message)
     }
   }
   return (
@@ -85,8 +77,9 @@ const SignUpPage=({signUpData ,signup})=>{
       type={`${hiddenPassword?"password":"text"}`}  
       class="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" 
       placeholder="Enter current password" />
-    {signUpData.data.message==="Please provide strong password"&&<p className="text-red-500 font-normal text-sm"> Please provide strong password e.g"Rnvoi123.@/"</p>}
-    {passwordChecking===true&&<p className="text-red-500 font-normal text-sm">Password not match</p>}
+    {isError&&error?.data?.message==="Please provide strong password"&&<p className="text-red-500 font-normal text-sm"> Please provide strong password e.g"Rnvoi123.@/"</p>}
+    {passwordChecking===false&&<p className="text-red-500 font-normal text-sm">Password not match</p>}
+    {passwordChecking===true&&<p className="text-blue-500 font-normal text-sm">Password match</p>}
    
   <div class="flex mt-4">
     <input data-hs-toggle-password='{
@@ -104,7 +97,7 @@ const SignUpPage=({signUpData ,signup})=>{
         </div>
          </div>
       <button id='submit' className='rounded-lg bg-green-600 w-full p-1 text-black font-semibold'>
-        Sign Up {signUpData.loading===true && <Loading/> }
+        Sign Up {isLoading && <Loading/> }
         </button>
       </form>
       <p className='flex place-items-center items-center justify-center '>Have an account?<span className='text-green-500 space-x-3 font-semibold hover:text-blue-600 cursor-pointer'><Link to="/signin">Sign In</Link></span></p>
@@ -113,10 +106,11 @@ const SignUpPage=({signUpData ,signup})=>{
   )
 }
 
-const mapStateToProps=(state)=>{
-  return {
-    signUpData:state.signup
-  }
-}
+// const mapStateToProps=(state)=>{
+//   return {
+//     signUpData:state.signup
+//   }
+// }
 
-export default connect(mapStateToProps,null)(SignUpPage)
+// export default connect(mapStateToProps,null)(SignUpPage)
+export default SignUpPage

@@ -39,13 +39,10 @@ const login = async(req, res) => {
         const { email: email, password: password } = req.body
         let crfToken
         if (!isValidEmail(email)) {
-            return res.Status(406).json({ message: "Provide correct email" })
+            return res.status(406).json({ message: "Provide correct email" })
         }
-
         const checkEmail = await UserModel.findOne({ email: email })
         if (!checkEmail) return res.status(404).json({ message: "This email not exist" })
-
-
         bcrypt.compare(password, checkEmail.hash, async(error, result) => {
             if (error) {
                 res.status(401).json({ message: "Wrong password" })
@@ -82,18 +79,18 @@ const login = async(req, res) => {
 }
 const signup = async(req, res) => {
     const { name: name, email: email, password: password } = req.body
+    console.log(name, email, password)
     try {
         const saltRounds = 10
         const salt = await bcrypt.genSalt(saltRounds)
         const passwordChecked = isValidPassword(password)
         if (passwordChecked === false) {
-            return res.status(208).json({ message: "Please provide strong password" })
-
+            return res.status(401).json({ message: "Please provide strong password" })
         } else {
             const hashPassword = await bcrypt.hash(password, salt)
             const checkAccount = await UserModel.findOne({ email: email })
             if (checkAccount !== null) {
-                return res.status(200).json({ message: "Email already exist" })
+                return res.status(400).json({ message: "Email already exist" })
             }
             const checkDb = await UserModel.find()
             if (checkDb.length === 0) {

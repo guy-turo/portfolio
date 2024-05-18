@@ -3,16 +3,16 @@ import axios from 'axios'
 const refreshToken = async() => {
     const URI = `http://localhost:8000/api/v1/auth/token`
     const initialToken = localStorage.getItem("refreshToken")
-    if (initialToken !== '') {
-        const response = await axios.post(URI, {
-            token: initialToken
-        })
-        const newToken = response.data.accessToken
-        return newToken
-    } else {
+    try {
+        if (initialToken !== '') {
+            const response = await axios.post(URI, { token: initialToken })
+            const newToken = response.data.accessToken
+            return newToken
+        }
+    } catch (e) {
         localStorage.setItem("refreshToken", '')
         localStorage.setItem("accessToken", '')
-
+        console.log(e.message)
     }
 }
 const productUri = "https://app-api-bixtdry5xq-uc.a.run.app/api/v1/"

@@ -1,38 +1,27 @@
 import React,{useState, useEffect} from 'react'
 import { LuImagePlus } from "react-icons/lu";
-import api from "../../utils/Helper"
-import { connect } from 'react-redux';
-import { fetchMe } from '../../redux/personalRequestRedux/me/me_actions';
-import { useDispatch } from 'react-redux';
-import { 
-  addMeRequest,
-  addMeSuccess, 
-  addMeFailure,  
-  updateMeRequest,
-  updateMeSuccess,
-  updateMeFailure
-} from '../../redux/personalRequestRedux/me/me_actions';
+import { useGetMeQuery,useAddMeMutation ,useUpdateMeMutation,} from '../../redux_tool.js/service/dataApi/apiDataService';
 
-function ProfileComponent({meData,fetchMe}) {
+function ProfileComponent({meData}) {
   
   const [meImage,setMeImage]=useState([])
-  const dispatch= useDispatch()
+  const {data,isError,isLoading, error}= useGetMeQuery()
+  const [addMe,{data:addMeData,isLoading:isLoadingAddMe,isError:isErrorAddMe,error:errorAdd}]=useAddMeMutation() 
+  const [updateMe,{data:updateMeData,isLoading:isLoadingUpdateMe,isError:isErrorUpdateMe}]=useUpdateMeMutation()
 
-  const [message,setMessage]=useState('')
-  const [successMessage,setSuccessMessage]=useState('')
 
   const handleImage=(event)=>{
     const files=Array.from(event.target.files)
     setMeImage(files)
   }
-  const [fullName,setFullName]=useState([meData?.data[0]?.fullName])
-  const [title,setTitle]=useState([meData?.data[0]?.title])
-  const [email ,setEmail]=useState([meData?.data[0]?.email])
-  const [phoneNumber,setPhoneNumber]=useState([meData?.data[0]?.phoneNumber])
-  const [experienceYear,setExperienceYear]=useState([meData?.data[0]?.experienceYear])
-  const [clients, setClients]=useState([meData?.data[0]?.clients])
-  const [description,setDescription]=useState([meData?.data[0]?.description])
-  const [projects,setProjects]=useState([meData?.data[0]?.projects])
+  const [fullName,setFullName]=useState([data[0]?.fullName])
+  const [title,setTitle]=useState([data[0]?.title])
+  const [email ,setEmail]=useState([data[0]?.email])
+  const [phoneNumber,setPhoneNumber]=useState([data[0]?.phoneNumber])
+  const [experienceYear,setExperienceYear]=useState([data[0]?.experienceYear])
+  const [clients, setClients]=useState([data[0]?.clients])
+  const [description,setDescription]=useState([data[0]?.description])
+  const [projects,setProjects]=useState([data[0]?.projects])
   const [process,setProcess]=useState(true)
   const addProfile=async(e)=>{
     e.preventDefault()
@@ -47,11 +36,8 @@ function ProfileComponent({meData,fetchMe}) {
         formData.append("experienceYear", experienceYear)
         formData.append("clients", clients)
         formData.append("projects", projects)
-        const URI = "/me/personal"
-        dispatch(addMeRequest)
-        const response =await api.post(URI, formData)
-        if (response.status === 200) {
-          const data = response.data
+        const response =await addMe({formData})
+        if (response.data) {
           setTimeout(()=>{
             setMeImage([])
             setTitle('')
@@ -63,32 +49,28 @@ function ProfileComponent({meData,fetchMe}) {
             setClients('')
             setProjects('')
           },1500)
-          dispatch(addMeSuccess(data))
       }
     }catch(error){
-      dispatch(addMeFailure(error.message))
+     console.log(error.message)
     }
   }
-useEffect(()=>{
-  fetchMe()
-},[])
+
 const updateProfile=async(id)=>{
   try{
-      const formDataUpdate = new FormData()
-      meImage.forEach(image => formDataUpdate.append("file", image))
-      formDataUpdate.append("fullName", fullName)
-      formDataUpdate.append("title", title)
-      formDataUpdate.append("description", description)
-      formDataUpdate.append("email", email)
-      formDataUpdate.append("phoneNumber", phoneNumber)
-      formDataUpdate.append("experienceYear", experienceYear)
-      formDataUpdate.append("clients", clients)
-      formDataUpdate.append("projects", projects)
-      const URI=`/me/personal/${id}`
-      dispatch(updateMeRequest())
-      const response =await api.put(URI, formDataUpdate)
-      if (response.status === 200) {
-        const data = response.data
+      const response =await updateMe({
+        id:id, 
+        meImage:meImage, 
+        fullName:fullName, 
+        title:title, 
+        description:description, 
+        email:email, 
+        phoneNumber:phoneNumber, 
+        experienceYear:experienceYear, 
+        clients:clients, 
+        projects:projects,
+      })
+      console.log(response)
+      if (response?.data) {
         setTimeout(()=>{
           setMeImage([])
           setTitle('')
@@ -100,10 +82,10 @@ const updateProfile=async(id)=>{
           setClients('')
           setProjects('')
         },1500)
-        dispatch(updateMeSuccess(data))
+       
     }
   }catch(error){
-    dispatch(updateMeFailure(error.message))
+   console.log(error.message)
   }
 }
   return (
@@ -137,7 +119,7 @@ const updateProfile=async(id)=>{
           <label htmlFor="phoneNumber">Phone number</label>
           <input type="text" 
           value={phoneNumber} 
-          placeholder={meData?.data[0]?.phoneNumber}
+          placeholder={data[0]?.phoneNumber}
           onChange={(e)=>setPhoneNumber(e.target.value)} 
           id="phoneNumber" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
           </div>
@@ -146,26 +128,26 @@ const updateProfile=async(id)=>{
           <label htmlFor="experienceYear">Experience Year</label>
           <input type="text"
           value={experienceYear} 
-          placeholder={meData?.data[0]?.experienceYear}
+          placeholder={data[0]?.experienceYear}
           onChange={(e)=>setExperienceYear(e.target.value)} 
           id="experienceYear" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
           <label htmlFor="clients">Clients</label>
           <input type="text"
           value={clients} 
-          placeholder={meData?.data[0]?.clients}
+          placeholder={data[0]?.clients}
           onChange={(e)=>setClients(e.target.value)} 
           id="clients" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
           <label htmlFor="projects">Projects</label>
           <input type="text"
           value={projects} 
-          placeholder={meData?.data[0]?.projects}
+          placeholder={data[0]?.projects}
           onChange={(e)=>setProjects(e.target.value)} 
           id="projects" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
          
           <label htmlFor="description">Description</label>
           <textarea type="text"
           value={description} 
-          placeholder={meData?.data[0]?.description}
+          placeholder={data[0]?.description}
           onChange={(e)=>setDescription(e.target.value)} 
           id="description" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
           </div>
@@ -176,16 +158,16 @@ const updateProfile=async(id)=>{
             </div>
           <label htmlFor='role' className="flex w-full overflow-x-auto rounded-md shadow-md border border-solid border-gray-400 items-center space-x-2  cursor-pointer">
           <div className=" flex items-center    rounded-md border border-solid border-blue-700">
-            {meImage.length===0  && meData?.data?.length===0 &&
+            {meImage.length===0  && data?.length===0 &&
             <LuImagePlus className="flex size-20 "/>}
-            {meImage.length===0 && meData?.data?.length!==0 &&
+            {meImage.length===0 && data?.length!==0 &&
               <ul className='flex'>
-                {meData?.data[0]?.pictures.map((item, index)=><li key={index}>
+                {data[0]?.pictures.map((item, index)=><li key={index}>
                   <img src={item} alt="" className=' flex size-20 rounded-md object-cover'/>
                 </li>)}
               </ul>
            }
-            {meData?.data?.length!==0&& 
+            {data?.length!==0&& 
               <ul className='flex'>
                 {meImage.map((item, index)=><li key={index}>
                 <img src={URL.createObjectURL(item)} alt="" className=' flex size-20 rounded-md object-cover'/>
@@ -199,24 +181,24 @@ const updateProfile=async(id)=>{
         
       </div>
       <p className='flex font-mono  w-full text-gray-400'>You only need 2 pictures</p>
-      {meData?.data?.length!==0&&<div className="space-y-1">
-          {meData.error && <textarea rows="1" cols="40" className='text-black  rounded-md  bg-red-500'>{meData.error}</textarea>}
-          {meData?.data?.length!==0 && meData.error==='' && <textarea rows="1" cols="40" value={meData?.data?.message} className='text-black items-center justify-center flex  rounded-md  bg-green-500 text-center text-blue-800'></textarea>}
-          <button onClick={()=>{
-            updateProfile(meData?.data[0]?._id)}
+      {data?.length!==0&&<div className="space-y-1">
+          {isError && <textarea rows="1" cols="40" className='text-black  rounded-md  bg-red-500'>{error}</textarea>}
+          {data?.length!==0 && isError===undefined && <textarea rows="1" cols="40" value={data?.message} className='text-black items-center justify-center flex  rounded-md  bg-green-500 text-center text-blue-800'></textarea>}
+          <button disabled={isLoadingUpdateMe} onClick={()=>{
+            updateProfile(data[0]?._id,)}
             } className="px-4 bg-green-700 w-fit rounded-md hover:text-blue-400">
-            {meData.error!==''&&meData.loading===false && <h3 className='text-red-700'>try again to Update</h3>}
-           {meData.error==="" &&!meData.data&&<h3 >{meData.loading?"update":"updating..."}</h3>}
-            {meData.loading===false&& meData.data &&meData.error==='' && <h3>updated</h3>}
+            {isErrorUpdateMe&& <h3 className='text-red-700'>try again to Update</h3>}
+           {!isLoadingUpdateMe&&<h3 >{isLoading?"updating...":"update"}</h3>}
+            {updateMeData&& data &&error===undefined && <h3>updated</h3>}
             </button>
           </div>}
-          {!meData&&<div className="space-y-1">
-        {meData.error && <textarea rows="1" cols="40" className='text-black  rounded-md  bg-red-500'>{meData.error}</textarea>}
-        {meData.data && <textarea rows="1" cols="40" value="Image uploaded successfully" className='text-black items-center justify-center flex  rounded-md  bg-green-500 text-center text-blue-800'></textarea>}
-        <button onSubmit={addProfile()} className="px-4 bg-green-700 w-fit rounded-md">
-          {meData!=='' && <h3 className='text-red-700'>try again to create</h3>}
-          {!meData &&meData?.data?.length!==0 && <h3>{process?"save":"saving..."}</h3>}
-          {successMessage && <h3>saved</h3>}
+          {!data&&<div className="space-y-1">
+        {isErrorAddMe && <textarea rows="1" cols="40" className='text-black  rounded-md  bg-red-500'>{errorAdd}</textarea>}
+        {addMeData && <textarea rows="1" cols="40" value="Image uploaded successfully" className='text-black items-center justify-center flex  rounded-md  bg-green-500 text-center text-blue-800'></textarea>}
+        <button disabled={isLoadingAddMe} onSubmit={addProfile()} className="px-4 bg-green-700 w-fit rounded-md">
+          {isErrorAddMe && <h3 className='text-red-700'>try again to create</h3>}
+          { !isLoadingAddMe && <h3>{process?"saving...":"save"}</h3>}
+          {addMeData && <h3>saved</h3>}
           </button>
         </div>}
         </div>
@@ -224,16 +206,17 @@ const updateProfile=async(id)=>{
   )
 }
 
-const mapStateToProps= (state)=>{
-  return{
-    meData:state.me,
-    updateData:state.updateMe,
-  }
-}
-const mapDispatchToProps=(dispatch)=>{
-return {
-  fetchMe: ()=>dispatch(fetchMe())
-  }
-}
+// const mapStateToProps= (state)=>{
+//   return{
+//     meData:state.me,
+//     updateData:state.updateMe,
+//   }
+// }
+// const mapDispatchToProps=(dispatch)=>{
+// return {
+//   fetchMe: ()=>dispatch(fetchMe())
+//   }
+// }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProfileComponent)
+// export default connect(mapStateToProps, mapDispatchToProps)(ProfileComponent)
+export default ProfileComponent

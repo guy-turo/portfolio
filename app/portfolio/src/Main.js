@@ -3,7 +3,7 @@ import App from './App'
 import { Provider } from 'react-redux';
 // import store from './redux/storeRedux';
 import { store } from './redux_tool.js/service/store';
-import AppTest from './AppTest';
+// import AppTest from './AppTest';
 
 export default class Main extends React.PureComponent {
 
@@ -26,7 +26,7 @@ export default class Main extends React.PureComponent {
         return (
         <Provider store={store}>
             <div > 
-                {this.state.online ?(<AppTest/> ) :(<div className = "flex  justify-center bg-gray-100 h-fit">
+                {this.state.online ?(<App/> ) :(<div className = "flex  justify-center bg-gray-100 h-fit">
                     <div className = ' flex h-lvh items-center' >
                     <p className = 'self-center text-red-600 font-semibold' >
                     You are no longer connected,

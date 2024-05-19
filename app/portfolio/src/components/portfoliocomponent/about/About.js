@@ -12,8 +12,8 @@ const  About=()=> {
     const URI="/me/personal"
     api.get(URI)
     .then(res=>{
-      setImage(res.data[0].pictures[1])
-      setAboutData(res.data[0])}
+      setImage(res.data.pictures[1])
+      setAboutData(res.data)}
     )
     .catch(error=>console.log(error.message))
   }

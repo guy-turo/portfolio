@@ -14,49 +14,19 @@ export const apiData = createApi({
         }),
         addMe: builder.mutation({
             query: ({ data }) => ({
-                url: "/me",
+                url: "/me/personal",
                 method: "post",
-                body: { data },
-
+                body: data
             })
         }),
         updateMe: builder.mutation({
-            query: ({
-                id,
-                meImage,
-                fullName,
-                title,
-                description,
-                email,
-                phoneNumber,
-                experienceYear,
-                clients,
-                projects
-            }) => {
-                console.log(id,
-                    meImage,
-                    fullName,
-                    title,
-                    description,
-                    email,
-                    phoneNumber,
-                    experienceYear,
-                    clients,
-                    projects)
-                const formDataUpdate = new FormData()
-                meImage.forEach(image => formDataUpdate.append("file", image))
-                formDataUpdate.append("fullName", fullName)
-                formDataUpdate.append("title", title)
-                formDataUpdate.append("description", description)
-                formDataUpdate.append("email", email)
-                formDataUpdate.append("phoneNumber", phoneNumber)
-                formDataUpdate.append("experienceYear", experienceYear)
-                formDataUpdate.append("clients", clients)
-                formDataUpdate.append("projects", projects)
+            query: (data) => {
+                console.log("data", data)
                 return {
-                    url: `/me/personal/${id}`,
+                    url: `/me/personal/${data.id}`,
                     method: 'put',
-                    body: { formDataUpdate },
+                    headers: { 'Content-Type': 'multipart/form-data' },
+                    data: data.data,
                 }
             }
         }),

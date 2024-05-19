@@ -12,7 +12,7 @@ const  Contact=()=> {
     const URI="/me/personal"
     api.get(URI)
     .then(res=>{
-      setAboutData(res.data[0])}
+      setAboutData(res.data)}
     )
     .catch(error=>console.log(error.message))
   }

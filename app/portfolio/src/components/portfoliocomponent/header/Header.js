@@ -11,8 +11,8 @@ function Header() {
     const URI="/me/personal"
     api.get(URI)
     .then(res=>{
-      setPersonalData(res.data[0])
-      setImage(res.data[0].pictures[0])
+      setPersonalData(res.data)
+      setImage(res.data.pictures[0])
     }
     )
     .catch(error=>alert("Something went wrong try again"))

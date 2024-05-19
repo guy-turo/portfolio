@@ -71,6 +71,7 @@ const updateMe = async(req, res) => {
         projects: projects,
     } = req.body
     console.log("body:", req.body)
+
     try {
         const checkData = await meModel.findById({ _id: req.params.id })
         if (!checkData) {
@@ -145,11 +146,10 @@ const deleteMe = async(req, res) => {
 const fetchMe = async(req, res) => {
     try {
         const data = await meModel.find()
-
         if (!data) {
             res.status(404).json({ message: "Item does not exist" })
         }
-        res.status(200).json(data)
+        res.status(200).json(data[0])
 
     } catch (err) {
         console.error(err.message)

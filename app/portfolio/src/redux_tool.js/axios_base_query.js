@@ -1,15 +1,16 @@
 import api from "../utils/Helper"
 const axiosBaseQuery = ({baseUrl}={baseUrl:""})=>
-async({url, method,data,params, headers, body})=>{
+async({url, method,data,params, headers,body})=>{
     try{
         const fullUrl= baseUrl+ url
+       
         const result = await api({
             method,
             url:fullUrl,
             data,
             params,
             headers,
-            body,
+            body,                                                                                                                                                                                                                                                                                                                                                                                                                 
         })
         return {data:result.data}
 

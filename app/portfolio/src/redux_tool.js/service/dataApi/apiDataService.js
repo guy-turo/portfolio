@@ -8,6 +8,13 @@ export const apiData = createApi({
         baseUrl: "http://localhost:8000/api/v1",
     }),
     endpoints: (builder) => ({
+        sendEmail: builder.mutation({
+            query: ({ data }) => ({
+                url: "/me/sendEmail",
+                method: 'post',
+                data: data
+            })
+        }),
         //
         getMe: builder.query({
             query: () => ({ url: "/me/personal", method: 'get' })
@@ -16,17 +23,17 @@ export const apiData = createApi({
             query: ({ data }) => ({
                 url: "/me/personal",
                 method: "post",
-                body: data
+                data: data
             })
         }),
         updateMe: builder.mutation({
-            query: (data) => {
+            query: ({ id, data }) => {
                 console.log("data", data)
                 return {
-                    url: `/me/personal/${data.id}`,
+                    url: `/me/personal/${id}`,
                     method: 'put',
                     headers: { 'Content-Type': 'multipart/form-data' },
-                    data: data.data,
+                    data: data,
                 }
             }
         }),
@@ -35,7 +42,7 @@ export const apiData = createApi({
             query: () => ({ url: "/me/experiences", method: "get" })
         }),
         addExperience: builder.mutation({
-            query: (frontend, backend, other) => ({
+            query: ({ frontend, backend, other }) => ({
                 url: "/me/experiences",
                 method: "post",
                 data: {
@@ -46,7 +53,7 @@ export const apiData = createApi({
             })
         }),
         updateExperience: builder.mutation({
-            query: (text, el, id) => ({
+            query: ({ text, el, id }) => ({
                 url: `/me/experiences/${id}`,
                 method: "put",
                 data: {
@@ -60,20 +67,20 @@ export const apiData = createApi({
             query: () => ({ url: "/me/projects", method: 'get' })
         }),
         addProject: builder.mutation({
-            query: (data) => ({
+            query: ({ data }) => ({
                 url: "/me/projects",
                 method: "post",
                 data: data
             })
         }),
         deleteProject: builder.mutation({
-            query: (id) => ({
+            query: ({ id }) => ({
                 url: `/me/projects/${id}`,
                 method: 'delete',
             })
         }),
         updateProject: builder.mutation({
-            query: (data, id) => ({
+            query: ({ data, id }) => ({
                 url: `/me/projects/${id}`,
                 method: 'put',
                 data: data
@@ -84,7 +91,7 @@ export const apiData = createApi({
             query: () => ({ url: '/me/services', method: 'get' })
         }),
         addService: builder.mutation({
-            query: (userExp, frontend, backend, other) => ({
+            query: ({ userExp, frontend, backend, other }) => ({
                 url: "/me/services",
                 method: "post",
                 data: {
@@ -96,7 +103,7 @@ export const apiData = createApi({
             })
         }),
         updateService: builder.mutation({
-            query: (id, text, el) => ({
+            query: ({ id, text, el }) => ({
                 url: `/me/services/${id}`,
                 method: "put",
                 data: {
@@ -110,7 +117,7 @@ export const apiData = createApi({
             query: () => ({ url: '/me/socials', method: 'get' })
         }),
         addSocial: builder.mutation({
-            query: (title, link) => ({
+            query: ({ title, link }) => ({
                 url: '/me/socials',
                 method: 'post',
                 data: {
@@ -120,13 +127,13 @@ export const apiData = createApi({
             })
         }),
         deleteSocial: builder.mutation({
-            query: (id) => ({
+            query: ({ id }) => ({
                 url: `/me/socials/${id}`,
                 method: 'delete',
             })
         }),
         updateSocial: builder.mutation({
-            query: (id, title, link) => ({
+            query: ({ id, title, link }) => ({
                 url: `/me/socials/${id}`,
                 method: 'put',
                 data: {
@@ -140,20 +147,20 @@ export const apiData = createApi({
             query: () => ({ url: '/me/testimonials', method: 'get' })
         }),
         addTestimonials: builder.mutation({
-            query: (data) => ({
+            query: ({ data }) => ({
                 url: '/me/testimonials',
                 method: 'post',
                 data: data
             })
         }),
         deleteTestimonials: builder.mutation({
-            query: (id) => ({
+            query: ({ id }) => ({
                 url: `/me/testimonials/${id}`,
                 method: 'delete',
             })
         }),
         updateTestimonials: builder.mutation({
-            query: (id, data) => ({
+            query: ({ id, data }) => ({
                 url: `/me/testimonials/${id}`,
                 method: "put",
                 data: data,
@@ -164,20 +171,20 @@ export const apiData = createApi({
             query: () => ({ url: '/pdf', method: 'get' })
         }),
         addPdf: builder.mutation({
-            query: (data) => ({
+            query: ({ data }) => ({
                 url: '/pdf/upload',
                 data: data,
                 method: 'post'
             })
         }),
         deletePdf: builder.mutation({
-            query: (id) => ({
+            query: ({ id }) => ({
                 url: `/pdf/${id}`,
                 method: 'delete'
             })
         }),
         updatePdf: builder.mutation({
-            query: (id, data) => ({
+            query: ({ id, data }) => ({
                 url: `/pdf/${id}`,
                 method: 'put',
                 data: data,
@@ -212,5 +219,6 @@ export const {
     useUpdateProjectMutation,
     useUpdateServiceMutation,
     useUpdateSocialMutation,
-    useUpdateTestimonialsMutation
+    useUpdateTestimonialsMutation,
+    useSendEmailMutation,
 } = apiData

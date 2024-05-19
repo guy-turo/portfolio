@@ -1,5 +1,5 @@
-import React,{useState, useEffect} from 'react'
-import api from "../utils/Helper"
+import React,{useState} from 'react'
+import AdminSkeleton from "./AdminSkeleton"
 import { CiLogout } from "react-icons/ci";
 import { CiSettings } from "react-icons/ci";
 import { MdMenu } from "react-icons/md";
@@ -9,10 +9,7 @@ import {MdDashboard} from 'react-icons/md'
 import Data from '../components/admin/Data'
 import Dashboard from '../components/admin/Dashboard'
 import {Link, useNavigate} from "react-router-dom"
-import { connect } from 'react-redux'
-import { fetchMe } from '../redux/personalRequestRedux/me/me_actions'
-import { useDispatch } from 'react-redux';
-import { logoutRequest, logoutSuccess,logoutFailure } from '../redux/authRedux/logout/logout_action';
+
 import Skeleton from '../components/helper/skeleton/Skeleton';
 import Loading from '../components/helper/loadingComponent/Loading';
 
@@ -22,14 +19,12 @@ import { useGetMeQuery } from '../redux_tool.js/service/dataApi/apiDataService';
 const AdminPage=()=> {
   const [isOpen, setIsOpen] = useState(false)
   const navigate= useNavigate()
-  const dispatch= useDispatch()
   const toggleDrawer = () => {
       setIsOpen((prevState) => !prevState)
   }
 
-  const [logout, {data:logoutData, isLoading:logoutLoading, error:logoutError,isError:logoutIsError}]= useLogoutMutation()
+  const [logout, {data:logoutData, isLoading:logoutLoading,isError:logoutIsError}]= useLogoutMutation()
   const {data, isLoading,isError} =  useGetMeQuery()
-  console.log(data)
   const [toggleState,setToggleState]=useState(1)
   const toggleTab=(index)=>{
     if(toggleState===index){
@@ -40,6 +35,12 @@ const AdminPage=()=> {
   const colors={
     backgroundColor:"#1f1f38"
   }
+  if(logoutData!==undefined){
+    alert("You're  signed Logout")
+  }
+if(logoutIsError){
+  navigate("/signin")
+}
   const handleLogout=async()=>{
     try{
       const initialToken=localStorage.getItem("refreshToken")
@@ -47,10 +48,9 @@ const AdminPage=()=> {
       if(response.data){
         const refreshToken = localStorage.getItem('refreshToken')
         const accessToken = localStorage.getItem('accessToken')
-        if (refreshToken && accessToken) {
+        if (refreshToken!=='' && accessToken!=='') {
           localStorage.removeItem("refreshToken")
           localStorage.removeItem("accessToken")
-          dispatch(logoutSuccess(response.data))
           navigate('/signin')
           }
         }
@@ -58,7 +58,7 @@ const AdminPage=()=> {
         setTimeout(() => {
           const refreshToken = localStorage.getItem('refreshToken')
           const accessToken = localStorage.getItem('accessToken')
-          if (refreshToken && accessToken) {
+          if (refreshToken!=='' && accessToken!=="") {
             localStorage.removeItem("refreshToken")
             localStorage.removeItem("accessToken")
             navigate('/signin')
@@ -68,10 +68,10 @@ const AdminPage=()=> {
        }
   const full= "full"
   if(isLoading){
-    return <div>..loading</div>
+    return <><AdminSkeleton/></>
   }
   if(isError){
-    return <div>...error...</div>
+    return navigate('/signin')
   }
   return (
     <div className=" flex flex-col h-screen">
@@ -90,7 +90,7 @@ const AdminPage=()=> {
               <div className="flex flex-col   rounded-tl-md rounded-bl-md w-12/12  p-1 items-center justify-items-center space-y-1">
               <div className="flex  flex-col items-center justify-center">
                   <div className="w-20 border border-gray-800 border-solid shadow-2xl h-20 rounded-full  cursor-pointer">
-                  {data.loading===false && data && data.map((item, index)=><img key={index} src={item.pictures[1]} alt="" className="w-20 h-20 rounded-full"/>)}
+                  { data && <img src={data.pictures[1]} alt="" className="w-20 h-20 rounded-full"/>}
                   {data.loading=== true && <Skeleton width={20} height={20} borderRadius={full}/>}
                   </div>
                   <h2 className="fex font-bold">Admin</h2>
@@ -123,7 +123,7 @@ const AdminPage=()=> {
           <div className="w-4"></div>
             <div className="w-10 border border-gray-800 border-solid shadow-xl h-10 rounded-full  cursor-pointer">
             <Link to="/" className='p-0'>
-                {!isLoading&&<img  src={data[0]?.pictures[1]} alt="" className="w-10 h-10 rounded-full"/>}
+                {!isLoading&&<img  src={data?.pictures[1]} alt="" className="w-10 h-10 rounded-full"/>}
                 {isLoading&& <Skeleton width={10} height={10} borderRadius={full}/>}
                 
             </Link>

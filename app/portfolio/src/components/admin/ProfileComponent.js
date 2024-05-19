@@ -176,16 +176,16 @@ const updateProfile=async(id)=>{
         } className="px-4 bg-green-700 w-fit rounded-md hover:text-blue-400">
             {isErrorUpdateMe&& <h3 className='text-red-700'>try again to Update</h3>}
            {<h3 >{isLoadingUpdateMe?"updating...":"update"}</h3>}
-            {updateMeData&& data &&error===undefined && <h3>updated</h3>}
+            {updateMeData!==undefined&& data &&error===undefined && <h3>updated</h3>}
             </button>
           </div>}
           {!data&&<div className="space-y-1">
         {isErrorAddMe && <textarea rows="1" cols="40" className='text-black  rounded-md  bg-red-500'>{errorAdd}</textarea>}
-        {addMeData && <textarea rows="1" cols="40" value="Image uploaded successfully" className='text-black items-center justify-center flex  rounded-md  bg-green-500 text-center text-blue-800'></textarea>}
+        {addMeData!==undefined && <textarea rows="1" cols="40" value="Image uploaded successfully" className='text-black items-center justify-center flex  rounded-md  bg-green-500 text-center text-blue-800'></textarea>}
         <button disabled={isLoadingAddMe} onSubmit={addProfile()} className="px-4 bg-green-700 w-fit rounded-md">
           {isErrorAddMe && <h3 className='text-red-700'>try again to create</h3>}
-          { !isLoadingAddMe && <h3>{process?"saving...":"save"}</h3>}
-          {addMeData && <h3>saved</h3>}
+          { <h3>{isLoadingAddMe?"saving...":"save"}</h3>}
+          {addMeData!==undefined && <h3>saved</h3>}
           </button>
         </div>}
         </div>

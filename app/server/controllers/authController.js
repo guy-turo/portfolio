@@ -50,7 +50,7 @@ const login = async(req, res) => {
             if (result) {
                 const user = { id: checkEmail._id, name: checkEmail.name, email: email, admin: checkEmail.isAdmin }
                 const accessToken = generateAccessToken(user)
-                const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, { expiresIn: "1d" })
+                const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, { expiresIn: "7d" })
                 crfToken = refreshToken
 
                 const checkToken = await TokenModel.find()

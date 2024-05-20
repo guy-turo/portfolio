@@ -1,20 +1,16 @@
-import React,{useEffect, useState} from 'react'
+import React from 'react'
 import {BiCheck} from 'react-icons/bi'
-import api from '../../../utils/Helper'
 
-function Services() {
-  const [servicesData,setServicesData]=useState([])
-  const fetchServices=()=>{
-    const URI=`/me/services`
-    api.get(URI)
-    .then((response)=>{
-      setServicesData(response.data)
-    })
-    .catch(error=>console.log(error.message))
+import { useGetServicesQuery } from '../../../redux_tool.js/service/dataApi/apiDataService'
+import ServiceSkeleton from "./ServiceSkeleton"
+const  Services=()=>{
+  const {data:servicesData,isLoading, error, isError}= useGetServicesQuery()
+  if(isLoading){
+    return <><ServiceSkeleton/></>
   }
-  useEffect(()=>{
-    fetchServices()
-  },[])
+  if(isError){
+    console.log("Error Service :",error)
+  }
   return (
     <section id='services' className='flex flex-col items-center justify-center'>
       <h5>What I Offer</h5>

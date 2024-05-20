@@ -1,28 +1,19 @@
-import React,{useEffect,useState} from 'react'
-
-import api from '../../../utils/Helper'
-
-function CTA() {
-  const [pdfData,setPdfData]=useState([])
-  const [isDownloading, setIsDownloading] = useState(false)
-  
-  const fetchData=()=>{
-    const URI="/pdf"
-    api.get(URI)
-    .then(res=>{
-      if(res.status===200){
-        setPdfData(res.data[0])
-      }
-    })
-    .catch(error=>alert('Error :'+error.message))
-  }
-  useEffect(()=>{
-    fetchData()
-  },[])
+import React ,{useState}from 'react'
+import { useGetPdfQuery } from '../../../redux_tool.js/service/dataApi/apiDataService'
+import CTASkeleton from './CTASkeleton'
+const  CTA=()=>{
+    const [isDownloading, setIsDownloading] = useState(false)
+    const {data, isLoading, isError, error}=  useGetPdfQuery()
+    if(isLoading){
+        return <><CTASkeleton/></>
+    }
+    if(isError){
+      console.log("Pdf error :", error)
+    }
   return (
     <div className="cta">
-      <a href={pdfData?.pdfUrl} onClick={()=>setIsDownloading(!isDownloading)} target="_blank"  className={`btn ${isDownloading?"":"disabled"}`} rel="noreferrer"> {isDownloading ? 'Downloading... CV' : 'Download CV'}</a>
-      {pdfData?.pdfUrl&& <div className='w-5 h-5 rounded-full bg-blue-950'></div>}
+      <a href={data?.pdfUrl} onClick={()=>setIsDownloading(!isDownloading)} target="_blank"  className={`btn ${isDownloading?"":"disabled"}`} rel="noreferrer"> {isDownloading ? 'Downloading... CV' : 'Download CV'}</a>
+      {data?.pdfUrl&& <div className='w-5 h-5 rounded-full bg-blue-950'></div>}
       <a href="#contact" className='btn btn-primary'>Let's Talk</a>
     </div>
   )

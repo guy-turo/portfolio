@@ -4,7 +4,8 @@ import { useGetSocialQuery, useGetProjectQuery} from '../../../redux_tool.js/ser
 const  Footer=()=> {
   const {data:SocialsData,isError:socialIsError,isLoading:socialIsLoading, error:socialError}=  useGetSocialQuery()
   const {data:portfolioData, isError:portfolioIsError, error:portfolioError, isLoading:portfolioIsLoading}= useGetProjectQuery()
-  const firstFourElements = portfolioData.slice(0,7);
+  const firstFourElements = portfolioData?.slice(0,7);
+  console.log(SocialsData)
   if(socialIsError){
     console.log("Social error: ", socialError)
   }
@@ -34,7 +35,7 @@ const  Footer=()=> {
         <h3 className='text-zinc-300 font-semibold'>Social</h3>
        <ul className='items-center flex flex-col'>
           {SocialsData && SocialsData?.map((item, index)=><li key={index}><a href={item.link}  className="flex text-nowrap">{item.title}</a></li>)}
-          {socialIsLoading&& <li><a   className="flex text-nowrap ">...</a></li>}
+          {socialIsLoading&& <li><a   className="flex text-nowrap animate-pulse ">...</a></li>}
         </ul>
        </div>
         <div className='items-center justify-items-center flex flex-col'>

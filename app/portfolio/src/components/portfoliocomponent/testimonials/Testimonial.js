@@ -3,25 +3,15 @@ import { FiChevronRight, FiChevronLeft } from 'react-icons/fi';
 import { FaQuoteRight } from 'react-icons/fa';
 import api from '../../../utils/Helper';
 import './testimonial.css'
-
+import { useGetTestimonialQuery } from '../../../redux_tool.js/service/dataApi/apiDataService';
+import TestimonialSkeleton from './TestimonialSkeleton';
 const  Testimonial=()=> {
   const [index , setIndex]=useState(0)
-  const [testimonialData,setTestimonialData]=useState([])
-  const fetchTestimonialData=()=>{
-    const URI="/me/testimonials"
-    api.get(URI)
-    .then((res)=>{
-      setTestimonialData(res.data)
-    })
-    .catch(error=>
-      alert('something went wrong with your connection')
-      )
-  }
+ 
+  const {data:testimonialData, isLoading, isError, error}=useGetTestimonialQuery()
+  
   useEffect(()=>{
-    fetchTestimonialData()
-  },[])
-  useEffect(()=>{
-    const lastIndex= testimonialData.length-1;
+    const lastIndex= testimonialData?.length-1;
     if(index<0){
       setIndex(lastIndex)
     }if(index>lastIndex){
@@ -36,6 +26,12 @@ const  Testimonial=()=> {
       clearInterval(slider)
     }
   },[index])
+  if(isLoading){
+    return <><TestimonialSkeleton/></>
+  }
+  if(isError){
+    console.log("Testimonial Error: ", error)
+  }
   return (
     <section id="testimonials" className="section">
       <div className="title">
@@ -52,7 +48,7 @@ const  Testimonial=()=> {
           }
           if (
             personIndex === index - 1 ||
-            (index === 0 && personIndex === testimonialData.length - 1)
+            (index === 0 && personIndex === testimonialData?.length - 1)
           ) {
             position = 'lastSlide';
           }

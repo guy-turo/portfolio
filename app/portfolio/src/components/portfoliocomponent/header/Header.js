@@ -1,35 +1,29 @@
-import React, {useEffect,useState} from 'react'
+import React from 'react'
 import './header.css'
 import CTA from './CTA'
 import HeaderSection from './HeaderSection'
-import api from '../../../utils/Helper'
 
-function Header() {
-  const [image,setImage]=useState('')
-  const [personalData,setPersonalData]=useState([])
-  const fetchData=()=>{
-    const URI="/me/personal"
-    api.get(URI)
-    .then(res=>{
-      setPersonalData(res.data)
-      setImage(res.data.pictures[0])
-    }
-    )
-    .catch(error=>alert("Something went wrong try again"))
+import { useGetMeQuery } from '../../../redux_tool.js/service/dataApi/apiDataService'
+import HeaderSkeleton from './HeaderSkeleton'
+
+const Header=()=>{
+  const {data, isLoading, isError, error}=  useGetMeQuery()
+  if(isLoading){
+    return <><HeaderSkeleton/></>
   }
-  useEffect(()=>{
-    fetchData()
-  },[])
+  if(isError){
+    console.log("Me Error :",error)
+  }
   return (
     <section id="#" className="header">
       <div className="container header_container">
         <h5>Hello I'm</h5>
-        <h1>{personalData?.fullName}</h1>
-        <h5 className="text-light">{personalData?.title}</h5>
+        <h1>{data?.fullName}</h1>
+        <h5 className="text-light">{data?.title}</h5>
         <CTA />
         <div className="sec">
         <div className='me'>
-          {personalData&&<img src={image} alt="" className='flex rounded-tr-3xl rounded-tl-3xl'/>}
+          {data &&<img src={data?.pictures[0]} alt="" className='flex rounded-tr-3xl rounded-tl-3xl'/>}
         </div>
         <p className='scroll_down'></p>
       </div>

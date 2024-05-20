@@ -19,7 +19,7 @@ const  About=()=> {
    <section id="about">
     <h5>Get To Know</h5>
     <h2>About Me</h2>
-    <div className="container  flex flex-col md:space-x-8 md:flex-row">
+    <div className="container   flex flex-col md:space-x-8 md:flex-row">
       <div className="about_me ">
         <div className="about_me-image">
           <img src={data?.pictures[1]} alt="About Image" />

@@ -1,4 +1,4 @@
-import React,{useEffect, useState} from 'react'
+import React,{useState} from 'react'
 import {MdOutlineEmail} from 'react-icons/md'
 import {BsWhatsapp} from 'react-icons/bs'
 import ContactSkeleton from './ContactSkeleton';

@@ -1,20 +1,9 @@
 import React from  'react'
-import { useGetSocialQuery, useGetProjectQuery} from '../../../redux_tool.js/service/dataApi/apiDataService'
 
 const  Footer=()=> {
-  const {data:SocialsData,isError:socialIsError,isLoading:socialIsLoading, error:socialError}=  useGetSocialQuery()
-  const {data:portfolioData, isError:portfolioIsError, error:portfolioError, isLoading:portfolioIsLoading}= useGetProjectQuery()
-  const firstFourElements = portfolioData.slice(0,7);
-  if(socialIsError){
-    console.log("Social error: ", socialError)
-  }
-  if(portfolioIsError){
-    console.log('Portfolio error: ', portfolioError)
-  }
- 
   return (
-    <footer id='footer' className="">
-      <div className='items-center flex flex-col space-y-10 divide-y-2 divide-solid divide-black'>
+    <footer id='footer' className=" animate-pulse">
+      <div className='items-center animate-pulse flex flex-col space-y-10 divide-y-2 divide-solid divide-black'>
       <div className='container pt-10 items-center flex flex-col'>
       <a href="#"  className="space-y-10 "><h1 className='flex font-extrabold underline'>K.K.Guy</h1></a>
       <div className='flex flex-col space-y-4 sm:space-y-0 items-center sm:items-start justify-items-center sm:flex-row  justify-evenly  w-full'>
@@ -33,15 +22,13 @@ const  Footer=()=> {
        <div className='items-center flex flex-col'>
         <h3 className='text-zinc-300 font-semibold'>Social</h3>
        <ul className='items-center flex flex-col'>
-          {SocialsData && SocialsData?.map((item, index)=><li key={index}><a href={item.link}  className="flex text-nowrap">{item.title}</a></li>)}
-          {socialIsLoading&& <li><a   className="flex text-nowrap ">...</a></li>}
+         <li ><a  className="flex text-nowrap">...</a></li>
         </ul>
        </div>
         <div className='items-center justify-items-center flex flex-col'>
           <h3 className='text-zinc-300 font-semibold'>Projects</h3>
         <ul className='items-center flex flex-col'>
-          {portfolioData && firstFourElements.map((item, index)=><li key={index}><a href={item.linkGithub}>{item.title}</a></li>)}
-          {portfolioIsLoading && <li><a  className=" animate-pulse">....</a></li> }
+          <li ><a >...</a></li>
           <a href="https://github.com/guy-turo?tab=repositories"  className="flex text-nowrap">more...</a>
         </ul>
         </div>

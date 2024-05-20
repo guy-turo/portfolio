@@ -1,6 +1,7 @@
-import React,{useState, useEffect} from 'react'
-import { LuImagePlus } from "react-icons/lu";
-import { useGetMeQuery,useAddMeMutation ,useUpdateMeMutation,} from '../../redux_tool.js/service/dataApi/apiDataService';
+import React,{useState} from 'react'
+import { LuImagePlus } from "react-icons/lu"
+import { useGetMeQuery,useAddMeMutation ,useUpdateMeMutation,} from '../../redux_tool.js/service/dataApi/apiDataService'
+import ProfileSkeleton from '../helper/skeleton/ProfileSkeleton'
 
 function ProfileComponent({meData}) {
   
@@ -9,7 +10,6 @@ function ProfileComponent({meData}) {
   const [addMe,{data:addMeData,isLoading:isLoadingAddMe,isError:isErrorAddMe,error:errorAdd}]=useAddMeMutation() 
   const [updateMe,{data:updateMeData,isLoading:isLoadingUpdateMe,isError:isErrorUpdateMe}]=useUpdateMeMutation()
 
-  console.log("personal",data)
   const handleImage=(event)=>{
     const files=Array.from(event.target.files)
     setMeImage(files)
@@ -22,7 +22,6 @@ function ProfileComponent({meData}) {
   const [clients, setClients]=useState([data.clients])
   const [description,setDescription]=useState([data.description])
   const [projects,setProjects]=useState([data.projects])
-  const [process,setProcess]=useState(true)
   const addProfile=async(e)=>{
     e.preventDefault()
     try{
@@ -67,14 +66,17 @@ const updateProfile=async(id)=>{
   formDataUpdate.append("clients", clients)
   formDataUpdate.append("projects", projects)
   try{
-      const response =await updateMe({
-        id:id, 
-        data:formDataUpdate,
-      })
-      console.log(response)
+      const response =await updateMe({id:id, data:formDataUpdate,})
+      if(response){
+        console.log(response)
+      }
   }catch(error){
    console.log(error.message)
   }
+}
+
+if(isLoading){
+  return <><ProfileSkeleton/></>
 }
   return (
     <div className="flex flex-col  container space-y-2 shadow-2xl border border-solid border-gray-400 mt-4 p-2 rounded-md" >
@@ -96,7 +98,7 @@ const updateProfile=async(id)=>{
           onChange={(e)=>setTitle(e.target.value)}
           placeholder={data.title} 
           id="title" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
-         
+
           <label htmlFor="email">Email</label>
           <input type="text" 
           value={email} 
@@ -142,7 +144,6 @@ const updateProfile=async(id)=>{
           </div>
           <div >
             <div>
-              
             </div>
           <label htmlFor='role' className="flex w-full overflow-x-auto rounded-md shadow-md border border-solid border-gray-400 items-center space-x-2  cursor-pointer">
           <div className=" flex items-center    rounded-md border border-solid border-blue-700">
@@ -174,7 +175,7 @@ const updateProfile=async(id)=>{
       {data && isError===undefined && <textarea rows="1" cols="40" value={data?.message} className='text-black items-center justify-center flex  rounded-md  bg-green-500 text-center text-blue-800'></textarea>}
       <button disabled={isLoadingUpdateMe} onClick={()=>{updateProfile(data._id,)}
         } className="px-4 bg-green-700 w-fit rounded-md hover:text-blue-400">
-            {isErrorUpdateMe&& <h3 className='text-red-700'>try again to Update</h3>}
+            {isErrorUpdateMe&& <h3 className='text-red-700'>try again to Update </h3>}
            {<h3 >{isLoadingUpdateMe?"updating...":"update"}</h3>}
             {updateMeData!==undefined&& data &&error===undefined && <h3>updated</h3>}
             </button>

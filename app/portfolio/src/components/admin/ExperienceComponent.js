@@ -1,13 +1,11 @@
-import React,{useState,useEffect} from 'react'
+import React,{useState} from 'react'
 import api from "../../utils/Helper"
 import { FaRegCircleRight } from "react-icons/fa6";
 import { FaRegCircleLeft } from "react-icons/fa6";
-
+import { useGetExperienceQuery ,useAddExperienceMutation, } from '../../redux_tool.js/service/dataApi/apiDataService';
 import UpdateExperience from './helper/UpdateExperience';
+import ExperienceSkeleton from '../portfoliocomponent/experience/ExperienceSkeleton';
 function ExperienceComponent() {
-  const [successMessage,setSuccessMessage]=useState('')
-  const [message,setMessage]=useState('')
-
   const [moreFunction, setMoreFunction]=useState(true)
   const [addSe, setAddSe]=useState(false)
 
@@ -15,34 +13,32 @@ function ExperienceComponent() {
   const [backendS,setBackendS]=useState('')
   const [otherS, setOtherS]=useState('')
 
-  const [experiencesData,setExperiencesData]=useState([])
-  const [process,setProcess]=useState(true)
-const addService=(e)=>{
+  
+
+  const {data:experiencesData, isLoading, isError,error}= useGetExperienceQuery()
+  const [addExperience, {data:addExperienceData,isLoading:addExperienceLoading, isError:addExperienceIsError,error:addExperienceError}]=useAddExperienceMutation()
+const addService=async (e)=>{
   e.preventDefault()
-  setProcess(!process)
-  const URI="/me/experiences"
-    api.post(URI,{
+  try{
+    const response= await addExperience({
       frontend:frontendS,
      backend:backendS,
      other:otherS
     })
-    .then((response)=>{
-      setSuccessMessage(response.data)
-    })
-    .catch(error=>setMessage(error.message))
+    if(response){
+      console.log(response)
+    }
+  }catch(error){
+    console.log(error)
+  }
 }
 
-const fetchServices=()=>{
-  const URI=`/me/experiences`
-  api.get(URI)
-  .then((response)=>{
-    setExperiencesData(response.data)
-  })
-  .catch(error=>console.log(error.message))
+if(isLoading){
+  return <><ExperienceSkeleton/></>
 }
-useEffect(()=>{
-  fetchServices()
-},[])
+if(isError){
+  console.log(error)
+}
   return (
     <div className="flex flex-col  container shadow-2xl border border-solid border-gray-400 mt-4 p-2 rounded-md">
    <div className="flex justify-between">
@@ -62,9 +58,9 @@ useEffect(()=>{
       </div>
       </div>
       <button type="submit" className="px-4 bg-green-700 w-fit rounded-md">
-            {message!=='' && <h3 className='text-red-700'>try again</h3>}
-            {!message &&successMessage==="" && <h3>{process?"save":"saving"}</h3>}
-            {successMessage && <h3>saved</h3>}
+            {addExperienceIsError &&addExperienceError && <h3 className='text-red-700'>try again</h3>}
+            {!addExperienceIsError&&addExperienceError &&addExperience===undefined && <h3>{addExperienceLoading?"save":"saving"}</h3>}
+            {addExperienceData && <h3>saved</h3>}
             </button>
     </form>
     </div>

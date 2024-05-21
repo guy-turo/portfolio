@@ -2,9 +2,10 @@ import React,{useState} from 'react'
 import Dialog from "../../../utils/Dialog"
 import api from "../../../utils/Helper"
 import { LiaEditSolid } from "react-icons/lia";
+import { useUpdateProjectMutation } from '../../../redux_tool.js/service/dataApi/apiDataService';
+import Loading from '../../helper/loadingComponent/Loading';
 const UpdateProject=({item})=> {
-  const [message,setMessage]=useState('')
-  const [successMessage, setSuccessMessage]=useState("")
+  const [updateProject, {data,isLoading,isError,error}]=useUpdateProjectMutation()
   const [open,setOpen]=useState(false)
 
   const [image,setImage]=useState([])
@@ -28,37 +29,32 @@ formData.append("linkLive",linkLive)
 formData.append("linkGithub", linkGithub)
 const update= async(e)=>{
     e.preventDefault()
-      const URI=`/me/projects/${item._id}`
-     api.put(URI,formData)
-     .then((response)=>{
-      if(response){
-        setSuccessMessage("Updated")
-          setTimeout(()=>{
-            onClose()
-            setSuccessMessage('')
-           setTitle('')
-           setDescription('')
-           setImage([])
-           setLinkGithub('')
-           setLinkLive('')
-          },1500)
+    try{
+      const response = await updateProject(formData)
+      if(response.data){
+        console.log(response)
+        setTimeout(()=>{
+          onClose()
+         setTitle('')
+         setDescription('')
+         setImage([])
+         setLinkGithub('')
+         setLinkLive('')
+        },1500)
       }
-     })
-     .catch((error)=>{
+    }catch(error){
       if (error.response) {
         // The server responded with a status code outside the 2xx range
-        console.log('Error response:', error.response.data);
-        setMessage("error response:"+ error.response.data)
+        console.log('Error response:', error.response.data)
       } else if (error.request) {
         // The request was made but no response was received
         console.log('Error request:', error.request);
-        setMessage("Error Request:"+ error.request)
       } else {
         // Something happened in setting up the request that triggered an error
         console.log('Error message:', error.message);
-        setMessage("Error message"+error.message)
       }
-     })
+    }
+    
   }
   return (
     <>
@@ -103,12 +99,13 @@ const update= async(e)=>{
               </div>
               </div>
               <div className="space-y-1">
-              {message && <textarea rows="1" cols="40" className='text-black  rounded-md  bg-red-500'>{message}</textarea>}
-              {successMessage && <textarea rows="1" cols="40" value="Image uploaded successfully" className='text-black items-center justify-center flex  rounded-md  bg-green-500 text-center text-blue-800'></textarea>}
+              {error && <textarea rows="1" cols="40" className='text-black  rounded-md  bg-red-500'>{error.data}</textarea>}
+              {data && <textarea rows="1" cols="40" value="Image uploaded successfully" className='text-black items-center justify-center flex  rounded-md  bg-green-500 text-center text-blue-800'></textarea>}
               <button type="submit" className="px-4 bg-green-700 w-full rounded-md">
-                {message && <h3 className='text-red-700'>try again</h3>}
-                {!message &&successMessage==="" && <h3>Update</h3>}
-                {successMessage && <h3>Updated</h3>}
+                {error&& isError && <h3 className='text-red-700'>try again</h3>}
+                {!isError &&data===undefined && <h3>Update</h3>}
+                {data && <h3>Updated</h3>}
+                {isLoading && <Loading/>}
               </button>
               </div>
               </form>

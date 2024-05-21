@@ -1,9 +1,10 @@
 import React,{useState} from 'react'
 import Dialog from "../../../utils/Dialog"
 import api from "../../../utils/Helper"
+import { useUpdateTestimonialsMutation } from '../../../redux_tool.js/service/dataApi/apiDataService'
 const UpdateTestimonials=({item})=> {
-  const [message,setMessage]=useState('')
-  const [successMessage, setSuccessMessage]=useState("")
+  const [updateTestimonial,{data,isError,error,isLoading}]=useUpdateTestimonialsMutation()
+ 
   const [open,setOpen]=useState(false)
   
   const [imageTes,setImageTes]=useState(null)
@@ -22,50 +23,39 @@ const UpdateTestimonials=({item})=> {
   const uploadImage= async(e)=>{
     e.preventDefault()
     if(!imageTes){
-      setMessage("please select a file to upload")
+      alert("please select a file to upload")
       return
     }
+    
       const formData=new FormData()
       formData.append('file',imageTes)
       formData.append('name',name)
       formData.append('title',title)
       formData.append("testimonials", testimonials)
 
-      const URI=`/me/testimonials/${item._id}`
-     
-     api.put(URI,formData,{
-      headers:{
-        "Content-Type":"multipart/form-data"
-      },
-     })
-     .then((response)=>{
-      if(response){
-        setSuccessMessage("Uploaded")
+      try{
+        const response = await updateTestimonial(formData)
+        if(response.data){
           setTimeout(()=>{
             onClose()
             setImageTes(null)
-            setSuccessMessage('')
             setName("")
             setTitle("")
             setTestimonials("")
           },1500)
+        }
+      }catch(error){
+        if (error.response) {
+          // The server responded with a status code outside the 2xx range
+          console.log('Error response:', error.response);
+        } else if (error.request) {
+          // The request was made but no response was received
+          console.log('Error request:', error.request);
+        } else {
+          // Something happened in setting up the request that triggered an error
+          console.log('Error message:', error.message);
+        }
       }
-     })
-     .catch((error)=>{
-      if (error.response) {
-        // The server responded with a status code outside the 2xx range
-        console.log('Error response:', error.response);
-        setMessage("error response:"+ error.response)
-      } else if (error.request) {
-        // The request was made but no response was received
-        console.log('Error request:', error.request);
-        setMessage("Error Request:"+ error.request)
-      } else {
-        // Something happened in setting up the request that triggered an error
-        console.log('Error message:', error.message);
-        setMessage("Error message"+error.message)
-      }
-     })
   }
   return (
     <>
@@ -90,12 +80,12 @@ const UpdateTestimonials=({item})=> {
               </div>
               </div>
               <div className="space-y-1">
-              {message && <textarea rows="1" cols="40" className='text-black  rounded-md  bg-red-500'>{message}</textarea>}
-              {successMessage && <textarea rows="1" cols="40" value="Image uploaded successfully" className='text-black items-center justify-center flex  rounded-md  bg-green-500 text-center text-blue-800'></textarea>}
+              {isError && <textarea rows="1" cols="40" className='text-black  rounded-md  bg-red-500'>{error.message}</textarea>}
+              {data && <textarea rows="1" cols="40" value="Image uploaded successfully" className='text-black items-center justify-center flex  rounded-md  bg-green-500 text-center text-blue-800'></textarea>}
               <button type="submit" className="px-4 bg-green-700 w-full rounded-md">
-                {message && <h3 className='text-red-700'>try again</h3>}
-                {!message &&successMessage==="" && <h3>Update</h3>}
-                {successMessage && <h3>Updated</h3>}
+                {error&&isError && <h3 className='text-red-700'>try again</h3>}
+                {!isError &&data===undefined && <h3>Update</h3>}
+                {data && <h3>Updated</h3>}
               </button>
           
               </div>

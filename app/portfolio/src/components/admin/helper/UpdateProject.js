@@ -30,7 +30,9 @@ formData.append("linkGithub", linkGithub)
 const update= async(e)=>{
     e.preventDefault()
     try{
-      const response = await updateProject(formData)
+      const response = await updateProject({
+        data:formData, 
+        id:item._id})
       if(response.data){
         console.log(response)
         setTimeout(()=>{

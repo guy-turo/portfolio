@@ -35,7 +35,7 @@ const UpdateTestimonials=({item})=> {
       formData.append("testimonials", testimonials)
 
       try{
-        const response = await updateTestimonial(formData)
+        const response = await updateTestimonial({id:item._id,data:formData})
         if(response.data){
           setTimeout(()=>{
             onClose()

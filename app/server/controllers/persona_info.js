@@ -3,7 +3,7 @@ const cloudinary = require('cloudinary').v2
 const StatusCodes = require('http-status-codes')
 const { getCloudinaryImagePath } = require('../utility/helper')
 const emailjs = require('@emailjs/nodejs');
-const crypto = require('crypto');
+
 require('dotenv').config()
 
 const { ProjectModel } = require("../models/projectModel")
@@ -190,14 +190,17 @@ const createProject = async(req, res) => {
     }
 }
 const updateProject = async(req, res) => {
-    console.log("hello")
+    
     try {
         const { id: id } = req.params
+        console.log(id)
+        console.log(req.body)
         const data = await ProjectModel.findById(id)
 
         if (!data) {
             return res.status(404).json({ message: "Item not fount" })
         }
+       
         let newImage = []
         for (let i = 0; i < data.pictures.length; i++) {
             let newImageId = getCloudinaryImagePath(data.pictures[i])
@@ -207,6 +210,7 @@ const updateProject = async(req, res) => {
                 console.log("all images has been updated successfully")
             }
         }
+       
         const resImage = req.files
         resImage.forEach(image => newImage.push(image.path))
 
@@ -248,9 +252,12 @@ const deleteProject = async(req, res) => {
 }
 
 const fetchProject = async(req, res) => {
+    console.log('project checked')
     try {
         const data = await ProjectModel.find()
-        if (!data) return res.status(404).json({ message: "No Data Found" })
+        
+        if (data===null) return res.status(404).json({ message: "No Data Found" })
+        console.log(data)
         res.status(200).json(data)
     } catch (err) {
         res.status(500).json(err.message)

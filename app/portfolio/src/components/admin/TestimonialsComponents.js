@@ -42,7 +42,7 @@ const TestimonialsComponent=()=>{
       formData.append('title',titleT)
       formData.append('testimonials',testimonialsT)
 
-      const response= await addTestimonials(formData)
+      const response= await addTestimonials({data:formData})
       if(response.data){
         setTimeout(()=>{
           setImageTestimonials()

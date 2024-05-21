@@ -3,7 +3,7 @@ import ViewDetailPortfolio from './helper/ViewDetailPortfolio'
 import { useGetProjectQuery } from '../../../redux_tool.js/service/dataApi/apiDataService'
 import PortfolioSkeleton from './PortfolioSkeleton'
 const  Portfolio=()=> {
-  const {portfolioData , isLoading, isError, error}= useGetProjectQuery()
+  const {data:portfolioData , isLoading, isError, error}= useGetProjectQuery()
   if(isLoading){
     return <><PortfolioSkeleton/></>
   }

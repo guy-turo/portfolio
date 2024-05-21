@@ -42,7 +42,7 @@ const handleAddProject=async(e)=>{
     formData.append("description",description)
     formData.append("linkGithub", linkGithub)
     formData.append("linkLive",linkLive)
-    const response= await addProject(formData)
+    const response= await addProject({data:formData})
     if(response){
       setTimeout(()=>{
         setTitle("")

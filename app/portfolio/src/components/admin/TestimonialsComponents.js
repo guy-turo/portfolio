@@ -7,6 +7,7 @@ import { LuImagePlus } from "react-icons/lu";
 import { useGetTestimonialQuery,useAddTestimonialsMutation,useDeleteTestimonialsMutation } from '../../redux_tool.js/service/dataApi/apiDataService';
 import Loading from '../helper/loadingComponent/Loading';
 import CustomAlert from '../helper/CustomAlert';
+import TestimonialSkeleton from '../helper/skeleton/TestimoniaSkeleton';
 
 const TestimonialsComponent=()=>{
   const [moreFunction, setMoreFunction]=useState(true)
@@ -64,6 +65,9 @@ const TestimonialsComponent=()=>{
       console.error(error.message)
     }
   }
+  if(isLoading){
+    return <><TestimonialSkeleton/></>
+  }
   return <div className="flex space-y-2 flex-col container shadow-2xl border border-solid border-gray-400 mt-4 p-2 rounded-md">
   <div className='flex justify-between'>
   <h1 className='text-gray-400'>Testimonials</h1>
@@ -100,10 +104,10 @@ const TestimonialsComponent=()=>{
       </div>
           <div className="space-y-1">
           {error&&isError && <textarea rows="1" cols="40" className='text-black  rounded-md  bg-red-500'>{error.data}</textarea>}
-          {TestimonialData && <textarea rows="1" cols="40" value="Image uploaded successfully" className='text-black items-center justify-center flex  rounded-md  bg-green-500 text-center text-blue-800'></textarea>}
+          {addData && <textarea rows="1" cols="40" value="Image uploaded successfully" className='items-center justify-center flex  rounded-md  bg-green-500 text-center text-blue-800'></textarea>}
           <button type="submit" className="px-4 bg-green-700 w-fit rounded-md">
             {addError!==undefined &&addIsError && <h3 className='text-red-700'>try again</h3>}
-            {!addIsError &&addData==="" && <h3>{addLoading?"save":"saving..."}</h3>}
+            {!addIsError &&addData===undefined && <h3>{addLoading?"saving...":"save"}</h3>}
             {addData && <h3>saved</h3>}
             </button>
       
@@ -112,9 +116,9 @@ const TestimonialsComponent=()=>{
   </div>
    
     <button className='w-fit' onClick={()=>setMoreFunction(!moreFunction)}>{moreFunction?<FaRegCircleLeft className='size-5 text-blue-500'/>:<FaRegCircleRight  className='size-5 text-blue-500'/>} </button>
-    {TestimonialData.length!==0 && <div className=" rounded-md w-full h-full bg-transparent border border-solid border-black shadow-md">
+    {TestimonialData?.length!==0 && <div className=" rounded-md w-full h-full bg-transparent border border-solid border-black shadow-md">
     <ul className=" grid grid-cols-1 place-items-center justify-center  w-full h-fit mt-1 mb-1  sm:grid-cols-1 md:grid-cols-2 px-1     overflow-y-auto ">
-      {TestimonialData.map(
+      {TestimonialData?.map(
         (item,index)=>(
         <li key={index} className=' shadow-2xl border mb-1 mt-1 border-solid border-gray-500  space-y-1 sm:space-y-0 sm:space-x-1 rounded-md w-60 h-60 items-center flex flex-col justify-center'>
                 <img src={item.pictures} alt={item.title} className="w-16 h-16  shadow-md rounded-md pb-1 border border-solid border-gray-500"/>

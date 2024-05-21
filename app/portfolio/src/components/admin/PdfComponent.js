@@ -104,7 +104,7 @@ if(response){
     </button>}
     {data!==undefined &&  <button onClick={(e)=>handleUpdatePdf(e,data?._id)} className="px-4 w-fit bg-green-700 rounded-md">
     {updateError!==undefined&& updateError && <h3 className='text-red-400'>try again Update</h3>}
-    {!updateIsError &&updateData===undefined && <h3>{updateLoading?"Update pdf":"updating pdf"}</h3>}
+    {!updateIsError &&updateData===undefined && <h3>{updateLoading?"Updating... pdf":"update pdf"}</h3>}
     {updateData && <h3>updated pdf</h3>}
 
     </button>}

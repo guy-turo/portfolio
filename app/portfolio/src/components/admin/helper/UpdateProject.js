@@ -72,8 +72,8 @@ const update= async(e)=>{
                 <div className="w-full flex items-center  cursor-pointer p-2 bg-slate-500  rounded-md border border-solid border-blue-700">
                 {image.length===0 &&
                   <ul className="flex">
-                    {item.pictures.map((data,index)=><li key={index}>
-                    <img src={data} alt="" className='size-20 rounded-md object-cover'/>
+                    {item.pictures.map((pic,index)=><li key={index}>
+                    <img src={pic} alt="" className='size-20 rounded-md object-cover'/>
                     </li>)}
                   </ul>
                 }
@@ -103,7 +103,7 @@ const update= async(e)=>{
               {data && <textarea rows="1" cols="40" value="Image uploaded successfully" className='text-black items-center justify-center flex  rounded-md  bg-green-500 text-center text-blue-800'></textarea>}
               <button type="submit" className="px-4 bg-green-700 w-full rounded-md">
                 {error&& isError && <h3 className='text-red-700'>try again</h3>}
-                {!isError &&data===undefined && <h3>Update</h3>}
+                {!isLoading && <h3>Update</h3>}
                 {data && <h3>Updated</h3>}
                 {isLoading && <Loading/>}
               </button>

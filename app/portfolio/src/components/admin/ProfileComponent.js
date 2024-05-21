@@ -174,7 +174,7 @@ if(isLoading){
       <p className='flex font-mono  w-full text-gray-400'>You only need 2 pictures</p>
       {data&&<div className="space-y-1">
       {isError && <textarea rows="1" cols="40" className='text-black  rounded-md  bg-red-500'>{error}</textarea>}
-      {data && isError===undefined && <textarea rows="1" cols="40" value={data?.message} className='text-black items-center justify-center flex  rounded-md  bg-green-500 text-center text-blue-800'></textarea>}
+      {data && isError===undefined && <textarea rows="1" cols="40" value={data?.message} className='text-black items-center justify-center flex  rounded-md  bg-green-500 text-center'></textarea>}
       {isErrorUpdateMe && errorUpdateMe && <CustomAlert message={errorUpdateMe.data} variant='error' dismissible/>}
       {updateMeData && isLoadingUpdateMe===false && <CustomAlert message="updated successfully" variant='success' dismissible/>}
  

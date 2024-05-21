@@ -40,7 +40,7 @@ if(isLoading){
     <div className="flex flex-col  container shadow-2xl border border-solid border-gray-400 mt-4 p-2 rounded-md">
    <div className="flex justify-between">
    <h1 className='text-gray-400'>Experiences</h1>
-   {experiencesData.length===0 && <button onClick={()=>setAddSe(!addSe)} className='border border-solid border-gray-400 rounded-md px-1 m-1'>Add Service</button>}
+   {experiencesData?.length===0 && <button onClick={()=>setAddSe(!addSe)} className='border border-solid border-gray-400 rounded-md px-1 m-1'>Add Service</button>}
    </div>
     <div className={addSe?"":"hidden"}>
     <form onSubmit={addService} className=' items-start space-y-2 flex flex-col'>
@@ -55,13 +55,12 @@ if(isLoading){
       </div>
       </div>
       <button type="submit" className="px-4 bg-green-700 w-fit rounded-md">
-            {addExperienceIsError &&addExperienceError && <h3 className='text-red-700'>try again</h3>}
-            {!addExperienceIsError&&addExperienceError &&addExperience===undefined && <h3>{addExperienceLoading?"save":"saving"}</h3>}
-            {addExperienceData && <h3>saved</h3>}
-            
-            </button>
-            {addExperienceError && addExperienceIsError && <CustomAlert message={addExperienceError.data} variant='error' dismissible/>}
-            {addExperienceData && addExperienceLoading===false && <CustomAlert message="Added successfully" variant='success' dismissible/>}
+      {addExperienceIsError &&addExperienceError && <h3 className='text-red-700'>try again</h3>}
+      {!addExperienceIsError&&addExperienceError &&addExperience===undefined && <h3>{addExperienceLoading?"save":"saving"}</h3>}
+      {addExperienceData && <h3>saved</h3>}
+      </button>
+      {addExperienceError && addExperienceIsError && <CustomAlert message={addExperienceError.data} variant='error' dismissible/>}
+      {addExperienceData && addExperienceLoading===false && <CustomAlert message="Added successfully" variant='success' dismissible/>}
  
     </form>
     </div>

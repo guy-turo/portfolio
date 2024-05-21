@@ -53,10 +53,10 @@ const update= async(e)=>{
 
               <div className="space-y-1">
               {isError && <textarea rows="1" cols="40" className='text-black  rounded-md  bg-red-500'>{error.data}</textarea>}
-              {error && <textarea rows="1" cols="40" value="Image uploaded successfully" className='text-black items-center justify-center flex  rounded-md  bg-green-500 text-center text-blue-800'></textarea>}
+              {data && <textarea rows="1" cols="40" value="Image uploaded successfully" className='text-black items-center justify-center flex  rounded-md  bg-green-500 text-center text-blue-800'></textarea>}
               <button type="submit" className="px-4 bg-green-700 w-full rounded-md">
                 {isError && <h3 className='text-red-700'>try again</h3>}
-                {!isError &&data===undefined&& <h3>Update</h3>}
+                {!isLoading&& <h3>Update</h3>}
                 {data && <h3>Updated</h3>}
                 {isLoading && <Loading/>}
               </button>

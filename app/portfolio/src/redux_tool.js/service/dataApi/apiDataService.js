@@ -70,6 +70,7 @@ export const apiData = createApi({
             query: ({ data }) => ({
                 url: "/me/projects",
                 method: "post",
+                headers: { 'Content-Type': 'multipart/form-data' },
                 data: data
             })
         }),
@@ -83,6 +84,7 @@ export const apiData = createApi({
             query: ({ data, id }) => ({
                 url: `/me/projects/${id}`,
                 method: 'put',
+                headers: { 'Content-Type': 'multipart/form-data' },
                 data: data
             })
         }),
@@ -150,6 +152,7 @@ export const apiData = createApi({
             query: ({ data }) => ({
                 url: '/me/testimonials',
                 method: 'post',
+                headers: { 'Content-Type': 'multipart/form-data' },
                 data: data
             })
         }),
@@ -163,6 +166,7 @@ export const apiData = createApi({
             query: ({ id, data }) => ({
                 url: `/me/testimonials/${id}`,
                 method: "put",
+                headers: { 'Content-Type': 'multipart/form-data' },
                 data: data,
             })
         }),
@@ -174,6 +178,7 @@ export const apiData = createApi({
             query: ({ data }) => ({
                 url: '/pdf/upload',
                 data: data,
+                headers: { 'Content-Type': 'multipart/form-data' },
                 method: 'post'
             })
         }),
@@ -187,6 +192,7 @@ export const apiData = createApi({
             query: ({ id, data }) => ({
                 url: `/pdf/${id}`,
                 method: 'put',
+                headers: { 'Content-Type': 'multipart/form-data' },
                 data: data,
             })
         }),

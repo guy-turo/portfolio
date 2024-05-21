@@ -11,9 +11,6 @@ import CustomAlert from '../helper/CustomAlert';
 import Loading from '../helper/loadingComponent/Loading';
 
 function ProjectComponent() {
-  const [successMessage,setSuccessMessage]=useState('')
-  const [message,setMessage]=useState('')
-
   const [moreFunction, setMoreFunction]=useState(true)
  
   const [imageProjects, setImageProjects]=useState([])
@@ -37,7 +34,8 @@ const handleAddProject=async(e)=>{
   try{
     const formData= new FormData()
     if(!imageProjects){
-      setMessage('Invalid image')
+      alert("please select image")
+     return
     }
     imageProjects.forEach((image)=>formData.append("file", image))
     formData.append("title",title)
@@ -114,7 +112,7 @@ if(isLoading){
           </div>
           <button type="submit" className="px-4 bg-green-700 w-fit rounded-md">
             {addIsError && <h3 className='text-red-700'>try again</h3>}
-            {!addIsError &&addData===undefined && <h3>{addLoading?"save":"saving..."}</h3>}
+            {!addIsError &&addData===undefined && <h3>{addLoading?"saving...":"save"}</h3>}
             {addData && <h3>saved</h3>}
           </button>
     </form>

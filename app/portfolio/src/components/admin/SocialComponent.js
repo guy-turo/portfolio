@@ -76,7 +76,7 @@ if(isLoading){
           {addData && addIsError===false && <CustomAlert message="Image uploaded successfully" variant='success' dismissible/>}
           <button type="submit" className="px-4 bg-green-700 w-fit rounded-md">
             {addError!==undefined&& addIsError && <h3 className='text-red-700'>try again</h3>}
-            {!addIsError &&addData==="" && <h3>{addLoading?'save':'saving...'}</h3>}
+            {!addIsError &&addData===undefined && <h3>{addLoading?'saving':'save'}</h3>}
             {addData && <h3>saved</h3>}
             </button>
       

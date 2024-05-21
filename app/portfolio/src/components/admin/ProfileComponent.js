@@ -2,13 +2,14 @@ import React,{useState} from 'react'
 import { LuImagePlus } from "react-icons/lu"
 import { useGetMeQuery,useAddMeMutation ,useUpdateMeMutation,} from '../../redux_tool.js/service/dataApi/apiDataService'
 import ProfileSkeleton from '../helper/skeleton/ProfileSkeleton'
+import CustomAlert from '../helper/CustomAlert'
 
 function ProfileComponent({meData}) {
   
   const [meImage,setMeImage]=useState([])
   const {data,isError,isLoading, error}= useGetMeQuery()
   const [addMe,{data:addMeData,isLoading:isLoadingAddMe,isError:isErrorAddMe,error:errorAdd}]=useAddMeMutation() 
-  const [updateMe,{data:updateMeData,isLoading:isLoadingUpdateMe,isError:isErrorUpdateMe}]=useUpdateMeMutation()
+  const [updateMe,{data:updateMeData,isLoading:isLoadingUpdateMe,isError:isErrorUpdateMe , error:errorUpdateMe}]=useUpdateMeMutation()
 
   const handleImage=(event)=>{
     const files=Array.from(event.target.files)
@@ -156,6 +157,7 @@ if(isLoading){
                 </li>)}
               </ul>
            }
+           {error && isError && <CustomAlert message={error.data} variant='error' dismissible/>}
             {data&& 
               <ul className='flex'>
                 {meImage.map((item, index)=><li key={index}>
@@ -173,6 +175,9 @@ if(isLoading){
       {data&&<div className="space-y-1">
       {isError && <textarea rows="1" cols="40" className='text-black  rounded-md  bg-red-500'>{error}</textarea>}
       {data && isError===undefined && <textarea rows="1" cols="40" value={data?.message} className='text-black items-center justify-center flex  rounded-md  bg-green-500 text-center text-blue-800'></textarea>}
+      {isErrorUpdateMe && errorUpdateMe && <CustomAlert message={errorUpdateMe.data} variant='error' dismissible/>}
+      {updateMeData && isLoadingUpdateMe===false && <CustomAlert message="updated successfully" variant='success' dismissible/>}
+ 
       <button disabled={isLoadingUpdateMe} onClick={()=>{updateProfile(data._id,)}
         } className="px-4 bg-green-700 w-fit rounded-md hover:text-blue-400">
             {isErrorUpdateMe&& <h3 className='text-red-700'>try again to Update </h3>}
@@ -183,6 +188,9 @@ if(isLoading){
           {!data&&<div className="space-y-1">
         {isErrorAddMe && <textarea rows="1" cols="40" className='text-black  rounded-md  bg-red-500'>{errorAdd}</textarea>}
         {addMeData!==undefined && <textarea rows="1" cols="40" value="Image uploaded successfully" className='text-black items-center justify-center flex  rounded-md  bg-green-500 text-center text-blue-800'></textarea>}
+        {errorAdd && isErrorAddMe && <CustomAlert message={errorAdd.data} variant='error' dismissible/>}
+        {addMeData && isLoadingAddMe===false && <CustomAlert message="Added successfully" variant='success' dismissible/>}
+ 
         <button disabled={isLoadingAddMe} onSubmit={addProfile()} className="px-4 bg-green-700 w-fit rounded-md">
           {isErrorAddMe && <h3 className='text-red-700'>try again to create</h3>}
           { <h3>{isLoadingAddMe?"saving...":"save"}</h3>}

@@ -1,10 +1,10 @@
 import React,{useState} from 'react'
-import api from "../../utils/Helper"
 import { FaRegCircleRight } from "react-icons/fa6";
 import { FaRegCircleLeft } from "react-icons/fa6";
 import { useGetExperienceQuery ,useAddExperienceMutation, } from '../../redux_tool.js/service/dataApi/apiDataService';
 import UpdateExperience from './helper/UpdateExperience';
 import ExperienceSkeleton from '../portfoliocomponent/experience/ExperienceSkeleton';
+import CustomAlert from '../helper/CustomAlert';
 function ExperienceComponent() {
   const [moreFunction, setMoreFunction]=useState(true)
   const [addSe, setAddSe]=useState(false)
@@ -36,9 +36,6 @@ const addService=async (e)=>{
 if(isLoading){
   return <><ExperienceSkeleton/></>
 }
-if(isError){
-  console.log(error)
-}
   return (
     <div className="flex flex-col  container shadow-2xl border border-solid border-gray-400 mt-4 p-2 rounded-md">
    <div className="flex justify-between">
@@ -61,7 +58,11 @@ if(isError){
             {addExperienceIsError &&addExperienceError && <h3 className='text-red-700'>try again</h3>}
             {!addExperienceIsError&&addExperienceError &&addExperience===undefined && <h3>{addExperienceLoading?"save":"saving"}</h3>}
             {addExperienceData && <h3>saved</h3>}
+            
             </button>
+            {addExperienceError && addExperienceIsError && <CustomAlert message={addExperienceError.data} variant='error' dismissible/>}
+            {addExperienceData && addExperienceLoading===false && <CustomAlert message="Added successfully" variant='success' dismissible/>}
+ 
     </form>
     </div>
     <button className='w-fit' onClick={()=>setMoreFunction(!moreFunction)}>{moreFunction?<FaRegCircleLeft className='size-5 text-blue-500'/>:<FaRegCircleRight  className='size-5 text-blue-500'/>} </button>
@@ -114,6 +115,8 @@ if(isError){
          )}
         </ul>
    </div>}
+   {isError && error && <CustomAlert message={error.data} variant='error' dismissible/>}
+    
   </div>
   )
 }

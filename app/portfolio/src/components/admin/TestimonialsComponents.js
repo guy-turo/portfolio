@@ -4,43 +4,33 @@ import UpdateTestimonials from './helper/UpdateTestimonials'
 import { FaRegCircleRight } from "react-icons/fa6";
 import { FaRegCircleLeft } from "react-icons/fa6";
 import { LuImagePlus } from "react-icons/lu";
+import { useGetTestimonialQuery,useAddTestimonialsMutation,useDeleteTestimonialsMutation } from '../../redux_tool.js/service/dataApi/apiDataService';
+import Loading from '../helper/loadingComponent/Loading';
+import CustomAlert from '../helper/CustomAlert';
+
 const TestimonialsComponent=()=>{
   const [moreFunction, setMoreFunction]=useState(true)
   const [addTest, setAddTest]=useState(false)
-  const [TestimonialData,setTestimonialData]=useState([])
-
-  const [message,setMessage]=useState('')
-  const [successMessage, setSuccessMessage]=useState("")
 
   const [imageTestimonials,setImageTestimonials]=useState(null)
   const [nameT,setNameT]=useState('')
   const [titleT,setTitleT]=useState('')
   const [testimonialsT,setTestimonialsT]=useState('')
 
+  const {data:TestimonialData, isError,error,isLoading}=useGetTestimonialQuery()
+  const [addTestimonials,{data:addData,isLoading:addLoading, isError:addIsError, error:addError}]=useAddTestimonialsMutation()
+  const [deleteTestimonial,{data:deleteData,isLoading:deleteLoading, isError:deleteIsError, error:deleteError}]=useDeleteTestimonialsMutation()
+
   const handleTestimonialFileName=(event)=>{
     const files=event.target.files[0]
     setImageTestimonials(files)
   }
-  const [process,setProcess]=useState(true)
-  const fetchTestimonialData=()=>{
-    const URI="/me/testimonials"
-    api.get(URI)
-    .then((res)=>{
-      setTestimonialData(res.data)
-    })
-    .catch(error=>
-      console.log(error.message)
-      )
-  }
-  useEffect(()=>{
-    fetchTestimonialData()
-  },[])
-  const addTestimonial=(e)=>{
+ 
+  const addTestimonial=async(e)=>{
     e.preventDefault()
-    setProcess(!process)
-    console.log('proceed')
+   try{
     if(imageTestimonials===null){
-      setMessage("please select a file to upload")
+      alert("please select a file to upload")
       return
     }else{
       const formData=new FormData()
@@ -50,35 +40,29 @@ const TestimonialsComponent=()=>{
       formData.append('name', nameT)
       formData.append('title',titleT)
       formData.append('testimonials',testimonialsT)
-    const URI="/me/testimonials"
-      api.post(URI,formData)
-      .then((response)=>{
-       
-          setProcess(!process)
-          setMessage('testimonial has been created')
-          setTimeout(()=>{
-            setImageTestimonials()
-            setSuccessMessage('')
-            setNameT("")
-            setTitleT("")
-            setTestimonialsT("")
-          },1500)
-        
-      })
-      .catch(error=>console.log(error))
-    }
-     
+
+      const response= await addTestimonials(formData)
+      if(response.data){
+        setTimeout(()=>{
+          setImageTestimonials()
+          setNameT("")
+          setTitleT("")
+          setTestimonialsT("")
+        },1500)
+      }}
+   }catch(error){
+    console.error(error.message)
+   }
   }
-  const deleteTestimonial=(id)=>{
-    
-    const URI=`/me/testimonials/${id}`
-    api.delete(URI)
-    .then((response)=>{
-      if(response.status===200){
-        setMessage('Deleted')
+  const handleDeleteTestimonial=async(id)=>{
+    try{
+      const response = await deleteTestimonial(id)
+      if(response.data){
+        console.log(response)
       }
-    })
-    .catch((e)=>setMessage(e.message))
+    }catch(error){
+      console.error(error.message)
+    }
   }
   return <div className="flex space-y-2 flex-col container shadow-2xl border border-solid border-gray-400 mt-4 p-2 rounded-md">
   <div className='flex justify-between'>
@@ -115,12 +99,12 @@ const TestimonialsComponent=()=>{
         
       </div>
           <div className="space-y-1">
-          {message && <textarea rows="1" cols="40" className='text-black  rounded-md  bg-red-500'>{message}</textarea>}
-          {successMessage && <textarea rows="1" cols="40" value="Image uploaded successfully" className='text-black items-center justify-center flex  rounded-md  bg-green-500 text-center text-blue-800'></textarea>}
+          {error&&isError && <textarea rows="1" cols="40" className='text-black  rounded-md  bg-red-500'>{error.data}</textarea>}
+          {TestimonialData && <textarea rows="1" cols="40" value="Image uploaded successfully" className='text-black items-center justify-center flex  rounded-md  bg-green-500 text-center text-blue-800'></textarea>}
           <button type="submit" className="px-4 bg-green-700 w-fit rounded-md">
-            {message!=='' && <h3 className='text-red-700'>try again</h3>}
-            {!message &&successMessage==="" && <h3>{process?"save":"saving..."}</h3>}
-            {successMessage && <h3>saved</h3>}
+            {addError!==undefined &&addIsError && <h3 className='text-red-700'>try again</h3>}
+            {!addIsError &&addData==="" && <h3>{addLoading?"save":"saving..."}</h3>}
+            {addData && <h3>saved</h3>}
             </button>
       
           </div>
@@ -133,23 +117,24 @@ const TestimonialsComponent=()=>{
       {TestimonialData.map(
         (item,index)=>(
         <li key={index} className=' shadow-2xl border mb-1 mt-1 border-solid border-gray-500  space-y-1 sm:space-y-0 sm:space-x-1 rounded-md w-60 h-60 items-center flex flex-col justify-center'>
-           
                 <img src={item.pictures} alt={item.title} className="w-16 h-16  shadow-md rounded-md pb-1 border border-solid border-gray-500"/>
-              
-            
           <h2 className='underline px-1 rounded-sm text-blue-950'>{item.name}</h2>
           <h2 className='underline font-normal px-1 rounded-sm'>{item.title}</h2>
           <p className='border-solid px-1 text-wrap items-center flex justify-center h-fit mx-2 font-normal border-gray-500  rounded-sm'>{item.testimonials}</p>
-          
-          
           <div className={`space-x-2 ${moreFunction?"hidden":"block"}`}>
             <UpdateTestimonials  item={item}/>
-            <button onClick={()=>deleteTestimonial(item._id)} className='border border-solid bg-red-800 border-gray-400 px-1 rounded-md'>Delete</button>
+            <button onClick={()=>handleDeleteTestimonial(item._id)} className='border border-solid bg-red-800 border-gray-400 px-1 rounded-md'>Delete {deleteLoading && <Loading/>}</button>
           </div>
         </li>)
         )}
     </ul>
    </div>}
+   {error && isError && <CustomAlert message={error.data} variant='error' dismissible/>}
+    {addError && addIsError && <CustomAlert message={addError.data} variant='error' dismissible/>}
+    {addError && addIsError===false && <CustomAlert message="add successfully" variant='success' dismissible/>}
+    {deleteError && deleteIsError && <CustomAlert message={addError.data} variant='error' dismissible/>}
+    {deleteData && deleteIsError===false && <CustomAlert message="delete successfully" variant='success' dismissible/>}
+ 
   </div>
 }
 

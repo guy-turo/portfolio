@@ -5,6 +5,10 @@ import { FaRegCircleRight } from "react-icons/fa6";
 import { FaRegCircleLeft } from "react-icons/fa6";
 import UpdateProject from "./helper/UpdateProject"
 import { MdDelete } from "react-icons/md";
+import { useGetProjectQuery,useDeleteProjectMutation, useAddProjectMutation,  } from '../../redux_tool.js/service/dataApi/apiDataService';
+import ProjectSkeleton from '../helper/skeleton/ProjectSkeleton';
+import CustomAlert from '../helper/CustomAlert';
+import Loading from '../helper/loadingComponent/Loading';
 
 function ProjectComponent() {
   const [successMessage,setSuccessMessage]=useState('')
@@ -13,11 +17,12 @@ function ProjectComponent() {
   const [moreFunction, setMoreFunction]=useState(true)
  
   const [imageProjects, setImageProjects]=useState([])
-  const [projectsData,setProjectsData]=useState([])
-  
+
   const [addSe, setAddSe]=useState(false)
 
-
+const {data:projectsData, isLoading, isError, error}=useGetProjectQuery()
+const [deleteProject,{data:deleteData, isLoading:deleteLoading, isError:deleteIsError, error:deleteError}]= useDeleteProjectMutation()
+const [addProject,{data:addData, isLoading:addLoading,isError:addIsError,error:addError}]=useAddProjectMutation() 
 const handleFileName=(event)=>{
  const files = Array.from(event.target.files)
  setImageProjects(files)
@@ -27,61 +32,47 @@ const handleFileName=(event)=>{
   const [linkGithub,setLinkGithub]=useState('')
   const [linkLive,setLinkLive]=useState('')
   const [description,setDescription]=useState('')
-  const [process,setProcess]=useState(true)
-const addProject=(e)=>{
+const handleAddProject=async(e)=>{
   e.preventDefault()
-  setProcess(!process)
-  const formData= new FormData()
-  if(!imageProjects){
-    
-    setMessage('Invalid image')
+  try{
+    const formData= new FormData()
+    if(!imageProjects){
+      setMessage('Invalid image')
+    }
+    imageProjects.forEach((image)=>formData.append("file", image))
+    formData.append("title",title)
+    formData.append("description",description)
+    formData.append("linkGithub", linkGithub)
+    formData.append("linkLive",linkLive)
+    const response= await addProject(formData)
+    if(response){
+      setTimeout(()=>{
+        setTitle("")
+        setDescription("")
+        setLinkGithub('')
+        setLinkLive("")
+        setImageProjects([])
+       },1500)
+    }
+  }catch(error){
+    console.error(error.message)
   }
-  imageProjects.forEach((image)=>formData.append("file", image))
-  formData.append("title",title)
-  formData.append("description",description)
-  formData.append("linkGithub", linkGithub)
-  formData.append("linkLive",linkLive)
-  const URI="/me/projects"
-    api.post(URI, formData)
-    .then((response)=>{
-      setProcess(!process)
-     setSuccessMessage(response.data)
-     setTimeout(()=>{
-      setTitle("")
-      setDescription("")
-      setLinkGithub('')
-      setLinkLive("")
-      setImageProjects([])
-     },1500)
-    })
-    .catch(error=>setMessage(error))
-}
-const fetchProjectData=()=>{
-  const URI="/me/projects"
-  api.get(URI)
-  .then((res)=>{
-    setProjectsData(res.data)
-  })
-  .catch(error=>
-    console.log(error.message)
-    )
-}
-useEffect(()=>{
-  fetchProjectData()
-},[])
-const deleteProject=(id)=>{
-  const URI=`/me/projects/${id}`
-  api.delete(URI)
-    .then((res)=>{
-      if(res.status===200){
-        console.log("deleted")
-      }
-    })
-    .catch((error)=>{
-      console.error(error.message)
-    })
 }
 
+const handleDeleteProject=async(id)=>{
+  try{
+    const response = await deleteProject(id)
+    if(response){
+      console.log(response)
+    }
+  }catch(error){
+    console.error(error)
+  }
+ 
+}
+if(isLoading){
+  return <><ProjectSkeleton/></>
+}
   return (
     <div className="flex space-y-2 flex-col  container shadow-2xl border border-solid border-gray-400 mt-4 p-2 rounded-md">
     <div className="flex justify-between">
@@ -90,7 +81,7 @@ const deleteProject=(id)=>{
    </div>
    <div  className={addSe?"":"hidden"}>
     
-   <form onSubmit={addProject}  className=' items-start space-y-2 flex flex-col'>
+   <form onSubmit={handleAddProject}  className=' items-start space-y-2 flex flex-col'>
       <div className=' flex flex-col '>
       <div className='grid grid-cols-2 sm:grid-cols-4 space-x-2 sm:space-y-1'>
       <label htmlFor="title">Title</label>
@@ -122,9 +113,9 @@ const deleteProject=(id)=>{
           <input type="file" required multiple id='images'  onChange={handleFileName} accept='image/*' hidden/>
           </div>
           <button type="submit" className="px-4 bg-green-700 w-fit rounded-md">
-            {message!=='' && <h3 className='text-red-700'>try again</h3>}
-            {!message &&successMessage==="" && <h3>{process?"save":"saving..."}</h3>}
-            {successMessage && <h3>saved</h3>}
+            {addIsError && <h3 className='text-red-700'>try again</h3>}
+            {!addIsError &&addData===undefined && <h3>{addLoading?"save":"saving..."}</h3>}
+            {addData && <h3>saved</h3>}
           </button>
     </form>
    </div>
@@ -137,10 +128,9 @@ const deleteProject=(id)=>{
               <li key={index} className='flex border  border-solid border-gray-500  rounded-md p-2 flex-col justify-center items-center'>
                  <div className={`space-x-2 ${moreFunction?"hidden":"block"} flex justify-between w-full`}>
                     <UpdateProject  item={item}/>
-                    <button onClick={()=>deleteProject(item._id)} className=' text-red-600 '><MdDelete className="size-5"/></button>
+                    <button onClick={()=>handleDeleteProject(item._id)} className=' text-red-600 '><MdDelete className="size-5"/> {deleteLoading &&<Loading/>}</button>
                   </div>
                 <img src={item.pictures[0]} alt='' className="w-16 h-16  shadow-md rounded-md pb-1 border border-solid border-gray-500"/>
-                
                 <h2 className="text-blue-950">{item.title}</h2>
                 <h3 className="font-normal">{item.description}</h3>
                 <div className="flex space-x-2">
@@ -153,6 +143,12 @@ const deleteProject=(id)=>{
           )}
         </ul>
       </div>}
+      {error && isError && <CustomAlert message={error.data} variant='error' dismissible/>}
+        {deleteError && deleteIsError && <CustomAlert message={deleteError.data} variant='error' dismissible/>}
+        {deleteData && deleteIsError===false && <CustomAlert message="Delete successfully" variant='success' dismissible/>}
+        {addError && addIsError && <CustomAlert message={addError.data} variant='error' dismissible/>}
+      {addData && addIsError===false && <CustomAlert message="Add successfully" variant='success' dismissible/>}
+ 
   </div>
   )
 }

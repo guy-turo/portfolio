@@ -2,13 +2,15 @@ import React,{useState,useEffect} from 'react'
 import api from "../../utils/Helper"
 import { FaRegCircleRight } from "react-icons/fa6";
 import { FaRegCircleLeft } from "react-icons/fa6";
-
+import { useGetServicesQuery ,useAddServiceMutation, } from '../../redux_tool.js/service/dataApi/apiDataService';
 
 import UpdateServices from './helper/UpdateServices'
+import ServicesSkeleton from '../helper/skeleton/ServiceSkeleton';
+import CustomAlert from '../helper/CustomAlert';
+import Loading from '../helper/loadingComponent/Loading';
 function ServicesComponent() {
-  const [successMessage,setSuccessMessage]=useState('')
-  const [message,setMessage]=useState('')
-
+  const {data:servicesData, isLoading, isError, error}= useGetServicesQuery()
+  const [addService, {data:addData, isLoading:addLoading, isError:addIsError, error:addError}]= useAddServiceMutation()
   const [moreFunction, setMoreFunction]=useState(true)
   const [addSe, setAddSe]=useState(false)
 
@@ -18,36 +20,26 @@ function ServicesComponent() {
   const [backendS,setBackendS]=useState('')
   const [otherS, setOtherS]=useState('')
 
-  const [servicesData,setServicesData]=useState([])
-  const [process,setProcess]=useState(true)
-const addService=(e)=>{
-
+const handleAddService=async(e)=>{
   e.preventDefault()
-  setProcess(!process)
-  const URI="/me/services"
-    api.post(URI,{
-      userExp:userExpS,
-      frontend:frontendS,
-     backend:backendS,
-     other:otherS
-    })
-    .then((response)=>{
-      setSuccessMessage(response.data)
-    })
-    .catch(error=>setMessage(error.message))
+try{
+  const response =await addService({
+    userExp:userExpS,
+    frontend:frontendS,
+   backend:backendS,
+   other:otherS
+  })
+  if(response){
+    console.log(response)
+  }
+}catch(error){
+  console.error(error.message)
+}
 }
 
-const fetchServices=()=>{
-  const URI=`/me/services`
-  api.get(URI)
-  .then((response)=>{
-    setServicesData(response.data)
-  })
-  .catch(error=>console.log(error.message))
+if(isLoading){
+  return <> <ServicesSkeleton/></>
 }
-useEffect(()=>{
-  fetchServices()
-},[])
   return (
     <div className="flex flex-col  container shadow-2xl border border-solid border-gray-400 mt-4 p-2 rounded-md">
    <div className="flex justify-between">
@@ -55,7 +47,7 @@ useEffect(()=>{
    {servicesData.length===0 && <button onClick={()=>setAddSe(!addSe)} className='border border-solid border-gray-400 rounded-md px-1 m-1'>Add Service</button>}
    </div>
     <div className={addSe?"":"hidden"}>
-    <form onSubmit={addService} className=' items-start space-y-2 flex flex-col'>
+    <form onSubmit={handleAddService} className=' items-start space-y-2 flex flex-col'>
       <div className=' flex flex-col  '>
       <div className='grid grid-cols-2 sm:grid-cols-4 space-x-2 sm:space-y-1'>
       <label htmlFor="ui/ux">UI/UX</label>
@@ -69,9 +61,10 @@ useEffect(()=>{
       </div>
       </div>
       <button type="submit" className="px-4 bg-green-700 w-fit rounded-md">
-            {message!=='' && <h3 className='text-red-700'>try again</h3>}
-            {!message &&successMessage==="" && <h3>{process?"save":"saving..."}</h3>}
-            {successMessage && <h3>saved</h3>}
+            {addError!==undefined&& addIsError && <h3 className='text-red-700'>try again</h3>}
+            {!addIsError &&addData===undefined && <h3>{isLoading?"save":"saving..."}</h3>}
+            {addData && <h3>saved</h3>}
+            {addLoading&& <Loading/>}
             </button>
     </form>
     </div>
@@ -137,6 +130,9 @@ useEffect(()=>{
          )}
         </ul>
    </div>}
+    {error && isError && <CustomAlert message={error.data} variant='error' dismissible/>}
+    {addError && addIsError && <CustomAlert message={addError.data} variant='error' dismissible/>}
+    {addError && addIsError===false && <CustomAlert message="add successfully" variant='success' dismissible/>}
   </div>
   )
 }

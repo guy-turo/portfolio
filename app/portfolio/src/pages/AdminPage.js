@@ -89,9 +89,9 @@ if(logoutIsError){
               <div className="w-full flex flex-col justify-between rounded-md h-full ">
               <div className="flex flex-col   rounded-tl-md rounded-bl-md w-12/12  p-1 items-center justify-items-center space-y-1">
               <div className="flex  flex-col items-center justify-center">
-                  <div className="w-20 border border-gray-800 border-solid shadow-2xl h-20 rounded-full  cursor-pointer">
+                  <div className="w-20 border  border-gray-800 border-solid shadow-2xl h-20 rounded-full  cursor-pointer">
                   { data && <img src={data.pictures[1]} alt="" className="w-20 h-20 rounded-full"/>}
-                  {data.loading=== true && <Skeleton width={20} height={20} borderRadius={full}/>}
+                  {isLoading=== true && <Skeleton width={20} height={20} borderRadius={full}/>}
                   </div>
                   <h2 className="fex font-bold">Admin</h2>
                 </div>

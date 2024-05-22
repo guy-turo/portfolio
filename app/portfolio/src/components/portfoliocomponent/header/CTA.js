@@ -12,8 +12,8 @@ const  CTA=()=>{
     }
   return (
     <div className="cta">
-      <a href={data?.pdfUrl} onClick={()=>setIsDownloading(!isDownloading)} target="_blank"  className={`btn ${isDownloading?"":"disabled"}`} rel="noreferrer"> {isDownloading ? 'Downloading... CV' : 'Download CV'}</a>
-      {data?.pdfUrl&& <div className='w-5 h-5 rounded-full bg-blue-950'></div>}
+      <a href={data[0]?.pdfUrl}  onClick={()=>setIsDownloading(!isDownloading)} target="_blank"  className={`btn ${isDownloading?"":"disabled"}  ${isDownloading?"cursor-none":"cursor-pointer"} `} rel="noreferrer"> {isDownloading ? 'Downloading... CV' : 'Download CV'}</a>
+      {data[0]?.pdfUrl&& <div className='w-5 h-5 rounded-full bg-blue-950'></div>}
       <a href="#contact" className='btn btn-primary'>Let's Talk</a>
     </div>
   )

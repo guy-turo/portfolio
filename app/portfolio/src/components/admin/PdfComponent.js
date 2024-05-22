@@ -1,6 +1,5 @@
 import React,{useState} from 'react'
 import { FaRegFilePdf } from "react-icons/fa";
-import api from "../../utils/Helper"
 import { MdDelete } from "react-icons/md";
 import { useGetPdfQuery,useAddPdfMutation,useDeletePdfMutation,useUpdatePdfMutation, } from '../../redux_tool.js/service/dataApi/apiDataService';
 import PdfSkeleton from '../helper/skeleton/PdfSkeleton';
@@ -49,7 +48,10 @@ if(response){
     try{
       const formData=new FormData()
       formData.append('file',pdfData)
-     const response =await updatePdf(formData)
+     const response =await updatePdf({
+      id:id,
+      data:formData
+    })
      if(response){
       setTimeout(()=>{
         setPdfData(null)
@@ -85,8 +87,8 @@ if(response){
         <div className="flex">
           <div className='flex cursor-pointer hover:bg-blue-900 flex-col items-end p-3 rounded-sm px-2 border border-solid border-blue-950 w-fit shadow-lg  font-normal'>
           <div  className="flex">
-           {data?.pdfUrl&&<FaRegFilePdf className="size-10 text-blue-950"/>}
-          <h2 className="font-normal text-gray-400">{data?.fileName}</h2>
+           {data[0]?.pdfUrl&&<FaRegFilePdf className="size-10 text-blue-950"/>}
+          <h2 className="font-normal text-gray-400">{data[0]?.fileName}</h2>
           </div>
         </div>
         <h2 className="rounded-sm px-2 items-center flex  w-fit shadow-lg bg-transparent font-normal">Select pdf</h2>
@@ -102,7 +104,7 @@ if(response){
     {addPdfError===undefined && addPdfData===undefined && <h3>{addPdfLoading?"upload pdf":"uploading... pdf"}</h3>}
     {addPdfData && <h3>uploaded pdf</h3>}
     </button>}
-    {data!==undefined &&  <button onClick={(e)=>handleUpdatePdf(e,data?._id)} className="px-4 w-fit bg-green-700 rounded-md">
+    {data!==undefined &&  <button onClick={(e)=>handleUpdatePdf(e,data[0]?._id)} className="px-4 w-fit bg-green-700 rounded-md">
     {updateError!==undefined&& updateError && <h3 className='text-red-400'>try again Update</h3>}
     {!updateIsError &&updateData===undefined && <h3>{updateLoading?"Updating... pdf":"update pdf"}</h3>}
     {updateData && <h3>updated pdf</h3>}

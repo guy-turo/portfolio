@@ -82,6 +82,7 @@ export const apiData = createApi({
         }),
         updateProject: builder.mutation({
             query: ({ data, id }) => ({
+
                 url: `/me/projects/${id}`,
                 method: 'put',
                 headers: { 'Content-Type': 'multipart/form-data' },
@@ -189,12 +190,16 @@ export const apiData = createApi({
             })
         }),
         updatePdf: builder.mutation({
-            query: ({ id, data }) => ({
-                url: `/pdf/${id}`,
-                method: 'put',
-                headers: { 'Content-Type': 'multipart/form-data' },
-                data: data,
-            })
+            query: ({ id, data }) => {
+                console.log(id, data)
+                return {
+                    url: `/pdf/${id}`,
+                    method: 'put',
+                    headers: { 'Content-Type': 'multipart/form-data' },
+                    data: data,
+                }
+
+            }
         }),
 
     })

@@ -32,12 +32,13 @@ const updatePdf = async(req, res) => {
     console.log("updating...")
     try {
         const { id: id } = req.params
+        console.log(id)
         const data = await PdfModel.findById({ _id: id })
-
+        console.log(data)
         if (!data) {
             return res.status(404).json({ message: "Item not fount" })
         }
-        console.log(data)
+
         console.log("existing checked..")
 
         if (req.file) {

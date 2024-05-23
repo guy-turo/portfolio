@@ -176,12 +176,16 @@ export const apiData = createApi({
             query: () => ({ url: '/pdf', method: 'get' })
         }),
         addPdf: builder.mutation({
-            query: ({ data }) => ({
-                url: '/pdf/upload',
-                data: data,
-                headers: { 'Content-Type': 'multipart/form-data' },
-                method: 'post'
-            })
+            query: ({ data }) => {
+                console.log("data", data)
+                console.log(data.get('file'))
+                return {
+                    url: '/pdf/upload',
+                    method: 'post',
+                    headers: { 'Content-Type': 'multipart/form-data' },
+                    data: data
+                }
+            }
         }),
         deletePdf: builder.mutation({
             query: ({ id }) => ({
@@ -198,9 +202,18 @@ export const apiData = createApi({
                     headers: { 'Content-Type': 'multipart/form-data' },
                     data: data,
                 }
-
             }
         }),
+        downloadPdf: builder.mutation({
+            query: (id) => {
+                console.log('checking', id)
+                return {
+                    url: `/pdf/${id}/download-pdf`,
+                    method: 'post',
+                    data: id,
+                }
+            }
+        })
 
     })
 })
@@ -232,4 +245,5 @@ export const {
     useUpdateSocialMutation,
     useUpdateTestimonialsMutation,
     useSendEmailMutation,
+    useDownloadPdfMutation,
 } = apiData

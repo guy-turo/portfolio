@@ -1,5 +1,5 @@
 const { PdfModel } = require('../models/pdfModel')
-const { getCloudinaryImagePath, generateDownloadLink } = require('../utility/helper')
+const { getCloudinaryImagePath } = require('../utility/helper')
 const cloudinary = require('cloudinary').v2
 
 
@@ -7,7 +7,7 @@ const pdfUpload = async(req, res, next) => {
     console.log('pdf Uploading...')
     try {
         const file = req.file
-        console.log(file)
+        console.log(req)
         if (!file && !file.path && !file.originalname) {
             const error = new Error("please upload a file")
             error.httpStatusCode = 400
@@ -34,14 +34,15 @@ const updatePdf = async(req, res) => {
         const { id: id } = req.params
         console.log(id)
         const data = await PdfModel.findById({ _id: id })
-        console.log(data)
         if (!data) {
             return res.status(404).json({ message: "Item not fount" })
         }
 
         console.log("existing checked..")
+        console.log(id)
+        console.log(req.file)
 
-        if (req.file) {
+        if (req.file && data.pdfUrl !== "") {
             let newPdfId = getCloudinaryImagePath(data.pdfUrl)
             await cloudinary.uploader.destroy(newPdfId)
             console.log("last pdf has been deleted")
@@ -111,36 +112,12 @@ const deletePdf = async(req, res) => {
 }
 const downloadPdf = async(req, res) => {
     console.log("downloading...")
+    const id = req.params.urlPdf
+    console.log(id)
     try {
         const response = await PdfModel.findById({ _id: req.params.urlPdf })
-        const id = response.pdfUrl
-        const getCloudinaryImagePaths = (url) => {
-            const urlParts = url.split('/');
-
-            if (urlParts.length < 7 || urlParts[0] !== 'https:' || urlParts[2] !== 'res.cloudinary.com') {
-                throw new Error('Invalid Cloudinary URL format');
-            }
-            const urlImage = urlParts.slice(8).join('/')
-            return urlImage.slice(0, -4)
-        }
-        let pdfId = getCloudinaryImagePaths(id)
-        console.log(pdfId)
-            // if (pdfId) {
-            //     const pdfData = cloudinary.url(pdfId, {
-
-        //         format: "pdf" // Specify format (if provided)
-        //     })
-
-        //     res.setHeader('Content-Type', 'application/pdf');
-        //     console.log('setting...done content type')
-        //     res.setHeader('Content-Disposition', `attachment; filename=${pdfId}.pdf`);
-        //     console.log('setting...done content-disposition')
-        //     res.redirect(pdfData)
-        //     console.log("sent link :" + pdfData)
-        // }
-        const downloadLink = await generateDownloadLink(pdfId);
-        console.log(downloadLink)
-        res.json({ downloadLink });
+        console.log(response)
+            // res.status(200).json({ downloadLink });
     } catch (error) {
         console.error(error);
         res.status(500).send('Error downloading PDF');
@@ -162,10 +139,10 @@ const fetchSinglePdf = async(req, res) => {
 const fetchPdf = async(req, res) => {
     try {
         const pdf = await PdfModel.find()
-        if (!pdf) {
-            return res.status(404).json({ message: 'Image not found' })
+        if (pdf === null || pdf === undefined) {
+            return res.status(404).json({ message: 'Pdf not found' })
         }
-        res.status(200).json(pdf)
+        res.status(200).json(pdf[0])
     } catch (error) {
         console.log(error.message)
         res.status(500).json({ message: "Failed to retrieve the data" })

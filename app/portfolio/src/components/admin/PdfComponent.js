@@ -19,7 +19,7 @@ const  PdfComponent=() =>{
     const formData = new FormData()
     formData.append('file',pdfData)
    
-     const response =await addPdf(formData)
+     const response =await addPdf({data:formData})
 if(response){
   console.log(response)
   setTimeout(()=>{
@@ -64,22 +64,26 @@ if(response){
   if(isLoading){
     return <><PdfSkeleton/></>
   }
-
  
+console.log(updateError)
   return (
   <div className='flex flex-col  container space-y-2 shadow-2xl border border-solid border-gray-400 mt-4 p-2 rounded-md'>
    <h1 className='text-gray-400'>CV</h1>
    <div onClick={(e)=>handleDeletePdf(e,data?._id)} className="flex cursor-pointer items-center rounded-md border border-solid border-red-800  w-fit bg-red-300 px-2">
    <MdDelete  className="size-6 text-red-600 shadow-2xl" />
   <h2 className='font-normal text-red-500 '>Delete </h2>
-  {deleteLoading &&<Loading/> }
-  {deleteData &&<CustomAlert message="Deleted" variant='success' dismissible/>}
-  {deleteError && deleteIsError && <CustomAlert message={deleteError.data} variant='error' dismissible/>}
+    {deleteLoading &&<Loading/> }
+    {deleteData &&<CustomAlert message="Deleted" variant='success' dismissible/>}
+    {deleteError && deleteIsError && <CustomAlert message={deleteError.data} variant='error' dismissible/>}
   </div>
   <label htmlFor="pdf">
       {!data&& 
       <div className='flex '>
-        {pdfData && <div className='w-5 h-5 rounded-full bg-blue-700'></div>}
+        {
+          pdfData!==null &&
+          <div className='w-5 h-5 rounded-full bg-blue-700'>
+          </div>
+        }
         <h2 className="rounded-sm px-2 border border-solid border-blue-950 w-fit shadow-lg bg-blue-950 font-normal">Select pdf</h2>
       </div>
         }
@@ -87,8 +91,8 @@ if(response){
         <div className="flex">
           <div className='flex cursor-pointer hover:bg-blue-900 flex-col items-end p-3 rounded-sm px-2 border border-solid border-blue-950 w-fit shadow-lg  font-normal'>
           <div  className="flex">
-           {data[0]?.pdfUrl&&<FaRegFilePdf className="size-10 text-blue-950"/>}
-          <h2 className="font-normal text-gray-400">{data[0]?.fileName}</h2>
+           {data?.pdfUrl&&<FaRegFilePdf className="size-10 text-blue-950"/>}
+          <h2 className="font-normal text-gray-400">{data?.fileName}</h2>
           </div>
         </div>
         <h2 className="rounded-sm px-2 items-center flex  w-fit shadow-lg bg-transparent font-normal">Select pdf</h2>
@@ -99,17 +103,19 @@ if(response){
     </label>
     <input type="file" id='pdf' onChange={(e)=>setPdfData(e.target.files[0])} hidden/>
     <div className='flex flex-col items-center space-y-2 justify-center self-start'>
-     {!data&&  <button onClick={handleAddPdf} className="px-4 w-fit bg-green-700 rounded-md">
-    {addPdfError!==undefined&& addPdfIsError && <h3 className='text-red-400'>try again</h3>}
-    {addPdfError===undefined && addPdfData===undefined && <h3>{addPdfLoading?"upload pdf":"uploading... pdf"}</h3>}
-    {addPdfData && <h3>uploaded pdf</h3>}
-    </button>}
-    {data!==undefined &&  <button onClick={(e)=>handleUpdatePdf(e,data[0]?._id)} className="px-4 w-fit bg-green-700 rounded-md">
-    {updateError!==undefined&& updateError && <h3 className='text-red-400'>try again Update</h3>}
-    {!updateIsError &&updateData===undefined && <h3>{updateLoading?"Updating... pdf":"update pdf"}</h3>}
-    {updateData && <h3>updated pdf</h3>}
-
-    </button>}
+      {data===null &&  
+      <button onClick={handleAddPdf} className="px-4 w-fit bg-green-700 rounded-md">
+        {addPdfError!==undefined&& addPdfIsError && <h3 className='text-red-400'>try again</h3>}
+        {addPdfError===undefined && addPdfData===undefined && <h3>{addPdfLoading?"uploading pdf":"upload pdf"}</h3>}
+        {addPdfData && <h3>uploaded pdf</h3>}
+      </button>}
+      {data!==null &&
+        <button onClick={(e)=>handleUpdatePdf(e,data?._id)} className="px-4 w-fit bg-green-700 rounded-md">
+          {updateError!==undefined&& updateError && <h3 className='text-red-400'>try again Update</h3>}
+          {!updateIsError &&updateData===undefined && <h3>{updateLoading?"Updating... pdf":"update pdf"}</h3>}
+          {updateData && <h3>updated pdf</h3>}
+        </button>
+      }
     </div>
     </div>
   )

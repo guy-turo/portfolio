@@ -9,6 +9,9 @@ const pdfSchema = new schema({
     pdfUrl: {
         type: String,
     },
+    downloadNumber: {
+        type: Number,
+    }
 }, { timestamps: true })
 
 const PdfModel = mongoose.model('Pdf', pdfSchema)

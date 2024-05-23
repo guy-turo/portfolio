@@ -15,14 +15,14 @@ function ProfileComponent({meData}) {
     const files=Array.from(event.target.files)
     setMeImage(files)
   }
-  const [fullName,setFullName]=useState([data.fullName])
-  const [title,setTitle]=useState([data.title])
-  const [email ,setEmail]=useState([data.email])
-  const [phoneNumber,setPhoneNumber]=useState([data.phoneNumber])
-  const [experienceYear,setExperienceYear]=useState([data.experienceYear])
-  const [clients, setClients]=useState([data.clients])
-  const [description,setDescription]=useState([data.description])
-  const [projects,setProjects]=useState([data.projects])
+  const [fullName,setFullName]=useState([data?.fullName])
+  const [title,setTitle]=useState([data?.title])
+  const [email ,setEmail]=useState([data?.email])
+  const [phoneNumber,setPhoneNumber]=useState([data?.phoneNumber])
+  const [experienceYear,setExperienceYear]=useState([data?.experienceYear])
+  const [clients, setClients]=useState([data?.clients])
+  const [description,setDescription]=useState([data?.description])
+  const [projects,setProjects]=useState([data?.projects])
   const addProfile=async(e)=>{
     e.preventDefault()
     try{
@@ -90,27 +90,27 @@ if(isLoading){
           <input type="text"
            value={fullName} 
            onChange={(e)=>setFullName(e.target.value)}
-           placeholder={data.fullName}
+           placeholder={data?.fullName}
            id="fullName" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
          
           <label htmlFor="title">Title</label>
           <input type="text"
           value={title} 
           onChange={(e)=>setTitle(e.target.value)}
-          placeholder={data.title} 
+          placeholder={data?.title} 
           id="title" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
 
           <label htmlFor="email">Email</label>
           <input type="text" 
           value={email} 
-          placeholder={data.email}
+          placeholder={data?.email}
           onChange={(e)=>setEmail(e.target.value)} 
           id="email" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
          
           <label htmlFor="phoneNumber">Phone number</label>
           <input type="text" 
           value={phoneNumber} 
-          placeholder={data.phoneNumber}
+          placeholder={data?.phoneNumber}
           onChange={(e)=>setPhoneNumber(e.target.value)} 
           id="phoneNumber" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
           </div>
@@ -119,26 +119,26 @@ if(isLoading){
           <label htmlFor="experienceYear">Experience Year</label>
           <input type="text"
           value={experienceYear} 
-          placeholder={data.experienceYear}
+          placeholder={data?.experienceYear}
           onChange={(e)=>setExperienceYear(e.target.value)} 
           id="experienceYear" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
           <label htmlFor="clients">Clients</label>
           <input type="text"
           value={clients} 
-          placeholder={data.clients}
+          placeholder={data?.clients}
           onChange={(e)=>setClients(e.target.value)} 
           id="clients" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
           <label htmlFor="projects">Projects</label>
           <input type="text"
           value={projects} 
-          placeholder={data.projects}
+          placeholder={data?.projects}
           onChange={(e)=>setProjects(e.target.value)} 
           id="projects" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
          
           <label htmlFor="description">Description</label>
           <textarea type="text"
           value={description} 
-          placeholder={data.description}
+          placeholder={data?.description}
           onChange={(e)=>setDescription(e.target.value)} 
           id="description" className=" bg-gray-300 border rounded-md px-2 text-black border-solid border-blue-800"/>
           </div>
@@ -152,12 +152,12 @@ if(isLoading){
             <LuImagePlus className="flex size-20 "/>}
             {meImage?.length===0 && data?.length!==0 &&
               <ul className='flex'>
-                {data.pictures.map((item, index)=><li key={index}>
+                {data?.pictures.map((item, index)=><li key={index}>
                   <img src={item} alt="" className=' flex size-20 rounded-md object-cover'/>
                 </li>)}
               </ul>
            }
-           {error && isError && <CustomAlert message={error.data} variant='error' dismissible/>}
+           {error && isError && <CustomAlert message={error?.data} variant='error' dismissible/>}
             {data&& 
               <ul className='flex'>
                 {meImage.map((item, index)=><li key={index}>
@@ -175,7 +175,7 @@ if(isLoading){
       {data&&<div className="space-y-1">
       {isError && <textarea rows="1" cols="40" className='text-black  rounded-md  bg-red-500'>{error}</textarea>}
       {data && isError===undefined && <textarea rows="1" cols="40" value={data?.message} className='text-black items-center justify-center flex  rounded-md  bg-green-500 text-center'></textarea>}
-      {isErrorUpdateMe && errorUpdateMe && <CustomAlert message={errorUpdateMe.data} variant='error' dismissible/>}
+      {isErrorUpdateMe && errorUpdateMe && <CustomAlert message={errorUpdateMe?.data} variant='error' dismissible/>}
       {updateMeData && isLoadingUpdateMe===false && <CustomAlert message="updated successfully" variant='success' dismissible/>}
  
       <button disabled={isLoadingUpdateMe} onClick={()=>{updateProfile(data._id,)}
@@ -188,7 +188,7 @@ if(isLoading){
           {!data&&<div className="space-y-1">
         {isErrorAddMe && <textarea rows="1" cols="40" className='text-black  rounded-md  bg-red-500'>{errorAdd}</textarea>}
         {addMeData!==undefined && <textarea rows="1" cols="40" value="Image uploaded successfully" className='text-black items-center justify-center flex  rounded-md  bg-green-500 text-center text-blue-800'></textarea>}
-        {errorAdd && isErrorAddMe && <CustomAlert message={errorAdd.data} variant='error' dismissible/>}
+        {errorAdd && isErrorAddMe && <CustomAlert message={errorAdd?.data} variant='error' dismissible/>}
         {addMeData && isLoadingAddMe===false && <CustomAlert message="Added successfully" variant='success' dismissible/>}
  
         <button disabled={isLoadingAddMe} onSubmit={addProfile()} className="px-4 bg-green-700 w-fit rounded-md">

@@ -35,10 +35,11 @@ const { upload } = require('../utility/helper')
 
 
 pdfRoute.post('/upload', authenticateToken, upload.single("file"), pdfUpload)
-pdfRoute.get("/download-pdf/:urlPdf", downloadPdf)
+pdfRoute.post("/:urlPdf/download-pdf", downloadPdf)
 pdfRoute.route('/').get(fetchPdf)
 pdfRoute.put('/:id', authenticateToken, upload.single('file'), updatePdf)
 pdfRoute.route('/:id').get(fetchSinglePdf)
 pdfRoute.delete("/:id", authenticateToken, deletePdf)
+
 
 module.exports = { pdfRoute, upload }

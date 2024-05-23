@@ -252,12 +252,9 @@ const deleteProject = async(req, res) => {
 }
 
 const fetchProject = async(req, res) => {
-    console.log('project checked')
     try {
         const data = await ProjectModel.find()
-        
         if (data===null) return res.status(404).json({ message: "No Data Found" })
-        console.log(data)
         res.status(200).json(data)
     } catch (err) {
         res.status(500).json(err.message)

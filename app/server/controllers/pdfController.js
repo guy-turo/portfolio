@@ -40,7 +40,9 @@ const updatePdf = async(req, res) => {
 
         console.log("existing checked..")
         console.log(id)
-        console.log(req.file)
+
+        console.log("file", req.file)
+
 
         if (req.file && data.pdfUrl !== "") {
             let newPdfId = getCloudinaryImagePath(data.pdfUrl)

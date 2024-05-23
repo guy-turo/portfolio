@@ -194,15 +194,12 @@ export const apiData = createApi({
             })
         }),
         updatePdf: builder.mutation({
-            query: ({ id, data }) => {
-                console.log(id, data)
-                return {
-                    url: `/pdf/${id}`,
-                    method: 'put',
-                    headers: { 'Content-Type': 'multipart/form-data' },
-                    data: data,
-                }
-            }
+            query: ({ id, data }) => ({
+                url: `/pdf/${id}`,
+                method: 'put',
+                headers: { 'Content-Type': 'multipart/form-data' },
+                data: data,
+            })
         }),
         downloadPdf: builder.mutation({
             query: (id) => {

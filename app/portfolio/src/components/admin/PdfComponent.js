@@ -20,7 +20,7 @@ const  PdfComponent=() =>{
     formData.append('file',pdfData)
    
      const response =await addPdf({data:formData})
-if(response){
+if(response.data ){
   console.log(response)
   setTimeout(()=>{
     setPdfData(null)
@@ -35,7 +35,7 @@ if(response){
     e.preventDefault()
     try{
     const response = await deletePdf(id)
-    if(response){
+    if(response.data){
       console.log(response)
     }
     }catch(error){
@@ -52,7 +52,7 @@ if(response){
       id:id,
       data:formData
     })
-     if(response){
+     if(response.data){
       setTimeout(()=>{
         setPdfData(null)
       },1500)
@@ -90,10 +90,14 @@ console.log(updateError)
        {data &&
         <div className="flex">
           <div className='flex cursor-pointer hover:bg-blue-900 flex-col items-end p-3 rounded-sm px-2 border border-solid border-blue-950 w-fit shadow-lg  font-normal'>
-          <div  className="flex">
+        {data && pdfData===null&& 
+          <div className="flex">
            {data?.pdfUrl&&<FaRegFilePdf className="size-10 text-blue-950"/>}
           <h2 className="font-normal text-gray-400">{data?.fileName}</h2>
-          </div>
+          </div>}
+          {data&& pdfData!==null&& <div  className="flex">
+           <FaRegFilePdf className="size-10 text-blue-950"/>
+          </div>}
         </div>
         <h2 className="rounded-sm px-2 items-center flex  w-fit shadow-lg bg-transparent font-normal">Select pdf</h2>
         </div>

@@ -1,5 +1,4 @@
-import React,{useState,useEffect} from 'react'
-import api from "../../utils/Helper"
+import React,{useState} from 'react'
 import { LuImagePlus } from "react-icons/lu";
 import { FaRegCircleRight } from "react-icons/fa6";
 import { FaRegCircleLeft } from "react-icons/fa6";
@@ -10,13 +9,10 @@ import ProjectSkeleton from '../helper/skeleton/ProjectSkeleton';
 import CustomAlert from '../helper/CustomAlert';
 import Loading from '../helper/loadingComponent/Loading';
 
-function ProjectComponent() {
+const  ProjectComponent=()=> {
   const [moreFunction, setMoreFunction]=useState(true)
- 
   const [imageProjects, setImageProjects]=useState([])
-
   const [addSe, setAddSe]=useState(false)
-
 const {data:projectsData, isLoading, isError, error}=useGetProjectQuery()
 const [deleteProject,{data:deleteData, isLoading:deleteLoading, isError:deleteIsError, error:deleteError}]= useDeleteProjectMutation()
 const [addProject,{data:addData, isLoading:addLoading,isError:addIsError,error:addError}]=useAddProjectMutation() 
@@ -66,11 +62,10 @@ const handleDeleteProject=async(id)=>{
   }catch(error){
     console.error(error)
   }
- 
 }
-if(isLoading){
-  return <><ProjectSkeleton/></>
-}
+  if(isLoading){
+    return <><ProjectSkeleton/></>
+  }
   return (
     <div className="flex space-y-2 flex-col  container shadow-2xl border border-solid border-gray-400 mt-4 p-2 rounded-md">
     <div className="flex justify-between">

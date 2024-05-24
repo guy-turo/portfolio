@@ -1,9 +1,7 @@
 import React from 'react'
 import App from './App'
 import { Provider } from 'react-redux';
-// import store from './redux/storeRedux';
 import { store } from './redux_tool.js/service/store';
-// import AppTest from './AppTest';
 
 export default class Main extends React.PureComponent {
 

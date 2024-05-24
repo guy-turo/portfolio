@@ -553,7 +553,7 @@ const sendEmail = async(req, res) => {
         email: sender,
         message: notes,
     };
-
+    
     emailjs
         .send(process.env.SERVICE_ID, process.env.TEMPLATE_ID, templateParams, {
             publicKey: process.env.PUBLIC_KEY,
@@ -569,8 +569,6 @@ const sendEmail = async(req, res) => {
                 res.status(400).json({ message: "error  on sending message" })
             },
         );
-
-
 }
 const createSocials = async(req, res) => {
     const { title: title, link: link } = req.body
@@ -599,7 +597,6 @@ const updateSocials = async(req, res) => {
     console.log("updating")
     try {
         const { id: id } = req.params
-
         const data = await SocialContactModel.findById({ _id: id })
         console.log(data)
         if (!data) {
@@ -608,16 +605,13 @@ const updateSocials = async(req, res) => {
         console.log(req.body.title, req.body.link)
         data.title = req.body.title || data.title
         data.link = req.body.link || data.link
-
         await data.save()
         res.status(200).json({ message: 'Item updated successfully' })
-
         console.log('updated successfully')
     } catch (e) {
         res.status(500).json(e.message)
     }
 }
-
 const deleteSocials = async(req, res) => {
     const { id: id } = req.params
     try {
@@ -631,7 +625,6 @@ const deleteSocials = async(req, res) => {
         res.status(500).json(error.message)
     }
 }
-
 const fetchSocials = async(req, res) => {
         try {
             const response = await SocialContactModel.find()
@@ -647,7 +640,6 @@ const fetchSocials = async(req, res) => {
 const createTestimonials = async(req, res) => {
     console.log("proceeding..")
     const { name: name, title: title, testimonials: testimonials } = req.body
-
     try {
         const testimonialData = new TestimonialsModel({
             name: name,
@@ -665,7 +657,6 @@ const createTestimonials = async(req, res) => {
     } catch (err) { console.error(err) }
 }
 const updateTestimonials = async(req, res) => {
-
     try {
         const { id: id } = req.params
         const data = await TestimonialsModel.findById(id)
@@ -673,13 +664,10 @@ const updateTestimonials = async(req, res) => {
         if (!data) {
             return res.status(404).json({ message: "Item not fount" })
         }
-
         let newImageId = getCloudinaryImagePath(data.pictures)
         if (newImageId) {
             await cloudinary.uploader.destroy(newImageId)
         }
-
-
         data.name = req.body.name || data.title
         data.title = req.body.title || data.title
         data.testimonials = req.body.testimonials || data.testimonials

@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from 'react';
+import React,{useState} from 'react';
 import {Routes,Route}from "react-router-dom"
 import PortfolioPage from "./pages/PortfolioPage";
 import LoginPage from './pages/auth/LoginPage';

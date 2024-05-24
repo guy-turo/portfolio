@@ -125,7 +125,6 @@ if(logoutIsError){
             <Link to="/" className='p-0'>
                 {!isLoading&&<img  src={data?.pictures[1]} alt="" className="w-10 h-10 rounded-full"/>}
                 {isLoading&& <Skeleton width={10} height={10} borderRadius={full}/>}
-                
             </Link>
             </div>
           <h2 className="font-semibold fex self-end">Admin</h2>
@@ -140,8 +139,6 @@ if(logoutIsError){
         </div>
       </div>
       <div className="w-full h-full p-1 flex  justify-center rounded-lg shadow-lg  ">
-        {/* Tabs Header */}
-        {/* For the big screen */}
         <div className="flex flex-col hidden md:block rounded-tl-md rounded-bl-md w-2/12  p-1 items-center justify-items-center space-y-1">
           <div
           onClick={()=>toggleTab(1)}
@@ -154,7 +151,6 @@ if(logoutIsError){
             <h2 className=" cursor-pointer flex justify-center ">Data</h2></div>
         </div>
 
-        {/* content Pages */}
         <div className="w-11/12 shadow-2xl rounded-md bg-gray-600">
           <div className={`${toggleState===1?"":"hidden"} flex flex-col items-center justify-start h-screen`}>
           <h2>Dashboard</h2>
@@ -171,16 +167,4 @@ if(logoutIsError){
   )
 }
 
-// const mapStateToProps= (state)=>{
-//   return{
-//     data:state.me,
-//     outData:state.logout
-//   }
-// }
-// const mapDispatchToProps= (dispatch)=>{
-//   return{
-//     fetchData:()=>dispatch(fetchMe()),
-//   }
-// }
-// export default connect(mapStateToProps,mapDispatchToProps)(AdminPage)
 export default AdminPage

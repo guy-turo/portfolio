@@ -1,6 +1,5 @@
 import React,{useState} from 'react'
 import Dialog from "../../../utils/Dialog"
-import api from "../../../utils/Helper"
 import { useUpdateSocialMutation } from '../../../redux_tool.js/service/dataApi/apiDataService'
 import Loading from '../../helper/loadingComponent/Loading'
 const UpdateSocials=({item})=> {
@@ -28,13 +27,10 @@ const update= async(e)=>{
        }
     }catch(error){
       if (error.response) {
-        // The server responded with a status code outside the 2xx range
         console.log('Error response:', error.response);
       } else if (error.request) {
-        // The request was made but no response was received
         console.log('Error request:', error.request);
       } else {
-        // Something happened in setting up the request that triggered an error
         console.log('Error message:', error.message);
       }
     }

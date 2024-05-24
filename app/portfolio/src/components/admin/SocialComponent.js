@@ -1,5 +1,4 @@
 import React,{useState} from 'react'
-import api from "../../utils/Helper"
 import { FaRegCircleRight } from "react-icons/fa6";
 import { FaRegCircleLeft } from "react-icons/fa6";
 import UpdateSocials from './helper/UpdateSocial'

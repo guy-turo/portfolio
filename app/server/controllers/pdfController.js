@@ -44,7 +44,7 @@ const updatePdf = async(req, res) => {
         console.log("file", req.file)
 
 
-        if (req.file && data.pdfUrl !== "") {
+        if (req.file) {
             let newPdfId = getCloudinaryImagePath(data.pdfUrl)
             await cloudinary.uploader.destroy(newPdfId)
             console.log("last pdf has been deleted")

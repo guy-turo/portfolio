@@ -1,7 +1,6 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
 
 import axiosBaseQuery from "../../axios_base_query";
-// fetchBaseQuery({ baseUrl: "http://localhost:8000/api/v1/" }),
 export const apiData = createApi({
     reducerPath: "dataApi",
     baseQuery: axiosBaseQuery({

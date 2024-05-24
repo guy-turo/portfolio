@@ -1,5 +1,4 @@
-import React,{useState,useEffect} from 'react'
-import api from "../../utils/Helper"
+import React,{useState} from 'react'
 import { FaRegCircleRight } from "react-icons/fa6";
 import { FaRegCircleLeft } from "react-icons/fa6";
 import { useGetServicesQuery ,useAddServiceMutation, } from '../../redux_tool.js/service/dataApi/apiDataService';

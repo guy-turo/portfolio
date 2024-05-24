@@ -64,8 +64,7 @@ if(response.data ){
   if(isLoading){
     return <><PdfSkeleton/></>
   }
- 
-console.log(updateError)
+
   return (
   <div className='flex flex-col  container space-y-2 shadow-2xl border border-solid border-gray-400 mt-4 p-2 rounded-md'>
    <h1 className='text-gray-400'>CV</h1>

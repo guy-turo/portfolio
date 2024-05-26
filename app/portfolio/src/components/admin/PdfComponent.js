@@ -35,7 +35,7 @@ if(response.data ){
     e.preventDefault()
     try{
       console.log(id)
-    const response = await deletePdf(id)
+    const response = await deletePdf({id})
     if(response.data){
       console.log(response)
     }

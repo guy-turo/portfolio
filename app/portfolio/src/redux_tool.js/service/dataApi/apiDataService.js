@@ -187,10 +187,14 @@ export const apiData = createApi({
             }
         }),
         deletePdf: builder.mutation({
-            query: ({ id }) => ({
-                url: `/pdf/${id}`,
-                method: 'delete'
-            })
+            query: ({ id }) => {
+                console.log(id)
+                return {
+                    url: `/pdf/${id}`,
+                    method: 'delete'
+                }
+
+            }
         }),
         updatePdf: builder.mutation({
             query: ({ id, data }) => ({

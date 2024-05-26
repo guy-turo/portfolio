@@ -7,9 +7,7 @@ const pdfUpload = async(req, res, next) => {
     console.log('pdf Uploading...')
     try {
         const file = req.file
-        console.log(file)
         const { public_id, url } = req.file
-        console.log(public_id, url)
         if (!file && !file.path && !file.originalname) {
             const error = new Error("please upload a file")
             error.httpStatusCode = 400
@@ -76,14 +74,12 @@ const updatePdf = async(req, res) => {
 
 const deletePdf = async(req, res) => {
     const { id: id } = req.params
-    console.log('deleting...')
     try {
         const pdf = await PdfModel.findById({ _id: id })
         if (!pdf) {
             console.log('Not Found')
             res.status(404).json({ message: "pdf not found" })
         }
-        console.log(pdf)
         if (pdf.pdfUrl !== '') {
             const publicId = getCloudinaryImagePath(pdf.pdfUrl)
             result = await cloudinary.uploader.destroy(publicId);
@@ -93,7 +89,6 @@ const deletePdf = async(req, res) => {
                 console.log("Can't delete pdf")
             }
         }
-        console.log(pdf)
         await PdfModel.deleteOne({ _id: id })
             .then(re => {
                 console.log(res)
@@ -108,24 +103,13 @@ const downloadPdf = async(req, res) => {
     const id = req.params.urlPdf
     try {
         const response = await PdfModel.findById({ _id: req.params.urlPdf })
-        console.log(response)
-        const url = response.pdfUrl
-        const dataSplitted = url.split('/')
-        const public_id = dataSplitted[dataSplitted.length - 1]
-        if (public_id) {
+        if (response !== null) {
             const filter = { _id: id }
             const update = { $inc: { downloadNumber: 1 } }
             const result = await PdfModel.updateOne(filter, update)
-
-            const pdfData = cloudinary.utils.private_download_url(public_id)
-            console.log(pdfData)
-            res.set({
-                    'Content-Type': 'application/pdf',
-                    'Content-Disposition': `attachment; filename=${response.fileName}`,
-                })
-                // if (result) {
-                //     res.status(200).json('downloaded')
-                // }
+            if (result) {
+                res.status(200).json('downloaded')
+            }
         }
     } catch (error) {
         console.error(error);

@@ -7,7 +7,9 @@ const pdfUpload = async(req, res, next) => {
     console.log('pdf Uploading...')
     try {
         const file = req.file
-        console.log(req)
+        console.log(file)
+        const { public_id, url } = req.file
+        console.log(public_id, url)
         if (!file && !file.path && !file.originalname) {
             const error = new Error("please upload a file")
             error.httpStatusCode = 400
@@ -17,12 +19,12 @@ const pdfUpload = async(req, res, next) => {
         const newPdf = new PdfModel({
             fileName: req.file.originalname,
             pdfUrl: file.path,
+            downloadNumber: 0
         })
         await newPdf.save()
             .then((response) => {
                 res.status(200).json(file)
                 console.log("uploaded")
-                console.log(response)
             })
     } catch (e) {
         res.status(500).json({ message: 'unable to to upload image' })
@@ -32,17 +34,10 @@ const updatePdf = async(req, res) => {
     console.log("updating...")
     try {
         const { id: id } = req.params
-        console.log(id)
         const data = await PdfModel.findById({ _id: id })
         if (!data) {
             return res.status(404).json({ message: "Item not fount" })
         }
-
-        console.log("existing checked..")
-        console.log(id)
-
-        console.log("file", req.file)
-
 
         if (req.file) {
             let newPdfId = getCloudinaryImagePath(data.pdfUrl)
@@ -56,15 +51,13 @@ const updatePdf = async(req, res) => {
             name = req.body.fileName
         }
 
-        console.log("update proceed")
         const newData = {
             $set: {
                 fileName: name,
-                pdfUrl: req.file.path || data.pdfUrl
+                pdfUrl: req.file.path || data.pdfUrl,
+                downloadNumber: data.downloadNumber
             }
         }
-        console.log("saving new pdf...")
-        console.log(data + "to update")
         const update = await PdfModel.updateMany({ _id: id }, newData, { new: true }, (err, doc) => {
             if (err) {
                 console.log("Something wrong when updating data!")
@@ -73,8 +66,6 @@ const updatePdf = async(req, res) => {
         if (update.modifiedCount === 1) {
             res.status(200).json({ message: 'Item updated successfully' })
             console.log('updated successfully')
-            console.log(update)
-            console.log(data)
         } else {
             console.log("failed")
         }
@@ -85,9 +76,11 @@ const updatePdf = async(req, res) => {
 
 const deletePdf = async(req, res) => {
     const { id: id } = req.params
+    console.log('deleting...')
     try {
         const pdf = await PdfModel.findById({ _id: id })
         if (!pdf) {
+            console.log('Not Found')
             res.status(404).json({ message: "pdf not found" })
         }
         console.log(pdf)
@@ -99,8 +92,6 @@ const deletePdf = async(req, res) => {
             } else {
                 console.log("Can't delete pdf")
             }
-        } else {
-            console.log('not pdf found')
         }
         console.log(pdf)
         await PdfModel.deleteOne({ _id: id })
@@ -115,11 +106,27 @@ const deletePdf = async(req, res) => {
 const downloadPdf = async(req, res) => {
     console.log("downloading...")
     const id = req.params.urlPdf
-    console.log(id)
     try {
         const response = await PdfModel.findById({ _id: req.params.urlPdf })
         console.log(response)
-            // res.status(200).json({ downloadLink });
+        const url = response.pdfUrl
+        const dataSplitted = url.split('/')
+        const public_id = dataSplitted[dataSplitted.length - 1]
+        if (public_id) {
+            const filter = { _id: id }
+            const update = { $inc: { downloadNumber: 1 } }
+            const result = await PdfModel.updateOne(filter, update)
+
+            const pdfData = cloudinary.utils.private_download_url(public_id)
+            console.log(pdfData)
+            res.set({
+                    'Content-Type': 'application/pdf',
+                    'Content-Disposition': `attachment; filename=${response.fileName}`,
+                })
+                // if (result) {
+                //     res.status(200).json('downloaded')
+                // }
+        }
     } catch (error) {
         console.error(error);
         res.status(500).send('Error downloading PDF');

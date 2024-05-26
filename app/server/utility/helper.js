@@ -30,7 +30,7 @@ const storage = new CloudinaryStorage({
     }
 })
 
-const upload = multer({ storage })
+const upload = multer({ storage: storage })
 
 const getCloudinaryImagePath = async(url) => {
     const urlParts = url.split('/');

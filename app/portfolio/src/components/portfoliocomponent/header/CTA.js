@@ -5,15 +5,20 @@ import CustomAlert from '../../helper/CustomAlert'
 const  CTA=()=>{
     const {data, isLoading, isError, error}=  useGetPdfQuery()
     const [downloadPdf, {data:downloadData,isLoading:downloadLoading,isError:downloadIsError, error:downloadError}]=useDownloadPdfMutation()
-
-    console.log(data)
+    
+    const newPage= ()=>{
+      return <a href={data?.pdfUrl} target="_blank" rel="noreferrer" ></a>  
+    }
     const download=async(e)=>{
       e.preventDefault()
+      
+      
       try{
+        newPage()
         const id= data?._id
         const response= await downloadPdf(id)
         if(response.data){
-          console.log(response)
+       
         }
       }catch(error){
         console.error(error)
@@ -25,15 +30,15 @@ const  CTA=()=>{
     if(isError){
       console.log("Pdf error :", error)
     }
-    console.log(downloadError)
   return (
-    <div className="cta">
-      <a href={data?.pdfUrl}  onClick={download} target="_blank"  className={`btn ${downloadLoading?"":"disabled"}  ${downloadLoading?"cursor-none":"cursor-pointer"} `} rel="noreferrer"> {downloadLoading ? 'Downloading... CV' : 'Download CV'}</a>
-      {data?.pdfUrl&& <div className='w-5 h-5 rounded-full bg-blue-950'></div>}
+
+    <div className="cta" >
+      <button   onClick={download}  className={`btn ${downloadLoading?"":"disabled"}  ${downloadLoading?"cursor-none":"cursor-pointer"} `} > {downloadData ? 'Downloaded CV' : 'Download CV'} </button>
+      {data?.pdfUrl&& <div  className='w-5 h-5 rounded-full bg-blue-950'></div>}
+      {/* {downloadError && downloadIsError && <CustomAlert message={downloadError.data} variant='error' dismissible/>}
+      {downloadData && downloadIsError===false && <CustomAlert message={downloadData} variant='success' dismissible/>} */}
       <a href="#contact" className='btn btn-primary'>Let's Talk</a>
-      {downloadError && downloadIsError && <CustomAlert message={downloadError.data} variant='error' dismissible/>}
-      {downloadData && downloadIsError===false && <CustomAlert message="Add successfully" variant='success' dismissible/>}
- 
+     
     </div>
     
   )

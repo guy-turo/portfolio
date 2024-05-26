@@ -34,6 +34,7 @@ if(response.data ){
   const handleDeletePdf=async(e,id)=>{
     e.preventDefault()
     try{
+      console.log(id)
     const response = await deletePdf(id)
     if(response.data){
       console.log(response)
@@ -68,13 +69,13 @@ if(response.data ){
   return (
   <div className='flex flex-col  container space-y-2 shadow-2xl border border-solid border-gray-400 mt-4 p-2 rounded-md'>
    <h1 className='text-gray-400'>CV</h1>
-   <div onClick={(e)=>handleDeletePdf(e,data?._id)} className="flex cursor-pointer items-center rounded-md border border-solid border-red-800  w-fit bg-red-300 px-2">
-   <MdDelete  className="size-6 text-red-600 shadow-2xl" />
-  <h2 className='font-normal text-red-500 '>Delete </h2>
-    {deleteLoading &&<Loading/> }
-    {deleteData &&<CustomAlert message="Deleted" variant='success' dismissible/>}
-    {deleteError && deleteIsError && <CustomAlert message={deleteError.data} variant='error' dismissible/>}
-  </div>
+  {data&&<div onClick={(e)=>handleDeletePdf(e,data?._id)} className="flex cursor-pointer items-center rounded-md border border-solid border-red-800  w-fit bg-red-300 px-2">
+    <MdDelete  className="size-6 text-red-600 shadow-2xl" />
+    <h2 className='font-normal text-red-500 '>Delete </h2>
+      {deleteLoading &&<Loading/> }
+      {deleteData &&<CustomAlert message="Deleted" variant='success' dismissible/>}
+      {deleteError && deleteIsError && <CustomAlert message={deleteError.data} variant='error' dismissible/>}
+    </div>}
   <label htmlFor="pdf">
       {!data&& 
       <div className='flex '>
@@ -105,20 +106,20 @@ if(response.data ){
  
     </label>
     <input type="file" id='pdf' onChange={(e)=>setPdfData(e.target.files[0])} hidden/>
-    <div className='flex flex-col items-center space-y-2 justify-center self-start'>
-      {data===null &&  
+    <div className='flex items-center space-x-2 justify-center self-start'>
+    
       <button onClick={handleAddPdf} className="px-4 w-fit bg-green-700 rounded-md">
         {addPdfError!==undefined&& addPdfIsError && <h3 className='text-red-400'>try again</h3>}
         {addPdfError===undefined && addPdfData===undefined && <h3>{addPdfLoading?"uploading pdf":"upload pdf"}</h3>}
         {addPdfData && <h3>uploaded pdf</h3>}
-      </button>}
-      {data!==null &&
+      </button>
+      
         <button onClick={(e)=>handleUpdatePdf(e,data?._id)} className="px-4 w-fit bg-green-700 rounded-md">
           {updateError!==undefined&& updateError && <h3 className='text-red-400'>try again Update</h3>}
           {!updateIsError &&updateData===undefined && <h3>{updateLoading?"Updating... pdf":"update pdf"}</h3>}
           {updateData && <h3>updated pdf</h3>}
         </button>
-      }
+      
     </div>
     </div>
   )

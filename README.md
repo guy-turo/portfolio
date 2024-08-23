@@ -1,5 +1,7 @@
 Personal Portfolio 
 
+With admin page and all possible CRUD operatiton [ADD,EDIT,UPDATE,DELETE method]
+
 -create account 
 -update profile
 -Get profile
